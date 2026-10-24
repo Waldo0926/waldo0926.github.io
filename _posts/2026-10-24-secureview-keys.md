@@ -11,7 +11,15 @@ title: "Sharing files the server cannot read"
 
 [SecureView](https://github.com/Waldo0926/SecureView) is the file sharing platform our team built for our final year project at Monash. It is live, and I wrote 182 of the 203 merged pull requests. The rule behind it is simple to say: files are encrypted in the browser, and the server never receives anything that can decrypt them. Not the file, not the file key, not the user's private key, not the passphrase.
 
-The rule is easy to say and hard to keep once you add sharing, forgotten passphrases and stolen sessions. This post walks through how SecureView handles each one.
+The rule is easy to say and hard to keep once you add sharing, forgotten passphrases and stolen sessions. First, what the rule buys you.
+
+## What this buys you
+
+**1. The server only stores encrypted files.** There is no original file on the server, and no key that opens one. The people running SecureView cannot read a user's files, and neither can someone who breaks into the server or copies the database. What they get is ciphertext and sealed keys, and without each user's passphrase that is useless.
+
+**2. A stolen account is not a stolen file.** Say someone gets your login password and signs in. They see your file list, but they cannot read any of it. They cannot preview a file, because the server has no original to show. They cannot download the real file or share it with anyone, because both need your private key, and only your passphrase unlocks it. The browser asks for the passphrase again on every download and every share. The most they can download is the encrypted file.
+
+The rest of this post is how the design keeps those two promises, and where they stop.
 
 ## Two secrets, not one
 
@@ -20,7 +28,7 @@ Every account has two separate secrets:
 - **The login password** proves who you are to the server. The server stores an Argon2id hash of it, like any login.
 - **The encryption passphrase** never leaves the browser. It unlocks the account's private key, and the private key unlocks your files.
 
-Keeping them apart is what lets a forgotten login password be reset by email. Taking over someone's mailbox gets you their session, but not their files.
+Keeping them apart is what makes point 2 work. It is also why a forgotten login password can be reset by email: taking over someone's mailbox gets you their session, but not their files.
 
 ## The key chain
 
@@ -81,7 +89,7 @@ Each signed operation (reset, rewrap, adding a key) has its own domain label in 
 
 ## What the server can still see
 
-Key custody is not the same as hiding everything. The server still sees:
+Key custody is not the same as hiding everything. Someone signed in with a stolen password can still delete or unshare your files, since those are normal account actions, even though they cannot read any of them. The server still sees:
 
 - filenames, MIME types and exact file sizes
 - who shared what with whom, and when
