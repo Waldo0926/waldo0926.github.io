@@ -1,23 +1,56 @@
 ---
 layout: default
 ---
-{%- assign other_lang = "zh-Hans" -%}
-{%- assign other_label = "中文" -%}
-{%- if page.lang == "zh-Hans" -%}
-  {%- assign other_lang = "en" -%}
-  {%- assign other_label = "English" -%}
+{%- assign zh = false -%}
+{%- if page.lang == "zh-Hans" -%}{%- assign zh = true -%}{%- endif -%}
+{%- assign en_post = site.posts | where: "ref", page.ref | where: "lang", "en" | first -%}
+{%- assign zh_post = site.posts | where: "ref", page.ref | where: "lang", "zh-Hans" | first -%}
+{%- assign text = content | strip_html -%}
+{%- if zh -%}
+  {%- assign minutes = text | size | divided_by: 450 | plus: 1 -%}
+{%- else -%}
+  {%- assign minutes = text | number_of_words | divided_by: 220 | plus: 1 -%}
 {%- endif -%}
-{%- assign other = site.posts | where: "ref", page.ref | where: "lang", other_lang | first -%}
-<article class="post">
-  <header class="post-head">
-    <h1>{{ page.title }}</h1>
-    <p class="meta">
-      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time>
-      {%- if other %}<span class="dot">·</span><a href="{{ other.url | relative_url }}" lang="{{ other_lang }}">{{ other_label }}</a>{% endif %}
+<div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="{{ '/#writing' | relative_url }}">{% if zh %}文章{% else %}Writing{% endif %}</a>
+      <span aria-hidden="true">/</span>
+      <span>{{ page.project }}</span>
     </p>
+    <h1 class="display post-title">{{ page.title }}</h1>
+    {%- if page.description %}<p class="lede">{{ page.description }}</p>{% endif %}
+    <div class="post-meta">
+      <time class="mono" datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%-d %b %Y" }}</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>{% if zh %}约 {{ minutes }} 分钟{% else %}{{ minutes }} min read{% endif %}</span>
+      {%- if en_post and zh_post %}
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="{{ en_post.url | relative_url }}"{% unless zh %} class="on" aria-current="page"{% endunless %}>English</a>
+        <a href="{{ zh_post.url | relative_url }}" lang="zh-Hans"{% if zh %} class="on" aria-current="page"{% endif %}>中文</a>
+      </span>
+      {%- endif %}
+    </div>
   </header>
-  <div class="prose">
-    {{ content }}
+
+  <div class="post-body">
+    <article class="card prose">
+      {{ content }}
+    </article>
+
+    {%- assign sections = content | split: '<h2 id="' -%}
+    {%- if sections.size > 2 %}
+    <aside class="toc card">
+      <p class="toc-title">{% if zh %}本文目录{% else %}On this page{% endif %}</p>
+      <ol>
+        {%- for part in sections offset: 1 -%}
+        {%- assign id = part | split: '"' | first -%}
+        {%- assign heading = part | split: '">' | slice: 1 | first | split: '</h2>' | first | strip_html -%}
+        <li><a href="#{{ id }}">{{ heading }}</a></li>
+        {%- endfor -%}
+      </ol>
+      <a class="toc-back" href="{{ '/#writing' | relative_url }}">{% if zh %}全部文章{% else %}All writing{% endif %}</a>
+    </aside>
+    {%- endif %}
   </div>
-  <p class="back"><a href="{{ '/' | relative_url }}">{% if page.lang == "zh-Hans" %}全部文章{% else %}All writing{% endif %}</a></p>
-</article>
+</div>

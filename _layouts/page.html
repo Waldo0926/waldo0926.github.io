@@ -1,9 +1,11 @@
 ---
 layout: default
 ---
-<article class="post">
-  <header class="post-head"><h1>{{ page.title }}</h1></header>
-  <div class="prose">
+<div class="container post-wrap">
+  <header class="post-hero">
+    <h1 class="display post-title">{{ page.title }}</h1>
+  </header>
+  <article class="card prose page-card">
     {{ content }}
-  </div>
-</article>
+  </article>
+</div>

@@ -1,0 +1,13 @@
+<div class="term" aria-hidden="true">
+  <div class="term-bar"><i></i><i></i><i></i><span>deploy.sh, when a release fails</span></div>
+<pre><span class="t-step">==&gt; Fetching origin</span>
+<span class="t-step">==&gt; Backing up the database before anything else</span>
+<span class="t-step">==&gt; Keeping the running images as the fallback</span>
+<span class="t-step">==&gt; Building images</span>
+<span class="t-step">==&gt; Running migrations</span>
+<span class="t-step">==&gt; Waiting for the API to report healthy</span>
+<span class="t-step">==&gt; Checking the release answers like the site should</span>
+<span class="t-err">error: the release failed the smoke check.</span>
+<span class="t-warn">==&gt; Putting the previous images back</span>
+    previous images are running again</pre>
+</div>

@@ -1,7 +1,10 @@
 ---
 layout: post
+project: Monash Hub
+description: "One VPS, no one watching the deploys. How the deploy script checks the right commit is live and puts the previous images back when it is not."
 ref: deploy-rollback
 lang: en
+preview: deploy-rollback
 title: "How Monash Hub deploys itself and rolls back"
 ---
 
