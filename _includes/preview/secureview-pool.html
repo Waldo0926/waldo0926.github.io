@@ -1,12 +1,12 @@
 <div class="term" aria-hidden="true">
-  <div class="term-bar"><i></i><i></i><i></i><span>loadtest, 100 concurrent users</span></div>
+  <div class="term-bar"><i></i><i></i><i></i><span>loadtest on the real server, 100 concurrent users</span></div>
 <pre><span class="t-dim"># before</span>
 <span class="t-err">QueuePool limit of size 5 overflow 10 reached,
 connection timed out, timeout 30.00</span>
-uploads failed   <span class="t-err">80%</span>     ops/s  <span class="t-err">0.33</span>
-server CPU       3%
+uploads succeeded  <span class="t-err">23 / 103</span>   (78% failed, HTTP 500)
+server CPU         3%
 
 <span class="t-dim"># after: no DB call on the event loop,
 # no connection held across an await</span>
-uploads failed   <span class="t-ok">0%</span>      ops/s  <span class="t-ok">56.1</span></pre>
+uploads succeeded  <span class="t-ok">102 / 102</span>  (0 failed)</pre>
 </div>

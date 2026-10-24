@@ -77,7 +77,7 @@ Same laptop, same tool, same accounts, 30 seconds per step with 1 MiB files:
 | 50 | 0% | 54.5 | 0% | 56.1 |
 | **100** | **80%** | **0.33** | **0%** | **56.1** |
 
-After the fix, throughput stays at about 56 operations a second at every step and latency grows with the queue, which is the machine's real limit. I ran it again on the real server that night: 102 of 102 uploads succeeded at 100 users, and every download matched its original hash.
+After the fix, throughput stays at about 56 operations a second at every step and latency grows with the queue, which is the machine's real limit. The laptop numbers are a local reproduction. On the real server, the run the night before had 23 of 103 uploads succeed at 100 users (78% failed). The re-run that night had 102 of 102 succeed, and every download matched its original hash.
 
 ## Tests that keep it fixed
 
