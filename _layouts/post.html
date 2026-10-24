@@ -53,4 +53,30 @@ layout: default
     </aside>
     {%- endif %}
   </div>
+
+  {%- assign same = site.posts | where: "lang", page.lang -%}
+  {%- for post in same -%}
+    {%- if post.url == page.url -%}
+      {%- assign newer_i = forloop.index0 | minus: 1 -%}
+      {%- assign older_i = forloop.index0 | plus: 1 -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if newer_i >= 0 %}{% assign newer = same[newer_i] %}{% else %}{% assign newer = nil %}{% endif -%}
+  {%- assign older = same[older_i] -%}
+  {%- if newer or older %}
+  <nav class="more" aria-label="{% if zh %}更多文章{% else %}More posts{% endif %}">
+    {%- if older %}
+    <a class="card more-link" href="{{ older.url | relative_url }}">
+      <span class="more-label">{% if zh %}上一篇{% else %}Previous{% endif %} · {{ older.project }}</span>
+      <span class="more-title">{{ older.title }}</span>
+    </a>
+    {%- else %}<span></span>{% endif %}
+    {%- if newer %}
+    <a class="card more-link more-link--next" href="{{ newer.url | relative_url }}">
+      <span class="more-label">{% if zh %}下一篇{% else %}Next{% endif %} · {{ newer.project }}</span>
+      <span class="more-title">{{ newer.title }}</span>
+    </a>
+    {%- endif %}
+  </nav>
+  {%- endif %}
 </div>

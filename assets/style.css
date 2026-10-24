@@ -479,3 +479,42 @@ p { margin: 0; }
 .prose th, .prose td { padding: 10px 16px 10px 0; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
 .prose th { color: var(--muted); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; border-bottom-color: var(--border-strong); }
 .prose td:last-child { font-family: var(--font-mono); font-size: 0.875em; white-space: nowrap; }
+
+/* --- project filter on the home page ---------------------------------------- */
+
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: -8px 0 20px; }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface, #fff);
+  color: var(--muted);
+  font: 500 0.88rem/1 var(--font);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.chip span { color: var(--muted-2); font-family: var(--font-mono); font-size: 0.78rem; }
+.chip:hover { border-color: var(--border-strong); color: var(--text); }
+.chip.on { border-color: var(--ink); background: var(--ink); color: #fff; }
+.chip.on span { color: rgba(255, 255, 255, 0.7); }
+.posts [hidden] { display: none; }
+
+/* --- previous / next on a post ---------------------------------------------- */
+
+.more {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  max-width: calc(100% - 292px);
+  margin-top: 40px;
+}
+.more-link { display: flex; flex-direction: column; gap: 6px; padding: 22px 26px; color: var(--text); transition: box-shadow 0.2s, border-color 0.2s; }
+.more-link:hover { color: var(--text); border-color: var(--border-strong); box-shadow: var(--shadow); }
+.more-link--next { text-align: right; }
+.more-label { color: var(--muted-2); font-size: 0.82rem; }
+.more-title { font-family: var(--font-display); font-size: 1.12rem; font-weight: 600; line-height: 1.35; }
+@media (max-width: 900px) { .more { max-width: none; } }
+@media (max-width: 640px) { .more { grid-template-columns: 1fr; } .more-link--next { text-align: left; } }

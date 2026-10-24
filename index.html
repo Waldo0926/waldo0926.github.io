@@ -71,10 +71,18 @@ layout: default
     <p class="muted">How my projects are built and run, with the code linked. Every post has an English and a Chinese version.</p>
   </div>
   {%- assign english = site.posts | where: "lang", "en" -%}
+  {%- assign projects = english | map: "project" | uniq -%}
+  <div class="filters" role="group" aria-label="Filter by project" hidden>
+    <button type="button" class="chip on" data-filter="" aria-pressed="true">All <span>{{ english.size }}</span></button>
+    {%- for name in projects %}
+    {%- assign count = english | where: "project", name | size %}
+    <button type="button" class="chip" data-filter="{{ name }}" aria-pressed="false">{{ name }} <span>{{ count }}</span></button>
+    {%- endfor %}
+  </div>
   <div class="posts">
     {%- for post in english -%}
     {%- assign zh = site.posts | where: "ref", post.ref | where: "lang", "zh-Hans" | first -%}
-    <article class="card post-card{% if forloop.first %} post-card--featured{% endif %}">
+    <article class="card post-card{% if forloop.first %} post-card--featured{% endif %}" data-project="{{ post.project }}">
       <div class="post-main">
         <p class="post-tag">{% if forloop.first %}<span class="new">Latest</span>{% endif %}{{ post.project }}</p>
         <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
@@ -93,6 +101,23 @@ layout: default
     </article>
     {%- endfor -%}
   </div>
+  <script>
+    (() => {
+      const bar = document.querySelector('.filters');
+      const cards = document.querySelectorAll('.posts [data-project]');
+      bar.hidden = false;
+      bar.addEventListener('click', (event) => {
+        const chip = event.target.closest('.chip');
+        if (!chip) return;
+        const want = chip.dataset.filter;
+        bar.querySelectorAll('.chip').forEach((c) => {
+          c.classList.toggle('on', c === chip);
+          c.setAttribute('aria-pressed', c === chip);
+        });
+        cards.forEach((card) => { card.hidden = want && card.dataset.project !== want; });
+      });
+    })();
+  </script>
 </section>
 
 <section class="container facts">

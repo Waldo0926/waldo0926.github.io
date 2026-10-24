@@ -1,0 +1,12 @@
+<div class="term" aria-hidden="true">
+  <div class="term-bar"><i></i><i></i><i></i><span>runs in the browser, never on the server</span></div>
+<pre><span class="t-step">passphrase</span>  <span class="t-dim">--Argon2id--></span>      KEK
+<span class="t-step">KEK</span>         <span class="t-dim">--AES-256-GCM--></span>   AMK
+<span class="t-step">AMK</span>         <span class="t-dim">--HKDF-SHA256--></span>   RSA private key
+<span class="t-step">private key</span> <span class="t-dim">--RSA-OAEP--></span>      file DEK
+<span class="t-step">DEK</span>         <span class="t-dim">--AES-256-GCM--></span>   the file
+
+<span class="t-ok">server stores:</span> sealed AMK, sealed private key,
+               public key, ciphertext
+<span class="t-err">server never gets:</span> passphrase, AMK, private key, DEK</pre>
+</div>
