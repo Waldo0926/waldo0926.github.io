@@ -1,5 +1,6 @@
 ---
 layout: post
+date: 2026-10-24 10:00:00 +0800
 project: Monash Hub
 description: "One VPS, no one watching the deploys. How the deploy script checks the right commit is live and puts the previous images back when it is not."
 ref: deploy-rollback

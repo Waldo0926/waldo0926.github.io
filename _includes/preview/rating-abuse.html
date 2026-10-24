@@ -1,0 +1,12 @@
+<div class="term" aria-hidden="true">
+  <div class="term-bar"><i></i><i></i><i></i><span>test: same network, new key, limit set to 2</span></div>
+<pre><span class="t-step">PUT /api/v1/reviews/units/FIT2102</span>
+    X-Guest-Key: 00000000-aaaa-4bbb-8ccc-…
+    <span class="t-ok">200 created</span>
+<span class="t-step">PUT /api/v1/reviews/units/FIT2102</span>
+    X-Guest-Key: 00000001-aaaa-4bbb-8ccc-…
+    <span class="t-ok">200 created</span>
+<span class="t-step">PUT /api/v1/reviews/units/FIT2102</span>
+    X-Guest-Key: 00000002-aaaa-4bbb-8ccc-…
+    <span class="t-err">429 Too many ratings today. Try again later.</span></pre>
+</div>

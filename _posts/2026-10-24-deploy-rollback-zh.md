@@ -1,5 +1,6 @@
 ---
 layout: post
+date: 2026-10-24 10:00:00 +0800
 project: Monash Hub
 description: "一台 VPS，部署没人盯着。部署脚本怎么确认上线的是对的提交，不对时怎么退回上一版镜像。"
 ref: deploy-rollback
