@@ -1,0 +1,23 @@
+---
+layout: default
+---
+<section class="intro">
+  <p>Computer Science student at Monash University. I write about how I build and run my own projects, with the code linked.</p>
+</section>
+
+<section>
+  <h2 class="section-label">Writing</h2>
+  <ul class="posts">
+    {%- assign english = site.posts | where: "lang", "en" -%}
+    {%- for post in english -%}
+    {%- assign zh = site.posts | where: "ref", post.ref | where: "lang", "zh-Hans" | first -%}
+    <li>
+      <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      <span class="post-meta">
+        <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %Y" }}</time>
+        {%- if zh %}<a href="{{ zh.url | relative_url }}" lang="zh-Hans">中文</a>{% endif %}
+      </span>
+    </li>
+    {%- endfor -%}
+  </ul>
+</section>

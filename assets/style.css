@@ -1,0 +1,203 @@
+:root {
+  --bg: #ffffff;
+  --text: #18181b;
+  --muted: #71717a;
+  --faint: #a1a1aa;
+  --line: #e4e4e7;
+  --code-bg: #f4f4f5;
+  --link: #18181b;
+  --accent: #2563eb;
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", Roboto, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b0b0c;
+    --text: #e4e4e7;
+    --muted: #a1a1aa;
+    --faint: #71717a;
+    --line: #27272a;
+    --code-bg: #18181b;
+    --link: #f4f4f5;
+    --accent: #60a5fa;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0 auto;
+  max-width: 680px;
+  padding: 0 24px;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.75 var(--sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* --- header and footer ---------------------------------------------------- */
+
+.site-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 40px 0 0;
+}
+
+.site-name { font-weight: 600; letter-spacing: -0.01em; }
+
+.site-head nav { display: flex; gap: 20px; font-size: 15px; }
+.site-head nav a { color: var(--muted); transition: color 0.15s; }
+.site-head nav a:hover { color: var(--text); }
+
+main { flex: 1; padding: 72px 0 96px; }
+
+.site-foot {
+  display: flex;
+  justify-content: space-between;
+  padding: 24px 0 48px;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+  color: var(--faint);
+}
+.site-foot a:hover { color: var(--text); }
+
+/* --- home ------------------------------------------------------------------ */
+
+.intro p {
+  margin: 0 0 64px;
+  font-size: 20px;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  color: var(--muted);
+}
+
+.section-label {
+  margin: 0 0 16px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.posts { list-style: none; margin: 0; padding: 0; }
+
+.posts li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.post-link { font-weight: 500; }
+.post-link:hover { color: var(--accent); }
+
+.post-meta {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+  font-size: 14px;
+  color: var(--faint);
+  font-variant-numeric: tabular-nums;
+}
+.post-meta a { color: var(--muted); }
+.post-meta a:hover { color: var(--accent); }
+
+/* --- post ------------------------------------------------------------------ */
+
+.post-head { margin-bottom: 48px; }
+
+.post-head h1 {
+  margin: 0 0 12px;
+  font-size: 32px;
+  line-height: 1.25;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.meta { margin: 0; font-size: 14px; color: var(--faint); }
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.dot { margin: 0 8px; }
+
+.prose > :first-child { margin-top: 0; }
+
+.prose h2 {
+  margin: 56px 0 16px;
+  font-size: 22px;
+  line-height: 1.35;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.prose h3 { margin: 40px 0 12px; font-size: 18px; font-weight: 600; }
+
+.prose p, .prose ul, .prose ol { margin: 0 0 20px; }
+.prose ul, .prose ol { padding-left: 1.25em; }
+.prose li { margin: 4px 0; }
+.prose li::marker { color: var(--faint); }
+
+.prose a {
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.15s;
+}
+.prose a:hover { text-decoration-color: currentColor; }
+
+.prose strong { font-weight: 600; }
+
+.prose code {
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: var(--code-bg);
+  font: 0.875em/1.5 var(--mono);
+}
+
+.prose pre {
+  margin: 0 0 24px;
+  padding: 16px 18px;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--code-bg);
+}
+.prose pre code { padding: 0; background: none; font-size: 13.5px; line-height: 1.65; }
+
+.prose blockquote {
+  margin: 0 0 20px;
+  padding-left: 16px;
+  border-left: 2px solid var(--line);
+  color: var(--muted);
+}
+
+.back { margin-top: 64px; font-size: 15px; }
+.back a { color: var(--muted); }
+.back a:hover { color: var(--text); }
+
+/* Rouge wraps highlighted blocks; keep them plain, the colour is noise here. */
+.highlight { background: none; }
+
+@media (max-width: 560px) {
+  body { padding: 0 20px; font-size: 16px; }
+  .site-head { padding-top: 28px; }
+  .site-head nav { gap: 16px; }
+  main { padding: 48px 0 72px; }
+  .intro p { font-size: 18px; margin-bottom: 48px; }
+  .posts li { flex-direction: column; gap: 4px; }
+  .post-head h1 { font-size: 26px; }
+}

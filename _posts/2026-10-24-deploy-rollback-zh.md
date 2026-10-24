@@ -1,10 +1,9 @@
 ---
 layout: post
-title: "Monash Hub 的自动部署和失败回滚"
+ref: deploy-rollback
 lang: zh-Hans
+title: "Monash Hub 的自动部署和失败回滚"
 ---
-
-[English version](/2026/10/24/deploy-rollback/)
 
 [Monash Hub](https://monashhub.secureview.tech) 是我做的 Monash 课程信息网站，给中国学生用。它跑在一台 VPS 上，用 Docker Compose 起 PostgreSQL、FastAPI 后端和 Nuxt 前端，前面是 nginx。代码合并到 `main` 就自动部署。
 

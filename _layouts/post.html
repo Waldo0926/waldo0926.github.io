@@ -1,0 +1,23 @@
+---
+layout: default
+---
+{%- assign other_lang = "zh-Hans" -%}
+{%- assign other_label = "中文" -%}
+{%- if page.lang == "zh-Hans" -%}
+  {%- assign other_lang = "en" -%}
+  {%- assign other_label = "English" -%}
+{%- endif -%}
+{%- assign other = site.posts | where: "ref", page.ref | where: "lang", other_lang | first -%}
+<article class="post">
+  <header class="post-head">
+    <h1>{{ page.title }}</h1>
+    <p class="meta">
+      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time>
+      {%- if other %}<span class="dot">·</span><a href="{{ other.url | relative_url }}" lang="{{ other_lang }}">{{ other_label }}</a>{% endif %}
+    </p>
+  </header>
+  <div class="prose">
+    {{ content }}
+  </div>
+  <p class="back"><a href="{{ '/' | relative_url }}">{% if page.lang == "zh-Hans" %}全部文章{% else %}All writing{% endif %}</a></p>
+</article>

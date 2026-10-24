@@ -1,5 +1,5 @@
 title: Shuoxun Wen
-description: Notes from building and running my own projects. 我做项目时的记录。
+description: How I build and run my own projects.
 author: Shuoxun Wen
 url: https://waldo0926.github.io
 baseurl: ""
@@ -7,14 +7,11 @@ lang: en
 timezone: Asia/Shanghai
 permalink: /:year/:month/:day/:title/
 
-theme: minima
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
 
 github_username: Waldo0926
-header_pages:
-  - about.md
 
 exclude:
   - README.md
