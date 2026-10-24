@@ -89,7 +89,7 @@ Each signed operation (reset, rewrap, adding a key) has its own domain label in 
 
 ## What the server can still see
 
-Key custody is not the same as hiding everything. Someone signed in with a stolen password can still delete or unshare your files, since those are normal account actions, even though they cannot read any of them. The server still sees:
+Key custody is not the same as hiding everything. The server still sees:
 
 - filenames, MIME types and exact file sizes
 - who shared what with whom, and when
