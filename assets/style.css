@@ -126,15 +126,11 @@ p { margin: 0; }
 .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--text); font-weight: 600; font-size: 1.05rem; }
 .brand:hover { color: var(--text); }
 .mark {
-  display: grid;
-  place-items: center;
   width: 34px;
   height: 34px;
-  border-radius: 9px;
-  background: var(--brand);
-  color: #fff;
-  font: 600 0.85rem/1 var(--font-display);
-  letter-spacing: 0.02em;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 3px var(--border);
 }
 
 .nav { display: flex; gap: 28px; }

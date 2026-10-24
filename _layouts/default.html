@@ -6,7 +6,8 @@
   <meta name="theme-color" content="#006DAE">
   {% seo %}
   {% feed_meta %}
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23006dae'/%3E%3Ctext x='16' y='21.5' font-family='Georgia,serif' font-size='15' font-weight='600' fill='%23fff' text-anchor='middle'%3ESW%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/png" href="{{ '/assets/favicon.png' | relative_url }}">
+  <link rel="apple-touch-icon" href="{{ '/assets/apple-touch-icon.png' | relative_url }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
@@ -16,7 +17,7 @@
   <header class="header">
     <div class="container header-row">
       <a class="brand" href="{{ '/' | relative_url }}">
-        <span class="mark" aria-hidden="true">SW</span>
+        <img class="mark" src="{{ '/assets/avatar.jpg' | relative_url }}" alt="" width="34" height="34">
         <span>Shuoxun Wen</span>
       </a>
       <nav class="nav" aria-label="Main">
