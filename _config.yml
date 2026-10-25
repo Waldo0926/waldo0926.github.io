@@ -1,7 +1,7 @@
 title: Shuoxun Wen
 description: How I build and run my own projects.
 author: Shuoxun Wen
-url: https://waldo0926.github.io
+url: https://blog.secureview.tech
 baseurl: ""
 lang: en
 timezone: Asia/Shanghai
@@ -15,4 +15,5 @@ github_username: Waldo0926
 
 exclude:
   - README.md
+  - deploy
 logo: /assets/avatar.jpg
