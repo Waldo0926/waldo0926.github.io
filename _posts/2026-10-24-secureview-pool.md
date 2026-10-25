@@ -7,6 +7,7 @@ ref: secureview-pool
 lang: en
 preview: secureview-pool
 title: "100 users, 3% CPU, and most uploads failing"
+image: /assets/og/secureview-pool.png
 ---
 
 [SecureView](https://github.com/Waldo0926/SecureView), our final year project, has a load test tool in `loadtest/`. It signs in as many users at once, uploads, downloads and shares files, and checks the SHA-256 of every downloaded file against the original. Up to 50 concurrent users the server returned no errors. At 100, 65% to 78% of uploads failed with HTTP 500.

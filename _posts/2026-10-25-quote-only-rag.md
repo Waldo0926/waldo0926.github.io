@@ -7,6 +7,7 @@ ref: quote-only-rag
 lang: en
 preview: quote-only-rag
 title: "A Q&A bot where the model is only allowed to quote"
+image: /assets/og/quote-only-rag.png
 ---
 
 The [马莫百科 bot](https://github.com/Waldo0926/mumguide-wechat-bot) answers questions from Monash Malaysia students and their parents on WeChat. Most answers come from rules: Q&As I taught it, the [Monash Hub](https://monashhub.secureview.tech) API, and the account's own articles. Anything it cannot answer is forwarded to me.

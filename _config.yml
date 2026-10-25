@@ -16,4 +16,13 @@ github_username: Waldo0926
 exclude:
   - README.md
   - deploy
+  - scripts
 logo: /assets/avatar.jpg
+
+# Link-preview image for pages without their own; posts set `image:` to the
+# card scripts/og.mjs draws for them.
+defaults:
+  - scope:
+      path: ""
+    values:
+      image: /assets/og/site.png

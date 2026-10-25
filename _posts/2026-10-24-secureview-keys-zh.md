@@ -6,6 +6,7 @@ description: "SecureView 里每个文件都在浏览器里加密，服务器手�
 ref: secureview-keys
 lang: zh-Hans
 title: "服务器读不了的文件分享"
+image: /assets/og/secureview-keys-zh.png
 ---
 
 [SecureView](https://github.com/Waldo0926/SecureView) 是我们团队在 Monash 做的毕业设计，一个文件分享平台，已经上线，合并的 203 个 PR 里有 182 个是我写的。它背后的规则说起来很简单：文件在浏览器里加密，服务器收不到任何能解密它的东西。文件本身、文件密钥、用户私钥、passphrase，都收不到。

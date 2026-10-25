@@ -6,6 +6,7 @@ description: "一个在微信上回答同学和家长签证、考试、选课问
 ref: quote-only-rag
 lang: zh-Hans
 title: "只许大模型摘原句的问答机器人"
+image: /assets/og/quote-only-rag-zh.png
 ---
 
 [马莫百科机器人](https://github.com/Waldo0926/mumguide-wechat-bot)在微信上回答 Monash 马来西亚校区同学和家长的问题。大部分回答靠规则：我教过的问答、[Monash Hub](https://monashhub.secureview.tech) 的接口，还有公众号自己的文章。答不上来的转给我。

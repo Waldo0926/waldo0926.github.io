@@ -7,6 +7,7 @@ ref: deploy-rollback
 lang: en
 preview: deploy-rollback
 title: "How Monash Hub deploys itself and rolls back"
+image: /assets/og/deploy-rollback.png
 ---
 
 [Monash Hub](https://monashhub.secureview.tech) is a course information site I built for Monash students. It runs on one VPS: Docker Compose starts PostgreSQL, a FastAPI backend and a Nuxt frontend, with nginx in front. Merging into `main` deploys it.

@@ -6,6 +6,7 @@ description: "100 人同时上传时最多 78% 失败，CPU 却只有 3%。怎�
 ref: secureview-pool
 lang: zh-Hans
 title: "100 个用户，3% 的 CPU，大部分上传失败"
+image: /assets/og/secureview-pool-zh.png
 ---
 
 我们的毕业设计 [SecureView](https://github.com/Waldo0926/SecureView) 有一个压测工具，在 `loadtest/` 里。它同时登录很多用户，上传、下载、分享文件，并用 SHA-256 把每个下载回来的文件和原文件对比。50 个并发用户以内，服务器没有报错。到 100 个，65% 到 78% 的上传返回 HTTP 500。

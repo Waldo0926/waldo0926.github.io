@@ -20,6 +20,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Every post has its link-preview image
+        run: |
+          missing=0
+          for post in _posts/*.md; do
+            image=$(sed -n '2,/^---$/s/^image: //p' "$post")
+            if [ -z "$image" ] || [ ! -f ".${image}" ]; then
+              echo "::error file=$post::no preview image; run node scripts/og.mjs"
+              missing=1
+            fi
+          done
+          exit $missing
+
       - name: Build with the same Jekyll as GitHub Pages
         uses: actions/jekyll-build-pages@v1
         with:

@@ -6,6 +6,7 @@ description: "不登录也能给课程打分。一个浏览器怎么保证每门
 ref: rating-abuse
 lang: zh-Hans
 title: "不用登录的课程评分，以及怎么防刷"
+image: /assets/og/rating-abuse-zh.png
 ---
 
 [Monash Hub](https://monashhub.secureview.tech) 可以给课程打 1 到 5 星，教学、内容、考核、难度、工作量这几项可以选填（[#163](https://github.com/Waldo0926/monash-hub/pull/163)）。我希望不登录也能评分。打个分还要先注册，新网站最后往往一条评分都没有。
