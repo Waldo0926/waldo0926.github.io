@@ -7,6 +7,7 @@ ref: rating-abuse
 lang: en
 preview: rating-abuse
 title: "Unit ratings without sign-in, and keeping them honest"
+image: /assets/og/rating-abuse.png
 ---
 
 [Monash Hub](https://monashhub.secureview.tech) lets students rate a unit out of five, with optional scores for teaching, content, assessment, difficulty and workload ([#163](https://github.com/Waldo0926/monash-hub/pull/163)). I wanted it to work without an account. Asking for sign-up before a one-click rating is how a new site ends up with no ratings at all.

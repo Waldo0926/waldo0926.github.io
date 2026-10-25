@@ -7,6 +7,7 @@ ref: translation-pipeline
 lang: en
 preview: translation-pipeline
 title: "Translating the Monash Handbook without paying for it"
+image: /assets/og/translation-pipeline.png
 ---
 
 Most people who read [Monash Hub](https://monashhub.secureview.tech) are Chinese students. What they need to read is in English: about five thousand Handbook units, the degree structures, and several hundred official Monash pages. Monash keeps changing it, so the Handbook is crawled again every week. A paid translation API would cost more than a student project can spend, so the site uses free engines. This post covers what goes wrong when you do that, and what the pipeline does about it.

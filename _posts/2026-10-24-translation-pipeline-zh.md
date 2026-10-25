@@ -6,6 +6,7 @@ description: "五千多门课和几百个官方页面，不花钱翻成中文。
 ref: translation-pipeline
 lang: zh-Hans
 title: "不花钱翻译 Monash Handbook"
+image: /assets/og/translation-pipeline-zh.png
 ---
 
 [Monash Hub](https://monashhub.secureview.tech) 的读者大部分是中国学生，但要看的内容都是英文：Handbook 里五千多门课、学位结构，还有几百个 Monash 官方页面。这些内容一直在变，Handbook 每周重新抓一次。付费翻译 API 的价格学生项目扛不住，所以网站用的是免费引擎。这篇讲用免费引擎会出什么问题，以及翻译流程是怎么处理的。

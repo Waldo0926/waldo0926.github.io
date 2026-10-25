@@ -7,6 +7,7 @@ ref: secureview-keys
 lang: en
 preview: secureview-keys
 title: "Sharing files the server cannot read"
+image: /assets/og/secureview-keys.png
 ---
 
 [SecureView](https://github.com/Waldo0926/SecureView) is the file sharing platform our team built for our final year project at Monash. It is live, and I wrote 182 of the 203 merged pull requests. The rule behind it is simple to say: files are encrypted in the browser, and the server never receives anything that can decrypt them. Not the file, not the file key, not the user's private key, not the passphrase.
