@@ -77,7 +77,7 @@ The second row is the one I care about. Seven questions have no answer in any so
 
 The first row needs a warning. The judge only checks whether the expected points are there, so a reply with an extra wrong step can still be marked correct. That is the reason the quote check is in code and not in another model.
 
-It runs on Groq's free tier (`qwen/qwen3.8-27b`) and has been on in production since 2026-10-24. In round 8, 95% of replies took under a second, well inside WeChat's 5-second limit. Answers are cached for seven days, so a repeated question does not call the model again. If the model is slow or down, the rules answer as before.
+It runs on Groq's free tier (`qwen/qwen3.8-27b`) and has been on in production since 2026-10-24. In round 8, 95% of replies took under a second, well inside WeChat's 5-second limit. Answers are cached for seven days, so a repeated question does not call the model again. If the model is slow or down (the free tier answers 429 when several questions come at once), taught Q&As, the account's articles and the Hub's FAQ still answer. When the rules only have a weak match, the bot does not guess and the question comes to me.
 
 ## What it still cannot do
 
