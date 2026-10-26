@@ -10,6 +10,7 @@ permalink: /:year/:month/:day/:title/
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
+  - jekyll-sitemap
 
 github_username: Waldo0926
 

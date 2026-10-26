@@ -14,7 +14,7 @@ layout: default
 <div class="container post-wrap">
   <header class="post-hero">
     <p class="crumbs">
-      <a href="{{ '/#writing' | relative_url }}">{% if zh %}文章{% else %}Writing{% endif %}</a>
+      <a href="{% if zh %}{{ '/zh/#writing' | relative_url }}{% else %}{{ '/#writing' | relative_url }}{% endif %}">{% if zh %}文章{% else %}Writing{% endif %}</a>
       <span aria-hidden="true">/</span>
       <span>{{ page.project }}</span>
     </p>
@@ -49,7 +49,7 @@ layout: default
         <li><a href="#{{ id }}">{{ heading }}</a></li>
         {%- endfor -%}
       </ol>
-      <a class="toc-back" href="{{ '/#writing' | relative_url }}">{% if zh %}全部文章{% else %}All writing{% endif %}</a>
+      <a class="toc-back" href="{% if zh %}{{ '/zh/#writing' | relative_url }}{% else %}{{ '/#writing' | relative_url }}{% endif %}">{% if zh %}全部文章{% else %}All writing{% endif %}</a>
     </aside>
     {%- endif %}
   </div>

@@ -1,0 +1,59 @@
+# Projects on the home page, in English and Chinese. `main` ones get a row
+# with an icon; the rest go in the short list under them.
+- name: Monash Hub
+  zh: Monash Hub
+  url: https://monashhub.secureview.tech
+  pill: live
+  main: true
+  icon: '<path d="M4 5.5A1.5 1.5 0 015.5 4H10a2 2 0 012 2v14a1.5 1.5 0 00-1.5-1.5h-5A1.5 1.5 0 014 17V5.5zM20 5.5A1.5 1.5 0 0018.5 4H14a2 2 0 00-2 2v14a1.5 1.5 0 011.5-1.5h5A1.5 1.5 0 0020 17V5.5z"/>'
+  desc: Course information, degree planning and a WAM calculator, in four languages
+  desc_zh: 课程信息、选课规划和 WAM 计算器，中英日韩四种语言
+- name: SecureView
+  zh: SecureView
+  url: https://github.com/Waldo0926/SecureView
+  pill: live
+  main: true
+  icon: '<path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/>'
+  desc: Secure file sharing platform, final year project
+  desc_zh: 安全文件分享平台，毕业设计
+- name: Monash Study Kit
+  zh: Monash Study Kit
+  url: https://github.com/Waldo0926/monash-study-kit
+  pill: open
+  main: true
+  icon: '<path d="M4 6h16v12H4z"/><path d="M8 10l2 2-2 2M12 14h4"/>'
+  desc: Moodle and Ed tools for Claude over MCP, with full-text search of course files
+  desc_zh: 让 Claude 通过 MCP 读 Moodle 和 Ed，课件可以全文搜索
+- name: Student Q&A bot
+  zh: 学生问答机器人
+  url: https://github.com/Waldo0926/mumguide-wechat-bot
+  pill: live
+  main: true
+  icon: '<path d="M5 5h14a1 1 0 011 1v9a1 1 0 01-1 1h-7l-4 3v-3H5a1 1 0 01-1-1V6a1 1 0 011-1z"/>'
+  desc: "Answers students on WeChat: rules first, an AI that may only quote, the rest to me"
+  desc_zh: 在微信上答同学的问题：先用规则，大模型只许摘原句，答不了的转给我
+- name: Attendance Helper
+  zh: 签到助手
+  url: https://github.com/Waldo0926/monash-attendance-reminder
+  desc: Finds attendance codes for you to confirm
+  desc_zh: Chrome 扩展，找签到码，确认后才提交
+- name: Ed Web
+  zh: Ed Web
+  url: https://github.com/Waldo0926/ed-web
+  desc: Ed forums, read and searched in the browser
+  desc_zh: 在浏览器里抓取和搜索 Ed 论坛，没有后端
+- name: quotegate
+  zh: quotegate
+  url: https://github.com/Waldo0926/quotegate
+  desc: Checks a model's quotes against the source
+  desc_zh: Python 包，只留下确实出自原文的摘句
+- name: Tool docs
+  zh: 工具文档
+  url: https://docs.secureview.tech
+  desc: Guides and one-line installs
+  desc_zh: 上面这些工具的使用指南和一键安装
+- name: Status
+  zh: 运行状态
+  url: https://waldo0926.github.io/uptime/
+  desc: Every site I run, checked every 5 minutes
+  desc_zh: 我在运行的网站，每 5 分钟检查一次

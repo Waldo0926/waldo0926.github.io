@@ -1,0 +1,11 @@
+<div class="term" aria-hidden="true">
+  <div class="term-bar"><i></i><i></i><i></i><span>sw.js, network first</span></div>
+<pre><span class="t-step">GET /units/FIT2004</span>  <span class="t-dim">online</span>
+    <span class="t-ok">200 from the network, saved</span>
+<span class="t-step">GET /units/FIT9999</span>  <span class="t-dim">online</span>
+    <span class="t-warn">404 passed through, not saved</span>
+<span class="t-step">GET /api/v1/reviews/units/FIT2004</span>
+    <span class="t-dim">live data, never saved</span>
+<span class="t-step">GET /units/FIT2004</span>  <span class="t-dim">no signal</span>
+    <span class="t-ok">saved copy, marked as possibly out of date</span></pre>
+</div>
