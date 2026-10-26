@@ -1,0 +1,13 @@
+<div class="term" aria-hidden="true">
+  <div class="term-bar"><i></i><i></i><i></i><span>record_failure: what takes a page down</span></div>
+<pre><span class="t-step">fetch a listed page</span>
+    <span class="t-warn">403 refused, or a timeout</span>
+    <span class="t-ok">keep the last good copy and its date</span>
+<span class="t-step">fetch a listed page</span>
+    <span class="t-warn">redirects to the section above</span>
+    <span class="t-ok">not stored, recorded as failed</span>
+<span class="t-step">a page about 2019</span>
+    <span class="t-dim">outdated(): 2019 &lt; 2026, left out</span>
+<span class="t-step">fetch a listed page</span>
+    <span class="t-err">404 or 410: taken down</span></pre>
+</div>
