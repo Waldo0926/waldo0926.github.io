@@ -1,0 +1,10 @@
+<div class="term" aria-hidden="true">
+  <div class="term-bar"><i></i><i></i><i></i><span>incremental refresh</span></div>
+<pre><span class="t-step">GET /courses/:id/threads?limit=100</span>  <span class="t-dim">one per 100</span>
+<span class="t-step">contentStamp(thread)</span>
+    <span class="t-dim">same as last time: skipped</span>
+    <span class="t-ok">changed: fetch the thread again</span>
+<span class="t-step">first_seen &gt;= this refresh</span>
+    <span class="t-ok">marked new</span>
+<span class="t-warn">429: wait Retry-After, then retry</span></pre>
+</div>
