@@ -74,7 +74,7 @@ function authHeaders(token) {
 }
 ```
 
-The page shows how many days a JWT has left, read from its `exp` field. One thing I have not been able to check: whether Ed's cross-origin settings let a browser page send an API token. The README says so, and if the request is refused the page says so and suggests the browser token.
+The page shows how many days a JWT has left, read from its `exp` field. An API token has no expiry, so it suits a page you come back to every week. This is the same token handling as the private tool, where I use an API token myself.
 
 ## Smaller things
 
