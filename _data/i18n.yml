@@ -1,0 +1,72 @@
+# Interface text for the English and Chinese pages. Posts are written twice
+# instead; this only covers the layout, the home page and the 404 page.
+en:
+  home: /
+  about: /about/
+  nav_writing: Writing
+  nav_projects: Projects
+  nav_about: About
+  switch_label: 中文
+  switch_lang: zh-Hans
+  footer_note: Computer Science at Monash University. Backend and AI application development.
+  footer_status: Status
+  eyebrow: Computer Science · Monash University
+  headline: I build tools Monash students use, and write down how they <em>run</em>.
+  lede: Backend and AI application developer. I run Monash Hub on my own VPS, with automated deploys that roll back when a release fails, and wrote 182 of the 203 merged pull requests in SecureView, our final year project.
+  latest: Read the latest post
+  about_me: About me
+  projects: Projects
+  all_repos: All repositories
+  also: Also
+  pill_live: Live
+  pill_open: Open source
+  writing: Writing
+  writing_note: How my projects are built and run, with the code linked. Every post has an English and a Chinese version.
+  filter_label: Filter by project
+  all: All
+  latest_tag: Latest
+  date_format: "%-d %b %Y"
+  facts:
+    - num: 182 / 203
+      text: merged pull requests in SecureView written by me
+    - num: "14"
+      text: browser test runs on every Monash Hub change, desktop and phone
+    - num: "4"
+      text: "languages on Monash Hub: Chinese, English, Japanese, Korean"
+    - num: 2025–2027
+      text: Handbook years searchable on Monash Hub, synced every week
+zh-Hans:
+  home: /zh/
+  about: /zh/about/
+  nav_writing: 文章
+  nav_projects: 项目
+  nav_about: 关于
+  switch_label: English
+  switch_lang: en
+  footer_note: Monash University 计算机科学。后端和 AI 应用开发。
+  footer_status: 运行状态
+  eyebrow: Monash University 计算机科学
+  headline: 我做 Monash 同学在用的工具，也把它们怎么<em>运行</em>写下来。
+  lede: 后端和 AI 应用开发。Monash Hub 跑在我自己的 VPS 上，自动部署，上线失败会自己回滚。毕业设计 SecureView 合并的 203 个 PR 里，182 个是我写的。
+  latest: 读最新一篇
+  about_me: 关于我
+  projects: 项目
+  all_repos: 全部仓库
+  also: 其他
+  pill_live: 在线
+  pill_open: 开源
+  writing: 文章
+  writing_note: 讲我的项目怎么做、怎么运行，附代码链接。每篇都有中文和英文版。
+  filter_label: 按项目筛选
+  all: 全部
+  latest_tag: 最新
+  date_format: "%Y-%m-%d"
+  facts:
+    - num: 182 / 203
+      text: SecureView 合并的 PR 里我写的数量
+    - num: "14"
+      text: Monash Hub 每次改动跑的浏览器测试，桌面和手机各一遍
+    - num: "4"
+      text: Monash Hub 的语言：中文、英文、日文、韩文
+    - num: 2025–2027
+      text: Monash Hub 能查的 Handbook 年份，每周同步

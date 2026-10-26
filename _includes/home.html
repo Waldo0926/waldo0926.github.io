@@ -1,0 +1,124 @@
+{%- comment -%}
+  The home page, shared by / and /zh/. Text comes from _data/i18n.yml and the
+  project list from _data/projects.yml; posts are the ones in the page's language.
+{%- endcomment -%}
+{%- assign lang = page.lang | default: site.lang -%}
+{%- assign t = site.data.i18n[lang] -%}
+{%- assign zh = false -%}{%- if lang == "zh-Hans" -%}{%- assign zh = true -%}{%- endif -%}
+<section class="container hero">
+  <div class="hero-text">
+    <div class="who">
+      <img class="avatar" src="{{ '/assets/avatar.jpg' | relative_url }}" alt="" width="56" height="56">
+      <div>
+        <p class="who-name">{% if zh %}温硕勋 <span>Shuoxun Wen</span>{% else %}Shuoxun Wen <span lang="zh-Hans">温硕勋</span>{% endif %}</p>
+        <p class="eyebrow">{{ t.eyebrow }}</p>
+      </div>
+    </div>
+    <h1 class="display">{{ t.headline }}</h1>
+    <p class="lede">{{ t.lede }}</p>
+    <div class="actions">
+      {%- assign latest = site.posts | where: "lang", lang | first -%}
+      {%- if latest %}<a class="btn" href="{{ latest.url | relative_url }}">{{ t.latest }}</a>{% endif %}
+      <a class="btn btn--ghost" href="{{ t.about | relative_url }}">{{ t.about_me }}</a>
+    </div>
+  </div>
+
+  <aside id="projects" class="card panel">
+    <div class="panel-head">
+      <h2 class="panel-title">{{ t.projects }}</h2>
+      <a class="small" href="https://github.com/{{ site.github_username }}?tab=repositories">{{ t.all_repos }}</a>
+    </div>
+    <ul class="projects">
+      {%- for p in site.data.projects %}{% if p.main %}
+      <li>
+        <a class="project" href="{{ p.url }}">
+          <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24">{{ p.icon }}</svg></span>
+          <span class="project-text">
+            <span class="project-name">{% if zh %}{{ p.zh }}{% else %}{{ p.name }}{% endif %}
+              {%- if p.pill == "live" %} <span class="pill pill--live">{{ t.pill_live }}</span>{% elsif p.pill == "open" %} <span class="pill">{{ t.pill_open }}</span>{% endif %}</span>
+            <span class="project-desc">{% if zh %}{{ p.desc_zh }}{% else %}{{ p.desc }}{% endif %}</span>
+          </span>
+        </a>
+      </li>
+      {%- endif %}{% endfor %}
+    </ul>
+    <p class="also-title">{{ t.also }}</p>
+    <ul class="also">
+      {%- for p in site.data.projects %}{% unless p.main %}
+      <li><a href="{{ p.url }}"><span class="also-name">{% if zh %}{{ p.zh }}{% else %}{{ p.name }}{% endif %}</span><span class="also-desc">{% if zh %}{{ p.desc_zh }}{% else %}{{ p.desc }}{% endif %}</span></a></li>
+      {%- endunless %}{% endfor %}
+    </ul>
+  </aside>
+</section>
+
+<section id="writing" class="container section">
+  <div class="section-head">
+    <h2>{{ t.writing }}</h2>
+    <p class="muted">{{ t.writing_note }}</p>
+  </div>
+  {%- assign posts = site.posts | where: "lang", lang -%}
+  {%- assign projects = posts | map: "project" | uniq -%}
+  <div class="filters" role="group" aria-label="{{ t.filter_label }}" hidden>
+    <button type="button" class="chip on" data-filter="" aria-pressed="true">{{ t.all }} <span>{{ posts.size }}</span></button>
+    {%- for name in projects %}
+    {%- assign count = posts | where: "project", name | size %}
+    <button type="button" class="chip" data-filter="{{ name }}" aria-pressed="false">{{ name }} <span>{{ count }}</span></button>
+    {%- endfor %}
+  </div>
+  <div class="posts">
+    {%- for post in posts -%}
+    {%- if zh -%}
+      {%- assign other = site.posts | where: "ref", post.ref | where: "lang", "en" | first -%}
+      {%- assign card = other | default: post -%}
+    {%- else -%}
+      {%- assign other = site.posts | where: "ref", post.ref | where: "lang", "zh-Hans" | first -%}
+      {%- assign card = post -%}
+    {%- endif -%}
+    <article class="card post-card{% if forloop.first %} post-card--featured{% endif %}" data-project="{{ post.project }}">
+      <div class="post-main">
+        <p class="post-tag">{% if forloop.first %}<span class="new">{{ t.latest_tag }}</span>{% endif %}{{ post.project }}</p>
+        <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+        <p class="post-excerpt">{{ post.description }}</p>
+        <p class="post-foot">
+          <time class="mono" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: t.date_format }}</time>
+          <span class="langs">
+            {%- if zh %}
+            <a href="{{ post.url | relative_url }}" lang="zh-Hans">中文</a>
+            {%- if other %}<a href="{{ other.url | relative_url }}" lang="en">EN</a>{% endif %}
+            {%- else %}
+            <a href="{{ post.url | relative_url }}">EN</a>
+            {%- if other %}<a href="{{ other.url | relative_url }}" lang="zh-Hans">中文</a>{% endif %}
+            {%- endif %}
+          </span>
+        </p>
+      </div>
+      {%- if forloop.first and card.preview %}
+      {% include preview/{{ card.preview }}.html %}
+      {%- endif %}
+    </article>
+    {%- endfor -%}
+  </div>
+  <script>
+    (() => {
+      const bar = document.querySelector('.filters');
+      const cards = document.querySelectorAll('.posts [data-project]');
+      bar.hidden = false;
+      bar.addEventListener('click', (event) => {
+        const chip = event.target.closest('.chip');
+        if (!chip) return;
+        const want = chip.dataset.filter;
+        bar.querySelectorAll('.chip').forEach((c) => {
+          c.classList.toggle('on', c === chip);
+          c.setAttribute('aria-pressed', c === chip);
+        });
+        cards.forEach((card) => { card.hidden = want && card.dataset.project !== want; });
+      });
+    })();
+  </script>
+</section>
+
+<section class="container facts">
+  {%- for f in t.facts %}
+  <div><p class="fact-num">{{ f.num }}</p><p class="fact-text">{{ f.text }}</p></div>
+  {%- endfor %}
+</section>
