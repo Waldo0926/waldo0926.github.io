@@ -6,8 +6,8 @@
   pill: live
   main: true
   icon: '<path d="M4 5.5A1.5 1.5 0 015.5 4H10a2 2 0 012 2v14a1.5 1.5 0 00-1.5-1.5h-5A1.5 1.5 0 014 17V5.5zM20 5.5A1.5 1.5 0 0018.5 4H14a2 2 0 00-2 2v14a1.5 1.5 0 011.5-1.5h5A1.5 1.5 0 0020 17V5.5z"/>'
-  desc: Course information, degree planning and a WAM calculator, in four languages
-  desc_zh: 课程信息、选课规划和 WAM 计算器，中英日韩四种语言
+  desc: Units, degree planning, WAM, Malaysia fees and key dates, in English and Chinese
+  desc_zh: 课程信息、选课规划、WAM、马来西亚学费和重要日期，中英双语
 - name: SecureView
   zh: SecureView
   url: https://github.com/Waldo0926/SecureView
@@ -22,8 +22,8 @@
   pill: open
   main: true
   icon: '<path d="M4 6h16v12H4z"/><path d="M8 10l2 2-2 2M12 14h4"/>'
-  desc: Moodle and Ed tools for Claude over MCP, with full-text search of course files
-  desc_zh: 让 Claude 通过 MCP 读 Moodle 和 Ed，课件可以全文搜索
+  desc: Your Moodle and Ed in Claude, ChatGPT or any MCP app, with full-text search of course files
+  desc_zh: 让 Claude、ChatGPT 等 AI 软件通过 MCP 读 Moodle 和 Ed，课件可以全文搜索
 - name: Student Q&A bot
   zh: 学生问答机器人
   url: https://github.com/Waldo0926/mumguide-wechat-bot
@@ -35,8 +35,8 @@
 - name: Attendance Helper
   zh: 签到助手
   url: https://github.com/Waldo0926/monash-attendance-reminder
-  desc: Finds attendance codes for you to confirm
-  desc_zh: Chrome 扩展，找签到码，确认后才提交
+  desc: On the Chrome Web Store
+  desc_zh: Chrome 扩展，已上架应用商店，帮你找签到码
 - name: Ed Web
   zh: Ed Web
   url: https://github.com/Waldo0926/ed-web

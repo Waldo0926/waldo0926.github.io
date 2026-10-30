@@ -14,6 +14,8 @@ image: /assets/og/chrome-store.png
 
 Until now it was installed from a zip in developer mode, which is too much to ask of most students. So on 25 October I submitted v1.3.52 to the Chrome Web Store. It is still waiting for review. This post is about what I changed to get there.
 
+*Update, 30 October: it passed review and is now [on the Chrome Web Store](https://chromewebstore.google.com/detail/monash-attendance-helper/mnbkcmgkjmfngcifndchaidndhdfafcd). The zip is still on GitHub for anyone who wants to load it unpacked.*
+
 ## Remote code that never runs still counts
 
 Codes are often posted as screenshots, so the extension bundles Tesseract.js for OCR. It runs in an offscreen document, because a service worker has no DOM or canvas, and it loads its worker, WebAssembly core and English data from the package with `chrome.runtime.getURL`.

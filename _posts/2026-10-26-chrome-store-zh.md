@@ -13,6 +13,8 @@ image: /assets/og/chrome-store-zh.png
 
 之前只能下载 zip、打开开发者模式手动安装，对大部分同学来说太麻烦了。所以 10 月 25 日我把 v1.3.52 提交到了 Chrome 应用商店，现在还在等审核。这篇讲为了上架改了什么。
 
+*10 月 30 日更新：已经过审，现在可以直接从 [Chrome 应用商店](https://chromewebstore.google.com/detail/monash-attendance-helper/mnbkcmgkjmfngcifndchaidndhdfafcd?hl=zh-CN)安装。GitHub 上的 zip 还在，想手动加载的同学照样能用。*
+
 ## 永远不会运行的远程代码也算
 
 签到码经常是截图，所以扩展里打包了 Tesseract.js 做 OCR。它跑在 offscreen 文档里，因为 service worker 没有 DOM 和 canvas；它的 worker、WebAssembly 核心和英文数据都通过 `chrome.runtime.getURL` 从扩展包里加载。

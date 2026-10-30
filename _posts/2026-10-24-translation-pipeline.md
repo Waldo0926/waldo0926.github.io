@@ -88,6 +88,8 @@ Japanese and Korean have very few readers, so they get machine output behind the
 
 At about ten seconds a string on the free model, a full Japanese and Korean fill takes a day or more. So it runs under its own lock after the crawl, and Chinese always goes first.
 
+*Update, 29 October: Japanese and Korean are no longer offered ([#251](https://github.com/Waldo0926/monash-hub/pull/251)). The readers are Chinese students, and keeping two more languages translated cost time and free quota that almost nobody used. The site is now English and Chinese.*
+
 ## Takeaways
 
 - The glossary is where quality comes from. Most translation bugs were fixed by adding a term, and the fix reaches every page on the next run.

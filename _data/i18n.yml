@@ -12,7 +12,7 @@ en:
   footer_status: Status
   eyebrow: Computer Science · Monash University
   headline: I build tools Monash students use, and write down how they <em>run</em>.
-  lede: Backend and AI application developer. I run Monash Hub on my own VPS, with automated deploys that roll back when a release fails, and wrote 182 of the 203 merged pull requests in SecureView, our final year project.
+  lede: Backend and AI application developer. I run Monash Hub on my own VPS, with automated deploys that roll back when a release fails, and wrote 187 of the 212 merged pull requests in SecureView, our final year project.
   latest: Read the latest post
   about_me: About me
   projects: Projects
@@ -27,12 +27,12 @@ en:
   latest_tag: Latest
   date_format: "%-d %b %Y"
   facts:
-    - num: 182 / 203
+    - num: 187 / 212
       text: merged pull requests in SecureView written by me
-    - num: "14"
-      text: browser test runs on every Monash Hub change, desktop and phone
-    - num: "4"
-      text: "languages on Monash Hub: Chinese, English, Japanese, Korean"
+    - num: "22"
+      text: browser tests on every Monash Hub change, each at desktop and phone size
+    - num: "2,917"
+      text: official pages from both campuses in Monash Hub's guides
     - num: 2025–2027
       text: Handbook years searchable on Monash Hub, synced every week
 zh-Hans:
@@ -47,7 +47,7 @@ zh-Hans:
   footer_status: 运行状态
   eyebrow: Monash University 计算机科学
   headline: 我做 Monash 同学在用的工具，也把它们怎么<em>运行</em>写下来。
-  lede: 后端和 AI 应用开发。Monash Hub 跑在我自己的 VPS 上，自动部署，上线失败会自己回滚。毕业设计 SecureView 合并的 203 个 PR 里，182 个是我写的。
+  lede: 后端和 AI 应用开发。Monash Hub 跑在我自己的 VPS 上，自动部署，上线失败会自己回滚。毕业设计 SecureView 合并的 212 个 PR 里，187 个是我写的。
   latest: 读最新一篇
   about_me: 关于我
   projects: 项目
@@ -62,11 +62,11 @@ zh-Hans:
   latest_tag: 最新
   date_format: "%Y-%m-%d"
   facts:
-    - num: 182 / 203
+    - num: 187 / 212
       text: SecureView 合并的 PR 里我写的数量
-    - num: "14"
-      text: Monash Hub 每次改动跑的浏览器测试，桌面和手机各一遍
-    - num: "4"
-      text: Monash Hub 的语言：中文、英文、日文、韩文
+    - num: "22"
+      text: Monash Hub 每次改动跑的浏览器测试，桌面和手机尺寸各跑一遍
+    - num: "2,917"
+      text: Monash Hub 指南收录的两个校区官方页面
     - num: 2025–2027
       text: Monash Hub 能查的 Handbook 年份，每周同步
