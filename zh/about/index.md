@@ -8,7 +8,7 @@ alt: /about/
 
 我是温硕勋（Shuoxun Wen），在 Monash University 读计算机科学（Algorithms and Software 方向）。
 
-我做的东西大多是给 Monash 同学用的，也都是我自己在运行：一台 VPS，Docker、nginx、自动部署，还有一个公开的[运行状态页](https://waldo0926.github.io/uptime/)。这个博客记录这些项目是怎么做的，以及中间出过什么问题。
+除了给Monash同学做工具，我还写过算法、机器学习和网络程序，也经常折腾Linux服务器。公开的网站跑在自己的VPS上，有Docker、自动部署和[运行状态监控](https://waldo0926.github.io/uptime/)。这里写开发过程，也写遇到问题以后怎么解决。
 
 ## 项目
 
@@ -19,7 +19,7 @@ alt: /about/
 - [签到助手](https://github.com/Waldo0926/monash-attendance-reminder)：Chrome 扩展，帮你找签到码，只提交你确认上过的课。已上架 [Chrome 应用商店](https://chromewebstore.google.com/detail/monash-attendance-helper/mnbkcmgkjmfngcifndchaidndhdfafcd?hl=zh-CN)。
 - [Ed Web](https://github.com/Waldo0926/ed-web)：在浏览器里抓取和搜索 Ed 论坛，没有后端。
 
-这些学生工具的使用指南在 [docs.secureview.tech](https://docs.secureview.tech)。其他项目在 [GitHub](https://github.com/Waldo0926)。
+学生工具的安装和使用说明在[Docs](https://docs.secureview.tech/zh-cn/)；更多算法、数据、网络和旧课程项目见[完整项目归档](/zh/projects/)。
 
 ## 联系我
 
