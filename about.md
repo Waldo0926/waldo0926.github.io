@@ -7,7 +7,7 @@ alt: /zh/about/
 
 I'm Shuoxun Wen (温硕勋), studying Computer Science (Algorithms and Software) at Monash University.
 
-Most of what I build is for Monash students, and I run it myself: a VPS with Docker, nginx, automated deploys and a public [status page](https://waldo0926.github.io/uptime/). This blog is where I write down how those projects work and what went wrong along the way.
+A lot of what I build is for Monash students, but I also work on algorithms, data and Linux/network infrastructure. For the [complete public project archive](/projects/), see the separate projects page. I run my public sites myself: a VPS with Docker, nginx, automated deploys and a public [status page](https://waldo0926.github.io/uptime/). This blog is where I write down how those projects work and what went wrong along the way.
 
 ## Projects
 
@@ -18,7 +18,7 @@ Most of what I build is for Monash students, and I run it myself: a VPS with Doc
 - [Attendance Helper](https://github.com/Waldo0926/monash-attendance-reminder): a Chrome extension that finds attendance codes and submits only the classes you confirm. On the [Chrome Web Store](https://chromewebstore.google.com/detail/monash-attendance-helper/mnbkcmgkjmfngcifndchaidndhdfafcd).
 - [Ed Web](https://github.com/Waldo0926/ed-web): reads and searches an Ed forum in the browser, with no backend.
 
-Guides for the student tools are at [docs.secureview.tech](https://docs.secureview.tech). Everything else is on [GitHub](https://github.com/Waldo0926).
+Guides for student tools are at [docs.secureview.tech](https://docs.secureview.tech). Older coursework and experiments are in the [project archive](/projects/); their READMEs explain what was rebuilt and what is no longer deployed.
 
 ## Contact
 
