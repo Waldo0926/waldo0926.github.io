@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>A Q&amp;A bot where the model is only allowed to quote | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="A Q&amp;A bot where the model is only allowed to quote" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="A WeChat bot answers students and parents about visas, exams and enrolment. Why the language model in it may only quote sentences, how the code checks every quote, and which true sentences it still refuses to send." />
+<meta property="og:description" content="A WeChat bot answers students and parents about visas, exams and enrolment. Why the language model in it may only quote sentences, how the code checks every quote, and which true sentences it still refuses to send." />
+<link rel="canonical" href="https://blog.secureview.tech/2026/10/25/quote-only-rag/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/10/25/quote-only-rag/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/quote-only-rag.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-25T19:00:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/quote-only-rag.png" />
+<meta property="twitter:title" content="A Q&amp;A bot where the model is only allowed to quote" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-10-25T19:00:00+08:00","datePublished":"2026-10-25T19:00:00+08:00","description":"A WeChat bot answers students and parents about visas, exams and enrolment. Why the language model in it may only quote sentences, how the code checks every quote, and which true sentences it still refuses to send.","headline":"A Q&amp;A bot where the model is only allowed to quote","image":"https://blog.secureview.tech/assets/og/quote-only-rag.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/10/25/quote-only-rag/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/10/25/quote-only-rag/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/10/25/quote-only-rag/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/10/25/quote-only-rag-zh/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/#writing">Writing</a>
+        <a href="/#projects">Projects</a>
+        <a href="/about/">About</a>
+      </nav>
+      <a class="lang-switch" href="/2026/10/25/quote-only-rag-zh/" lang="zh-Hans" hreflang="zh-Hans">中文</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/#writing">Writing</a>
+      <span aria-hidden="true">/</span>
+      <span>Q&A bot</span>
+    </p>
+    <h1 class="display post-title">A Q&A bot where the model is only allowed to quote</h1><p class="lede">A WeChat bot answers students and parents about visas, exams and enrolment. Why the language model in it may only quote sentences, how the code checks every quote, and which true sentences it still refuses to send.</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-10-25T19:00:00+08:00">25 Oct 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>5 min read</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/10/25/quote-only-rag/" class="on" aria-current="page">English</a>
+        <a href="/2026/10/25/quote-only-rag-zh/" lang="zh-Hans">中文</a>
+      </span>
+    </div>
+  </header>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p>The <a href="https://github.com/Waldo0926/mumguide-wechat-bot">马莫百科 bot</a> answers questions from Monash Malaysia students and their parents on WeChat. Most answers come from rules: Q&amp;As I taught it, the <a href="https://monashhub.secureview.tech">Monash Hub</a> API, and the account’s own articles. Anything it cannot answer is forwarded to me.</p>
+
+<p>The rules miss questions whose answer is sitting in those same sources, worded differently. So I added an optional RAG step that runs only when the rules found nothing or only a weak match. The rule I set for it: better “不知道” than a wrong procedure. A student who is told “I don’t know, I’ve passed it on” asks again. A student who is told the wrong visa deadline acts on it.</p>
+
+<h2 id="letting-the-model-write-did-not-work">Letting the model write did not work</h2>
+
+<p>The first version let a free model answer in its own words from the retrieved passages. It read well and it was wrong in ways that matter. It added steps no passage has (“老师会替你申请特殊考虑”, the teacher will apply for special consideration for you). It turned “ISP 在贴纸剩 14 天或更少时收护照” (ISP collects passports when 14 days or fewer are left on the sticker) into “过期后有 14 天宽限期” (a 14-day grace period after expiry).</p>
+
+<p>I tried a second model to check the first one’s sentences. It missed some of these and cut correct ones. A checker that is also a language model has the same problem as the writer.</p>
+
+<h2 id="the-model-picks-sentences-the-code-checks-them">The model picks sentences, the code checks them</h2>
+
+<p>So the model does not write anymore. The prompt asks it to copy sentences from the numbered passages without changing a character, at most four, one per line as <code class="language-plaintext highlighter-rouge">[passage number] sentence</code>, or to say “这个我不确定” when nothing answers the question.</p>
+
+<p>Every line is then checked in code. The quote must be in the passage it names, with whitespace ignored, and at least six characters long:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">sentence</span><span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">h</span><span class="p">.</span><span class="n">text</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="p">.</span><span class="n">isspace</span><span class="p">()]</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">_squash</span><span class="p">(</span><span class="n">quote</span><span class="p">)</span>
+    <span class="n">at</span> <span class="o">=</span> <span class="s">""</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">).</span><span class="n">find</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">q</span> <span class="ow">or</span> <span class="n">at</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>
+    <span class="p">...</span>  <span class="c1"># widen to the whole sentence it is in
+</span></code></pre></div></div>
+
+<p>A paraphrase, an added step, or a real sentence put on the wrong passage number all fail this check. A test feeds in exactly those three cases and expects nothing to be sent. What passes is widened to the whole sentence it sits in, so a half sentence never goes out on its own. The reply lists the pages the sentences come from, with links, and a line saying they are excerpts.</p>
+
+<p>When the model says it is unsure, or none of its quotes survive, the question goes to me. A weak rule match (“你问的是不是…”) is held back too, because a confident guess about a different question is worse than “已转给作者”.</p>
+
+<h2 id="a-true-sentence-can-still-mislead">A true sentence can still mislead</h2>
+
+<p>Quoting exactly is not enough. One early reply quoted the renewal page:</p>
+
+<blockquote>
+  <p>你必须在到期前四个月提交续签申请；并且</p>
+</blockquote>
+
+<p>That sentence is on the page. But it sits under “如果你没有满足上述任何一项要求：” (if you meet none of the requirements above), so it only applies to some students. Without the line above it, the sentence tells everyone the wrong deadline.</p>
+
+<p>So <code class="language-plaintext highlighter-rouge">_why_not</code> also drops sentences that need their surroundings to be read correctly:</p>
+
+<ul>
+  <li>a list item under a heading that ends in a colon,</li>
+  <li>a line ending in “；并且” or “：”,</li>
+  <li>a line starting with “此流程” (this process) or with the “不，” that answers an FAQ question the reader cannot see,</li>
+  <li>a table row without its header row,</li>
+  <li>a sentence whose years are all in the past, such as last year’s exam dates.</li>
+</ul>
+
+<p>Taught Q&amp;As and the Hub’s FAQ are written for these students, so when they answer, a general web page is not mixed in next to them. An old page once said “你必须选择参加考核” (you must sit the assessment) right next to a taught answer saying you can skip it.</p>
+
+<h2 id="malaysia-is-not-australia">Malaysia is not Australia</h2>
+
+<p>Most people who ask are at the Malaysia campus, but many Monash pages are written for Australia. The Hub’s FAQ once said intermission “会改变你的 CoE”. A CoE is part of the Australian student visa and means nothing on a Malaysian Student Pass.</p>
+
+<p>Each quote is now labelled by campus. A sentence from an Australian page, or one that mentions CoE, OSHC, ESOS or Centrelink, counts as Australian. Taught Q&amp;As, the account’s articles and Malaysian pages count as Malaysian. Quotes are sorted Malaysia first, then all campuses, then Australia. When anything Australian is in the reply, the quotes get headings, so the Australian rule appears under “澳洲校区（澳大利亚的规定，马来西亚校区不一定一样）”. The taught Q&amp;As for visas, insurance and study load now give both campuses separately, and a test fails any answer that mentions CoE, OSHC or subclass 500 without both labels.</p>
+
+<h2 id="how-well-it-does">How well it does</h2>
+
+<p>The evaluation runs 50 fixed questions through the rules alone and through rules plus RAG. A judge model compares each reply with the expected points. Round 8, on 2026-10-25 (<a href="https://github.com/Waldo0926/mumguide-wechat-bot/blob/main/docs/EVAL.md">docs/EVAL.md</a>):</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>Rules only</th>
+      <th>Rules + RAG</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Correct, marked by the judge</td>
+      <td>81% (34/42)</td>
+      <td>88% (38/43)</td>
+    </tr>
+    <tr>
+      <td>No-answer questions left to me</td>
+      <td>14% (1/7)</td>
+      <td>86% (6/7)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The second row is the one I care about. Seven questions have no answer in any source. The rules alone guessed at six of them. With RAG, six of the seven went to me.</p>
+
+<p>The first row needs a warning. The judge only checks whether the expected points are there, so a reply with an extra wrong step can still be marked correct. That is the reason the quote check is in code and not in another model.</p>
+
+<p>It runs on Groq’s free tier (<code class="language-plaintext highlighter-rouge">qwen/qwen3.8-27b</code>) and has been on in production since 2026-10-24. In round 8, 95% of replies took under a second, well inside WeChat’s 5-second limit. Answers are cached for seven days, so a repeated question does not call the model again. If the model is slow or down (the free tier answers 429 when several questions come at once), taught Q&amp;As, the account’s articles and the Hub’s FAQ still answer. When the rules only have a weak match, the bot does not guess and the question comes to me.</p>
+
+<h2 id="what-it-still-cannot-do">What it still cannot do</h2>
+
+<p>The check makes sure every sentence sent is really on the page it links to. It cannot make sure that page is the right one for the question. When retrieval picks a passage about another situation, the model can quote it correctly and still not answer what was asked. That is why every reply links its pages and says it is an excerpt, and why questions it cannot answer still come to me.</p>
+
+<p>Code: <a href="https://github.com/Waldo0926/mumguide-wechat-bot/blob/main/wxbot/rag.py"><code class="language-plaintext highlighter-rouge">rag.py</code></a>, <a href="https://github.com/Waldo0926/mumguide-wechat-bot/blob/main/tests/test_rag.py"><code class="language-plaintext highlighter-rouge">test_rag.py</code></a>, <a href="https://github.com/Waldo0926/mumguide-wechat-bot/blob/main/wxbot/evaluate.py"><code class="language-plaintext highlighter-rouge">evaluate.py</code></a>.</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">On this page</p>
+      <ol><li><a href="#letting-the-model-write-did-not-work">Letting the model write did not work</a></li><li><a href="#the-model-picks-sentences-the-code-checks-them">The model picks sentences, the code checks them</a></li><li><a href="#a-true-sentence-can-still-mislead">A true sentence can still mislead</a></li><li><a href="#malaysia-is-not-australia">Malaysia is not Australia</a></li><li><a href="#how-well-it-does">How well it does</a></li><li><a href="#what-it-still-cannot-do">What it still cannot do</a></li></ol>
+      <a class="toc-back" href="/#writing">All writing</a>
+    </aside>
+  </div>
+  <nav class="more" aria-label="More posts">
+    <a class="card more-link" href="/2026/10/24/secureview-pool/">
+      <span class="more-label">Previous · SecureView</span>
+      <span class="more-title">100 users, 3% CPU, and most uploads failing</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/10/26/assignment-sources/">
+      <span class="more-label">Next · Study Kit</span>
+      <span class="more-title">Which source wins when an AI reads your assignment</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Computer Science at Monash University. Backend and AI application development.</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">Status</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

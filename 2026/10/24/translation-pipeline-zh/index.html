@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>不花钱翻译 Monash Handbook | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="不花钱翻译 Monash Handbook" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="zh_Hans" />
+<meta name="description" content="五千多门课和几百个官方页面，不花钱翻成中文。为什么模型前面要挡一层术语表，翻不好的时候怎么退回英文。" />
+<meta property="og:description" content="五千多门课和几百个官方页面，不花钱翻成中文。为什么模型前面要挡一层术语表，翻不好的时候怎么退回英文。" />
+<link rel="canonical" href="https://blog.secureview.tech/2026/10/24/translation-pipeline-zh/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/10/24/translation-pipeline-zh/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/translation-pipeline-zh.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-24T17:00:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/translation-pipeline-zh.png" />
+<meta property="twitter:title" content="不花钱翻译 Monash Handbook" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-10-24T17:00:00+08:00","datePublished":"2026-10-24T17:00:00+08:00","description":"五千多门课和几百个官方页面，不花钱翻成中文。为什么模型前面要挡一层术语表，翻不好的时候怎么退回英文。","headline":"不花钱翻译 Monash Handbook","image":"https://blog.secureview.tech/assets/og/translation-pipeline-zh.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/10/24/translation-pipeline-zh/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/10/24/translation-pipeline-zh/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/10/24/translation-pipeline-zh/">
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/10/24/translation-pipeline/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/zh/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/zh/#writing">文章</a>
+        <a href="/zh/#projects">项目</a>
+        <a href="/zh/about/">关于</a>
+      </nav>
+      <a class="lang-switch" href="/2026/10/24/translation-pipeline/" lang="en" hreflang="en">English</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/zh/#writing">文章</a>
+      <span aria-hidden="true">/</span>
+      <span>Monash Hub</span>
+    </p>
+    <h1 class="display post-title">不花钱翻译 Monash Handbook</h1><p class="lede">五千多门课和几百个官方页面，不花钱翻成中文。为什么模型前面要挡一层术语表，翻不好的时候怎么退回英文。</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-10-24T17:00:00+08:00">24 Oct 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>约 6 分钟</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/10/24/translation-pipeline/">English</a>
+        <a href="/2026/10/24/translation-pipeline-zh/" lang="zh-Hans" class="on" aria-current="page">中文</a>
+      </span>
+    </div>
+  </header>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p><a href="https://monashhub.secureview.tech">Monash Hub</a> 的读者大部分是中国学生，但要看的内容都是英文：Handbook 里五千多门课、学位结构，还有几百个 Monash 官方页面。这些内容一直在变，Handbook 每周重新抓一次。付费翻译 API 的价格学生项目扛不住，所以网站用的是免费引擎。这篇讲用免费引擎会出什么问题，以及翻译流程是怎么处理的。</p>
+
+<h2 id="普通翻译器偏偏错在关键词上">普通翻译器偏偏错在关键词上</h2>
+
+<p>最早用的是 Argos Translate，一个跑在同一台 VPS 上的离线模型，不要钱，也没有调用次数限制。在真实的 Handbook 页面上，它把：</p>
+
+<ul>
+  <li><em>census date</em> 译成“人口普查日期”</li>
+  <li><em>unit</em> 译成“单位”</li>
+  <li><em>Exercise</em> 译成“锻炼”</li>
+  <li><em>Breadth studies</em> 译成“面包研究”</li>
+</ul>
+
+<p>这些恰好是学生要据此行动的词。错过 census date，退掉的课也要交钱。所以这些词不能交给模型决定。</p>
+
+<h2 id="翻译流程">翻译流程</h2>
+
+<p>每个句子都走同样的几步：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>有固定译法吗？ -&gt;  把术语保护起来  -&gt;  翻译  -&gt;  把术语放回去
+</code></pre></div></div>
+
+<p><strong>固定值不进模型。</strong> 校区、教学时段、考核类型、学院名这些都来自固定列表。<a href="https://github.com/Waldo0926/monash-hub/blob/main/backend/app/knowledge/glossary.py"><code class="language-plaintext highlighter-rouge">glossary.py</code></a> 给每一个都写好了中日韩三种核对过的译法，包括全部 120 个学院和系的名字。学位名是拼出来的，不是翻出来的，因为英文学位名从前往后读，中文要倒过来。</p>
+
+<p><strong>句子里的术语先遮住。</strong> 句子交给模型之前，里面的术语表词汇都换成占位符，翻完再换回固定译法。占位符用字母（<code class="language-plaintext highlighter-rouge">Zqa</code>、<code class="language-plaintext highlighter-rouge">Zqb</code>……），因为数字会被模型改掉。</p>
+
+<p>字母也不是绝对安全。“What is Zqa?” 回来变成了“什么是兹卡?”，模型把占位符音译了。我拿线上指南里 59 个失败的句子试了几种占位符，每种丢掉的句子都不一样，所以现在一种不行就换下一种，一共五种，直到占位符完整回来为止。这样救回了 59 句里的 50 句。</p>
+
+<h2 id="聊天模型也要先看术语表">聊天模型也要先看术语表</h2>
+
+<p>Argos 的语法还是不行，“WAM of 65” 被译成 65 岁。所以我加了一个引擎，可以接任何兼容 OpenAI 接口的聊天模型（<a href="https://github.com/Waldo0926/monash-hub/pull/115">#115</a>），默认用智谱的 <code class="language-plaintext highlighter-rouge">glm-4-flash</code>，因为它免费。网站上现在大部分中文都是它翻的。</p>
+
+<p>聊天模型反而不擅长处理占位符。让它翻 “Zqa units”，它会把两个都译成“课程”。所以给它的方式改成在提示词里直接列出固定译法，回复只有在什么都没丢的时候才算数（<a href="https://github.com/Waldo0926/monash-hub/pull/116">#116</a>）：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 从 crawler/translate/llm.py 简化
+</span><span class="k">def</span> <span class="nf">faithful</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">reply</span><span class="p">,</span> <span class="n">terms</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">agreed</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">reply</span> <span class="k">for</span> <span class="n">_english</span><span class="p">,</span> <span class="n">agreed</span> <span class="ow">in</span> <span class="n">terms</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">code</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">reply</span> <span class="k">for</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">_CODE</span><span class="p">.</span><span class="n">findall</span><span class="p">(</span><span class="n">source</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">if</span> <span class="n">bullets</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="o">!=</span> <span class="n">bullets</span><span class="p">(</span><span class="n">reply</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">n</span> <span class="ow">in</span> <span class="n">reply</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">_NUMBER</span><span class="p">.</span><span class="n">findall</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>没通过检查的句子，再走一遍遮术语的流程，那条路不会丢术语。</p>
+
+<h2 id="拿不准就保留英文">拿不准就保留英文</h2>
+
+<p>聊天模型还可能直接回答问题而不是翻译，或者开头先说一句“以下是翻译”。遇到下面这些情况，引擎会直接丢掉回复：</p>
+
+<ul>
+  <li>回复是空的，或者比原文长太多</li>
+  <li>开头有客套话，或者把提示词原样吐回来</li>
+  <li>文字不对，比如日文回复里夹着简体中文</li>
+  <li>和英文原文一模一样</li>
+</ul>
+
+<p>翻不好的句子就保留英文。读者至少还能看英文，一句没人写过却说得很肯定的中文更糟。</p>
+
+<h2 id="译文存在哪里">译文存在哪里</h2>
+
+<p>译文都存在 <code class="language-plaintext highlighter-rouge">content_translations</code> 这张表里，和英文原文并排放，不覆盖原文。每一行有两个关键字段：</p>
+
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">source_hash</code></strong>：生成这条译文时英文原文的哈希。Monash 改了页面，哈希就变了，页面会提示译文可能过时。重跑时哈希没变的直接跳过，所以每周刷新只把新句子发给模型。</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">provenance</code></strong>：<code class="language-plaintext highlighter-rouge">machine</code>（机器）、<code class="language-plaintext highlighter-rouge">curated</code>（对照英文核对过）或 <code class="language-plaintext highlighter-rouge">human</code>（人工）。读取时人工的优先。机器重跑永远不会覆盖人写的译文，页面上也会告诉读者现在看的是哪一种。</li>
+</ul>
+
+<p>Handbook 里同样的段落在几千门课里重复出现，所以引擎按句子缓存。有没有这层缓存，是跑一小时和跑一周的差别。</p>
+
+<h2 id="日文和韩文">日文和韩文</h2>
+
+<p>日文和韩文读者很少，所以只用同一套术语表加机器翻译，不做日常人工检查。即便这样，第一批样本还是要修（<a href="https://github.com/Waldo0926/monash-hub/pull/182">#182</a>、<a href="https://github.com/Waldo0926/monash-hub/pull/183">#183</a>）：</p>
+
+<ul>
+  <li>韩文的空格全没了，因为一条在术语后面拼接中文的规则也作用到了韩文上。</li>
+  <li>韩文助词是按模型自己的词选的，不是按换回去的术语选的（写成了 과목를，应该是 과목을）。</li>
+  <li>日文在术语前后重复（マレーシアキャンパスキャンパス）。</li>
+  <li>日期写成了 12月2026年。</li>
+</ul>
+
+<p>免费模型大约十秒一句，日文和韩文全部翻完要一天以上。所以它在抓取结束后用单独的锁跑，中文先跑。</p>
+
+<p><em>10 月 29 日更新：日文和韩文已经下线了（<a href="https://github.com/Waldo0926/monash-hub/pull/251">#251</a>）。看这个网站的主要是中国同学，多维护两种语言的翻译要花时间和免费额度，几乎没人用。现在网站只有英文和中文。</em></p>
+
+<h2 id="小结">小结</h2>
+
+<ul>
+  <li>质量主要靠术语表。大部分翻译错误加一个术语就能修好，下次运行所有页面都会跟着改。</li>
+  <li>存之前先检查模型返回的内容，固定译法、课程代码和数字一个都不能少。</li>
+  <li>译文和原文并排存，带上哈希，原文变了才知道译文过时了。</li>
+  <li>翻不好的句子就保留原文。</li>
+</ul>
+
+<p>代码：<a href="https://github.com/Waldo0926/monash-hub/blob/main/crawler/translate/engine.py"><code class="language-plaintext highlighter-rouge">engine.py</code></a>、<a href="https://github.com/Waldo0926/monash-hub/blob/main/crawler/translate/llm.py"><code class="language-plaintext highlighter-rouge">llm.py</code></a>、<a href="https://github.com/Waldo0926/monash-hub/blob/main/backend/app/knowledge/glossary.py"><code class="language-plaintext highlighter-rouge">glossary.py</code></a>，决策记录见 <a href="https://github.com/Waldo0926/monash-hub/blob/main/docs/adr/0004-glossary-before-machine-translation.md">ADR 0004</a>。</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">本文目录</p>
+      <ol><li><a href="#普通翻译器偏偏错在关键词上">普通翻译器偏偏错在关键词上</a></li><li><a href="#翻译流程">翻译流程</a></li><li><a href="#聊天模型也要先看术语表">聊天模型也要先看术语表</a></li><li><a href="#拿不准就保留英文">拿不准就保留英文</a></li><li><a href="#译文存在哪里">译文存在哪里</a></li><li><a href="#日文和韩文">日文和韩文</a></li><li><a href="#小结">小结</a></li></ol>
+      <a class="toc-back" href="/zh/#writing">全部文章</a>
+    </aside>
+  </div>
+  <nav class="more" aria-label="更多文章">
+    <a class="card more-link" href="/2026/10/24/deploy-rollback-zh/">
+      <span class="more-label">上一篇 · Monash Hub</span>
+      <span class="more-title">Monash Hub 的自动部署和失败回滚</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/10/24/rating-abuse-zh/">
+      <span class="more-label">下一篇 · Monash Hub</span>
+      <span class="more-title">不用登录的课程评分，以及怎么防刷</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Monash University 计算机科学。后端和 AI 应用开发。</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">运行状态</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

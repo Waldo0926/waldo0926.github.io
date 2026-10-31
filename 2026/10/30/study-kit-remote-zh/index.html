@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>让 ChatGPT 也能用 Study Kit，但只给自己用 | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="让 ChatGPT 也能用 Study Kit，但只给自己用" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="zh_Hans" />
+<meta name="description" content="Study Kit 1.4.0 起，ChatGPT 和网页版 Claude 也能连上。它仍然只给一个人用：配对码从你自己的终端拿，回调地址只认几个，令牌会轮换，远程只开放只读的工具。" />
+<meta property="og:description" content="Study Kit 1.4.0 起，ChatGPT 和网页版 Claude 也能连上。它仍然只给一个人用：配对码从你自己的终端拿，回调地址只认几个，令牌会轮换，远程只开放只读的工具。" />
+<link rel="canonical" href="https://blog.secureview.tech/2026/10/30/study-kit-remote-zh/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/10/30/study-kit-remote-zh/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/study-kit-remote-zh.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-30T18:00:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/study-kit-remote-zh.png" />
+<meta property="twitter:title" content="让 ChatGPT 也能用 Study Kit，但只给自己用" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-10-30T18:00:00+08:00","datePublished":"2026-10-30T18:00:00+08:00","description":"Study Kit 1.4.0 起，ChatGPT 和网页版 Claude 也能连上。它仍然只给一个人用：配对码从你自己的终端拿，回调地址只认几个，令牌会轮换，远程只开放只读的工具。","headline":"让 ChatGPT 也能用 Study Kit，但只给自己用","image":"https://blog.secureview.tech/assets/og/study-kit-remote-zh.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/10/30/study-kit-remote-zh/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/10/30/study-kit-remote-zh/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/10/30/study-kit-remote-zh/">
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/10/30/study-kit-remote/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/zh/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/zh/#writing">文章</a>
+        <a href="/zh/#projects">项目</a>
+        <a href="/zh/about/">关于</a>
+      </nav>
+      <a class="lang-switch" href="/2026/10/30/study-kit-remote/" lang="en" hreflang="en">English</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/zh/#writing">文章</a>
+      <span aria-hidden="true">/</span>
+      <span>Study Kit</span>
+    </p>
+    <h1 class="display post-title">让 ChatGPT 也能用 Study Kit，但只给自己用</h1><p class="lede">Study Kit 1.4.0 起，ChatGPT 和网页版 Claude 也能连上。它仍然只给一个人用：配对码从你自己的终端拿，回调地址只认几个，令牌会轮换，远程只开放只读的工具。</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-10-30T18:00:00+08:00">30 Oct 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>约 6 分钟</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/10/30/study-kit-remote/">English</a>
+        <a href="/2026/10/30/study-kit-remote-zh/" lang="zh-Hans" class="on" aria-current="page">中文</a>
+      </span>
+    </div>
+  </header>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p><a href="https://github.com/Waldo0926/monash-study-kit">Monash Study Kit</a> 把你自己的 Moodle 和 Ed 同步到电脑上，让 AI 软件通过 MCP 去搜。Claude Desktop 和 Claude Code 是在本机把它当程序启动，用 stdio 通信。ChatGPT 和网页版、手机上的 Claude 做不到这一点，它们跑在别人的服务器上，只能去调一个 HTTPS 地址。</p>
+
+<p>10 月 30 日发布的 1.4.0 加了一个可选的 <code class="language-plaintext highlighter-rouge">monash remote</code> 模式来解决这个问题。这篇讲它是怎么锁住的，因为一个能读你 Moodle 的公网地址，出错的代价很大。</p>
+
+<h2 id="只给一个人只读自己的数据">只给一个人，只读自己的数据</h2>
+
+<p>我之前就决定不替所有人托管 Study Kit。那样我的服务器上会存着每个同学的 Moodle 登录和 Ed 令牌，被攻破一次就全部泄露。<a href="https://docs.secureview.tech/zh-cn/private-tools/">文档</a>里也是这么解释的。</p>
+
+<p>所以远程模式只给数据的主人自己用。你在自己的服务器上跑，或者在自己电脑上开一个 Cloudflare 免费的临时隧道，它把你同步好的资料提供给你自己的 AI 软件。setup 不会启动它，安装和更新也不会开任何端口。只有你自己运行 <code class="language-plaintext highlighter-rouge">monash remote serve</code>，它才开始监听。</p>
+
+<p>服务器还拒绝绑定在本机回环以外的地址：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">make_server</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">con</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">addr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s">"127.0.0.1"</span><span class="p">,</span> <span class="s">"localhost"</span><span class="p">}:</span>
+        <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">"Bind remote MCP on loopback behind an HTTPS reverse proxy"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>HTTPS 由前面的 nginx 或隧道负责。每个请求都会检查 <code class="language-plaintext highlighter-rouge">Host</code> 和 <code class="language-plaintext highlighter-rouge">Origin</code> 是否和你给的公网地址一致，所以别的网页把自己的域名指到你机器上（DNS rebinding）会直接拿到 403。</p>
+
+<h2 id="用配对码代替密码">用配对码代替密码</h2>
+
+<p>ChatGPT 和 Claude 用 OAuth 连接，通常意味着要有一个输密码的登录页。一个只有一个人用的工具，我不想为它做账号系统。所以登录页要的是你在自己终端里拿到的码：</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ monash remote pair
+Pairing code: 3F9A-0C21-B7E4
+Valid for 10 minutes, single use.
+</code></pre></div></div>
+
+<p>数据库里只存它的 SHA-256 哈希。输对一次就作废。输错五次窗口就关掉，要重新运行 <code class="language-plaintext highlighter-rouge">pair</code>。没有打开的窗口时，页面会直接提示，什么都不接受。别人就算知道了你的地址，不在十分钟内坐在你的电脑前也进不来。</p>
+
+<h2 id="谁可以连进来">谁可以连进来</h2>
+
+<p>MCP 软件在登录之前会先自己注册，协议规定注册不需要登录。也就是说谁都能注册。有两点让这件事不要紧。</p>
+
+<p>第一，只有回调地址全部在白名单上，注册才会被接受：<code class="language-plaintext highlighter-rouge">claude.ai</code>、<code class="language-plaintext highlighter-rouge">claude.com</code> 和 <code class="language-plaintext highlighter-rouge">chatgpt.com</code> 上那几条固定的 OAuth 回调路径，整个主机名完全匹配，不能带端口、查询串或片段。想把授权码发到别处的客户端在注册时就被拒了，所以就算授权码被截到，也只能回到 Claude 或 ChatGPT。可以用参数额外加一个精确的地址，但不能写通配。</p>
+
+<p>第二，注册的客户端最多 50 个。满了以后，会清掉注册超过一小时、从来没换到过令牌的客户端。真正在用的客户端一定有刷新令牌，所以不会被清掉。</p>
+
+<p>剩下的是公开客户端的标准 OAuth：</p>
+
+<ul>
+  <li>必须用 PKCE（S256）。只有 verifier 算出来的哈希和登录时的 challenge 一致，授权码才能换令牌。</li>
+  <li>访问令牌一小时过期。刷新令牌 30 天过期，每用一次就换新的，旧的立刻失效。</li>
+  <li>令牌以哈希形式存在 <code class="language-plaintext highlighter-rouge">secrets/remote-mcp.db</code>，文件创建时权限就是 0600。</li>
+  <li><code class="language-plaintext highlighter-rouge">monash remote revoke --all</code> 删掉所有客户端、授权码和令牌，并关掉还开着的配对窗口。</li>
+</ul>
+
+<h2 id="远程只开放读的工具">远程只开放读的工具</h2>
+
+<p>本地的 Study Kit 有 18 个工具。其中两个会启动 Moodle 登录或同步，这需要在那台机器上开浏览器、输密码。远程模式把它们从工具列表里去掉，就算软件硬要按名字调用，也会被拒绝：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">spec</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">spec</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">"jsonrpc"</span><span class="p">:</span> <span class="s">"2.0"</span><span class="p">,</span> <span class="s">"id"</span><span class="p">:</span> <span class="n">msg</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"id"</span><span class="p">),</span> <span class="s">"error"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">"code"</span><span class="p">:</span> <span class="o">-</span><span class="mi">32602</span><span class="p">,</span> <span class="s">"message"</span><span class="p">:</span> <span class="s">"Run login or sync on the server's own terminal"</span><span class="p">}}</span>
+</code></pre></div></div>
+
+<p>所以令牌能碰到的只有 16 个查询工具。令牌被偷的话，在它过期或被你撤销之前，对方能读你的课件，这当然不好，但他没法用你的身份登录，也改不了 Moodle 或 Ed 上的任何东西。不管本地还是远程，Study Kit 都没有提交作业、发帖或做测验的工具。</p>
+
+<h2 id="怎么验证的">怎么验证的</h2>
+
+<p><a href="https://github.com/Waldo0926/monash-study-kit/blob/main/tests/test_remote.py"><code class="language-plaintext highlighter-rouge">tests/test_remote.py</code></a> 里有 22 个测试，用编造的数据在一台机器上走完整个流程：从 401 开始的服务发现、注册、配对、PKCE、令牌过期和轮换、撤销、回调白名单、错误的 Host 和 Origin，以及拒绝登录和同步。有一个测试专门打开旧格式的数据库（令牌还没和服务器地址绑定的时候），确认升级以后之前存的令牌还能用。</p>
+
+<p>10 月 30 日，PyPI 上的 1.4.0 包也在干净环境里用 Claude 和 ChatGPT 真实的回调地址走了一遍同样的登录和查询流程。那次测试没有公网域名。用我自己的域名和服务器，ChatGPT Plus 可以查我的 Moodle 和 Ed。具体步骤在<a href="https://docs.secureview.tech/zh-cn/study-kit/remote/">自己托管</a>。</p>
+
+<h2 id="小结">小结</h2>
+
+<ul>
+  <li>个人工具的远程模式就应该一直是个人的。一个主人，只有他自己的数据，不替别人启动任何东西。</li>
+  <li>只有一个用户的时候，一个从自己终端拿的码就能代替整套账号系统。</li>
+  <li>回调地址在客户端注册时就查清楚，后面每一步都能放心用。</li>
+  <li>想清楚哪些工具可以离开这台机器。会登录或会写东西的，都留在本地。</li>
+</ul>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">本文目录</p>
+      <ol><li><a href="#只给一个人只读自己的数据">只给一个人，只读自己的数据</a></li><li><a href="#用配对码代替密码">用配对码代替密码</a></li><li><a href="#谁可以连进来">谁可以连进来</a></li><li><a href="#远程只开放读的工具">远程只开放读的工具</a></li><li><a href="#怎么验证的">怎么验证的</a></li><li><a href="#小结">小结</a></li></ol>
+      <a class="toc-back" href="/zh/#writing">全部文章</a>
+    </aside>
+  </div>
+  <nav class="more" aria-label="更多文章">
+    <a class="card more-link" href="/2026/10/26/official-coverage-zh/">
+      <span class="more-label">上一篇 · Monash Hub</span>
+      <span class="more-title">官方页面从 662 页到 3100 页，抓取失败也不丢</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Monash University 计算机科学。后端和 AI 应用开发。</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">运行状态</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

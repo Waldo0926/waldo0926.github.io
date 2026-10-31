@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Shuoxun Wen | How I build and run my own projects.</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Shuoxun Wen" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="How I build and run my own projects." />
+<meta property="og:description" content="How I build and run my own projects." />
+<link rel="canonical" href="https://blog.secureview.tech/" />
+<meta property="og:url" content="https://blog.secureview.tech/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/site.png" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/site.png" />
+<meta property="twitter:title" content="Shuoxun Wen" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"Shuoxun Wen"},"description":"How I build and run my own projects.","headline":"Shuoxun Wen","image":"https://blog.secureview.tech/assets/og/site.png","name":"Shuoxun Wen","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/zh/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/#writing">Writing</a>
+        <a href="/#projects">Projects</a>
+        <a href="/about/">About</a>
+      </nav>
+      <a class="lang-switch" href="/zh/" lang="zh-Hans" hreflang="zh-Hans">中文</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="container hero">
+  <div class="hero-text">
+    <div class="who">
+      <img class="avatar" src="/assets/avatar.jpg" alt="" width="56" height="56">
+      <div>
+        <p class="who-name">Shuoxun Wen <span lang="zh-Hans">温硕勋</span></p>
+        <p class="eyebrow">Computer Science · Monash University</p>
+      </div>
+    </div>
+    <h1 class="display">I build tools Monash students use, and write down how they <em>run</em>.</h1>
+    <p class="lede">Backend and AI application developer. I run Monash Hub on my own VPS, with automated deploys that roll back when a release fails, and wrote 187 of the 212 merged pull requests in SecureView, our final year project.</p>
+    <div class="actions"><a class="btn" href="/2026/10/30/study-kit-remote/">Read the latest post</a>
+      <a class="btn btn--ghost" href="/about/">About me</a>
+    </div>
+  </div>
+
+  <aside id="projects" class="card panel">
+    <div class="panel-head">
+      <h2 class="panel-title">Projects</h2>
+      <a class="small" href="https://github.com/Waldo0926?tab=repositories">All repositories</a>
+    </div>
+    <ul class="projects">
+      <li>
+        <a class="project" href="https://monashhub.secureview.tech">
+          <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A1.5 1.5 0 015.5 4H10a2 2 0 012 2v14a1.5 1.5 0 00-1.5-1.5h-5A1.5 1.5 0 014 17V5.5zM20 5.5A1.5 1.5 0 0018.5 4H14a2 2 0 00-2 2v14a1.5 1.5 0 011.5-1.5h5A1.5 1.5 0 0020 17V5.5z"/></svg></span>
+          <span class="project-text">
+            <span class="project-name">Monash Hub <span class="pill pill--live">Live</span></span>
+            <span class="project-desc">Units, degree planning, WAM, Malaysia fees and key dates, in English and Chinese</span>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a class="project" href="https://github.com/Waldo0926/SecureView">
+          <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></span>
+          <span class="project-text">
+            <span class="project-name">SecureView <span class="pill pill--live">Live</span></span>
+            <span class="project-desc">Secure file sharing platform, final year project</span>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a class="project" href="https://github.com/Waldo0926/monash-study-kit">
+          <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="M8 10l2 2-2 2M12 14h4"/></svg></span>
+          <span class="project-text">
+            <span class="project-name">Monash Study Kit <span class="pill">Open source</span></span>
+            <span class="project-desc">Your Moodle and Ed in Claude, ChatGPT or any MCP app, with full-text search of course files, plus optional school mail and attendance</span>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a class="project" href="https://github.com/Waldo0926/mumguide-wechat-bot">
+          <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 5h14a1 1 0 011 1v9a1 1 0 01-1 1h-7l-4 3v-3H5a1 1 0 01-1-1V6a1 1 0 011-1z"/></svg></span>
+          <span class="project-text">
+            <span class="project-name">Student Q&A bot <span class="pill pill--live">Live</span></span>
+            <span class="project-desc">Answers students on WeChat: rules first, an AI that may only quote, the rest to me</span>
+          </span>
+        </a>
+      </li>
+    </ul>
+    <p class="also-title">Also</p>
+    <ul class="also">
+      <li><a href="https://github.com/Waldo0926/monash-attendance-reminder"><span class="also-name">Attendance Helper</span><span class="also-desc">On the Chrome Web Store</span></a></li>
+      <li><a href="https://github.com/Waldo0926/ed-web"><span class="also-name">Ed Web</span><span class="also-desc">Ed forums, read and searched in the browser</span></a></li>
+      <li><a href="https://github.com/Waldo0926/quotegate"><span class="also-name">quotegate</span><span class="also-desc">Checks a model's quotes against the source</span></a></li>
+      <li><a href="https://docs.secureview.tech"><span class="also-name">Tool docs</span><span class="also-desc">Guides and one-line installs</span></a></li>
+      <li><a href="https://waldo0926.github.io/uptime/"><span class="also-name">Status</span><span class="also-desc">Every site I run, checked every 5 minutes</span></a></li>
+    </ul>
+  </aside>
+</section>
+
+<section id="writing" class="container section">
+  <div class="section-head">
+    <h2>Writing</h2>
+    <p class="muted">How my projects are built and run, with the code linked. Every post has an English and a Chinese version.</p>
+  </div><div class="filters" role="group" aria-label="Filter by project" hidden>
+    <button type="button" class="chip on" data-filter="" aria-pressed="true">All <span>15</span></button>
+    <button type="button" class="chip" data-filter="Study Kit" aria-pressed="false">Study Kit <span>2</span></button>
+    <button type="button" class="chip" data-filter="Monash Hub" aria-pressed="false">Monash Hub <span>7</span></button>
+    <button type="button" class="chip" data-filter="quotegate" aria-pressed="false">quotegate <span>1</span></button>
+    <button type="button" class="chip" data-filter="Attendance Helper" aria-pressed="false">Attendance Helper <span>1</span></button>
+    <button type="button" class="chip" data-filter="Ed Web" aria-pressed="false">Ed Web <span>1</span></button>
+    <button type="button" class="chip" data-filter="Q&A bot" aria-pressed="false">Q&A bot <span>1</span></button>
+    <button type="button" class="chip" data-filter="SecureView" aria-pressed="false">SecureView <span>2</span></button>
+  </div>
+  <div class="posts"><article class="card post-card post-card--featured" data-project="Study Kit">
+      <div class="post-main">
+        <p class="post-tag"><span class="new">Latest</span>Study Kit</p>
+        <h3><a href="/2026/10/30/study-kit-remote/">Letting ChatGPT reach Study Kit, for one person only</a></h3>
+        <p class="post-excerpt">Study Kit 1.4.0 can now be reached from ChatGPT and Claude on the web. It stays a server for one person: a pairing code from your own terminal, a short list of callback addresses, rotating tokens, and only the tools that read.</p>
+        <p class="post-foot">
+          <time class="mono" datetime="2026-10-30T18:00:00+08:00">30 Oct 2026</time>
+          <span class="langs">
+            <a href="/2026/10/30/study-kit-remote/">EN</a><a href="/2026/10/30/study-kit-remote-zh/" lang="zh-Hans">中文</a>
+          </span>
+        </p>
+      </div>
+      <div class="term" aria-hidden="true">
+  <div class="term-bar"><i></i><i></i><i></i><span>monash remote</span></div>
+<pre><span class="t-step">$ monash remote pair</span>
+Pairing code: 3F9A-0C21-B7E4
+Valid for 10 minutes, single use.
+<span class="t-step">callback https://chatgpt.com/connector_platform_oauth_redirect</span>
+    <span class="t-ok">allowed</span>
+<span class="t-step">callback https://example.com/steal</span>
+    <span class="t-err">invalid_redirect_uri</span>
+<span class="t-step">tools/call start_monash_login</span>
+    <span class="t-err">Run login or sync on the server's own terminal</span>
+<span class="t-dim"># 16 of 18 tools leave the machine</span></pre>
+</div>
+
+    </article><article class="card post-card" data-project="Monash Hub">
+      <div class="post-main">
+        <p class="post-tag">Monash Hub</p>
+        <h3><a href="/2026/10/26/official-coverage/">From 662 official pages to 3,100, without losing any when a crawl fails</a></h3>
+        <p class="post-excerpt">Monash Hub's guides went from 662 official pages to about 3,100 in one weekend. How the list is built from two sitemaps, what gets left out, and why a failed fetch no longer takes a page down.</p>
+        <p class="post-foot">
+          <time class="mono" datetime="2026-10-26T11:30:00+08:00">26 Oct 2026</time>
+          <span class="langs">
+            <a href="/2026/10/26/official-coverage/">EN</a><a href="/2026/10/26/official-coverage-zh/" lang="zh-Hans">中文</a>
+          </span>
+        </p>
+      </div>
+    </article><article class="card post-card" data-project="quotegate">
+      <div class="post-main">
+        <p class="post-tag">quotegate</p>
+        <h3><a href="/2026/10/26/quotegate/">Turning a bot's quote check into a package</a></h3>
+        <p class="post-excerpt">The word-for-word check in my WeChat bot is now its own Python package with no dependencies. What it keeps and drops, why it does not use a second model as a judge, and how a release gets from a tag to PyPI.</p>
+        <p class="post-foot">
+          <time class="mono" datetime="2026-10-26T11:00:00+08:00">26 Oct 2026</time>
+          <span class="langs">
+            <a href="/2026/10/26/quotegate/">EN</a><a href="/2026/10/26/quotegate-zh/" lang="zh-Hans">中文</a>
+          </span>
+        </p>
+      </div>
+    </article><article class="card post-card" data-project="Monash Hub">
+      <div class="post-main">
+        <p class="post-tag">Monash Hub</p>
+        <h3><a href="/2026/10/26/two-campuses/">One question, two campuses</a></h3>
+        <p class="post-excerpt">Visas, insurance, intermission and closing units follow different rules at Monash's Australian and Malaysian campuses. How Monash Hub answers both side by side, and the test that fails an answer that forgets which country it is about.</p>
+        <p class="post-foot">
+          <time class="mono" datetime="2026-10-26T10:30:00+08:00">26 Oct 2026</time>
+          <span class="langs">
+            <a href="/2026/10/26/two-campuses/">EN</a><a href="/2026/10/26/two-campuses-zh/" lang="zh-Hans">中文</a>
+          </span>
+        </p>
+      </div>
+    </article><article class="card post-card" data-project="Monash Hub">
+      <div class="post-main">
+        <p class="post-tag">Monash Hub</p>
+        <h3><a href="/2026/10/26/plan-code-and-searches/">A plan code the server never sees, and searches counted without people</a></h3>
+        <p class="post-excerpt">Monash Hub has no accounts for course plans. How a plan moves to another device in a link the server never receives, how the home page shows real searches while storing only a word, a day and a count, and a privacy note that had to be corrected.</p>
+        <p class="post-foot">
+          <time class="mono" datetime="2026-10-26T10:00:00+08:00">26 Oct 2026</time>
+          <span class="langs">
+            <a href="/2026/10/26/plan-code-and-searches/">EN</a><a href="/2026/10/26/plan-code-and-searches-zh/" lang="zh-Hans">中文</a>
+          </span>
+        </p>
+      </div>
+    </article><article class="card post-card" data-project="Monash Hub">
+      <div class="post-main">
+        <p class="post-tag">Monash Hub</p>
+        <h3><a href="/2026/10/26/offline-app/">An offline app that never shows an old page when a new one is there</a></h3>
+        <p class="post-excerpt">Monash Hub can now be added to a phone's home screen and opens pages you have read with no signal. Why the service worker always tries the network first, what it refuses to save, and how an app left open for days picks up a new deploy.</p>
+        <p class="post-foot">
+          <time class="mono" datetime="2026-10-26T09:30:00+08:00">26 Oct 2026</time>
+          <span class="langs">
+            <a href="/2026/10/26/offline-app/">EN</a><a href="/2026/10/26/offline-app-zh/" lang="zh-Hans">中文</a>
+          </span>
+        </p>
+      </div>
+    </article><article class="card post-card" data-project="Attendance Helper">
+      <div class="post-main">
+        <p class="post-tag">Attendance Helper</p>
+        <h3><a href="/2026/10/26/chrome-store/">Getting a Chrome extension ready for the Web Store</a></h3>
+        <p class="post-excerpt">Before putting my attendance extension on the Chrome Web Store, I removed a permission, deleted URLs from a library I never call, and made the build refuse to package remote code. What the store checks, and how I checked it myself first.</p>
+        <p class="post-foot">
+          <time class="mono" datetime="2026-10-26T09:00:00+08:00">26 Oct 2026</time>
+          <span class="langs">
+            <a href="/2026/10/26/chrome-store/">EN</a><a href="/2026/10/26/chrome-store-zh/" lang="zh-Hans">中文</a>
+          </span>
+        </p>
+      </div>
+    </article><article class="card post-card" data-project="Ed Web">
+      <div class="post-main">
+        <p class="post-tag">Ed Web</p>
+        <h3><a href="/2026/10/26/ed-web-redesign/">Refreshing an Ed forum in the browser without fetching it all again</a></h3>
+        <p class="post-excerpt">Ed Web reads a course's Ed forum in the browser with no backend. The redesign added a refresh that only fetches posts that changed, an honest meaning for "new", Ed's post format rendered safely, and support for Ed's API tokens.</p>
+        <p class="post-foot">
+          <time class="mono" datetime="2026-10-26T08:30:00+08:00">26 Oct 2026</time>
+          <span class="langs">
+            <a href="/2026/10/26/ed-web-redesign/">EN</a><a href="/2026/10/26/ed-web-redesign-zh/" lang="zh-Hans">中文</a>
+          </span>
+        </p>
+      </div>
+    </article><article class="card post-card" data-project="Study Kit">
+      <div class="post-main">
+        <p class="post-tag">Study Kit</p>
+        <h3><a href="/2026/10/26/assignment-sources/">Which source wins when an AI reads your assignment</a></h3>
+        <p class="post-excerpt">Monash Study Kit lets an AI read your own Moodle and Ed. When you ask it what an assignment wants, it now follows a fixed order of sources: the brief and rubric, then staff answers on Ed, with dates and a source for every rule. How that rule is written, and the test that keeps the agent instructions true.</p>
+        <p class="post-foot">
+          <time class="mono" datetime="2026-10-26T08:00:00+08:00">26 Oct 2026</time>
+          <span class="langs">
+            <a href="/2026/10/26/assignment-sources/">EN</a><a href="/2026/10/26/assignment-sources-zh/" lang="zh-Hans">中文</a>
+          </span>
+        </p>
+      </div>
+    </article><article class="card post-card" data-project="Q&A bot">
+      <div class="post-main">
+        <p class="post-tag">Q&A bot</p>
+        <h3><a href="/2026/10/25/quote-only-rag/">A Q&A bot where the model is only allowed to quote</a></h3>
+        <p class="post-excerpt">A WeChat bot answers students and parents about visas, exams and enrolment. Why the language model in it may only quote sentences, how the code checks every quote, and which true sentences it still refuses to send.</p>
+        <p class="post-foot">
+          <time class="mono" datetime="2026-10-25T19:00:00+08:00">25 Oct 2026</time>
+          <span class="langs">
+            <a href="/2026/10/25/quote-only-rag/">EN</a><a href="/2026/10/25/quote-only-rag-zh/" lang="zh-Hans">中文</a>
+          </span>
+        </p>
+      </div>
+    </article><article class="card post-card" data-project="SecureView">
+      <div class="post-main">
+        <p class="post-tag">SecureView</p>
+        <h3><a href="/2026/10/24/secureview-pool/">100 users, 3% CPU, and most uploads failing</a></h3>
+        <p class="post-excerpt">At 100 concurrent users, up to 78% of uploads failed while the CPU sat at 3%. How the cause was found, a first fix that made things worse, and the fix that brought failures to zero.</p>
+        <p class="post-foot">
+          <time class="mono" datetime="2026-10-24T18:20:00+08:00">24 Oct 2026</time>
+          <span class="langs">
+            <a href="/2026/10/24/secureview-pool/">EN</a><a href="/2026/10/24/secureview-pool-zh/" lang="zh-Hans">中文</a>
+          </span>
+        </p>
+      </div>
+    </article><article class="card post-card" data-project="SecureView">
+      <div class="post-main">
+        <p class="post-tag">SecureView</p>
+        <h3><a href="/2026/10/24/secureview-keys/">Sharing files the server cannot read</a></h3>
+        <p class="post-excerpt">In SecureView the browser encrypts every file and the server never holds a key that opens one. How sharing works under that rule, and what happens when someone forgets their passphrase.</p>
+        <p class="post-foot">
+          <time class="mono" datetime="2026-10-24T18:00:00+08:00">24 Oct 2026</time>
+          <span class="langs">
+            <a href="/2026/10/24/secureview-keys/">EN</a><a href="/2026/10/24/secureview-keys-zh/" lang="zh-Hans">中文</a>
+          </span>
+        </p>
+      </div>
+    </article><article class="card post-card" data-project="Monash Hub">
+      <div class="post-main">
+        <p class="post-tag">Monash Hub</p>
+        <h3><a href="/2026/10/24/rating-abuse/">Unit ratings without sign-in, and keeping them honest</a></h3>
+        <p class="post-excerpt">Students can rate a unit without an account. How one browser keeps one rating per unit, why the limit is on the network and not the key, and what this still does not stop.</p>
+        <p class="post-foot">
+          <time class="mono" datetime="2026-10-24T17:30:00+08:00">24 Oct 2026</time>
+          <span class="langs">
+            <a href="/2026/10/24/rating-abuse/">EN</a><a href="/2026/10/24/rating-abuse-zh/" lang="zh-Hans">中文</a>
+          </span>
+        </p>
+      </div>
+    </article><article class="card post-card" data-project="Monash Hub">
+      <div class="post-main">
+        <p class="post-tag">Monash Hub</p>
+        <h3><a href="/2026/10/24/translation-pipeline/">Translating the Monash Handbook without paying for it</a></h3>
+        <p class="post-excerpt">Five thousand units and hundreds of official pages, translated into Chinese for free. Why a glossary sits in front of the model, and how a bad translation falls back to English.</p>
+        <p class="post-foot">
+          <time class="mono" datetime="2026-10-24T17:00:00+08:00">24 Oct 2026</time>
+          <span class="langs">
+            <a href="/2026/10/24/translation-pipeline/">EN</a><a href="/2026/10/24/translation-pipeline-zh/" lang="zh-Hans">中文</a>
+          </span>
+        </p>
+      </div>
+    </article><article class="card post-card" data-project="Monash Hub">
+      <div class="post-main">
+        <p class="post-tag">Monash Hub</p>
+        <h3><a href="/2026/10/24/deploy-rollback/">How Monash Hub deploys itself and rolls back</a></h3>
+        <p class="post-excerpt">One VPS, no one watching the deploys. How the deploy script checks the right commit is live and puts the previous images back when it is not.</p>
+        <p class="post-foot">
+          <time class="mono" datetime="2026-10-24T10:00:00+08:00">24 Oct 2026</time>
+          <span class="langs">
+            <a href="/2026/10/24/deploy-rollback/">EN</a><a href="/2026/10/24/deploy-rollback-zh/" lang="zh-Hans">中文</a>
+          </span>
+        </p>
+      </div>
+    </article></div>
+  <script>
+    (() => {
+      const bar = document.querySelector('.filters');
+      const cards = document.querySelectorAll('.posts [data-project]');
+      bar.hidden = false;
+      bar.addEventListener('click', (event) => {
+        const chip = event.target.closest('.chip');
+        if (!chip) return;
+        const want = chip.dataset.filter;
+        bar.querySelectorAll('.chip').forEach((c) => {
+          c.classList.toggle('on', c === chip);
+          c.setAttribute('aria-pressed', c === chip);
+        });
+        cards.forEach((card) => { card.hidden = want && card.dataset.project !== want; });
+      });
+    })();
+  </script>
+</section>
+
+<section class="container facts">
+  <div><p class="fact-num">187 / 212</p><p class="fact-text">merged pull requests in SecureView written by me</p></div>
+  <div><p class="fact-num">22</p><p class="fact-text">browser tests on every Monash Hub change, each at desktop and phone size</p></div>
+  <div><p class="fact-num">2,917</p><p class="fact-text">official pages from both campuses in Monash Hub's guides</p></div>
+  <div><p class="fact-num">2025–2027</p><p class="fact-text">Handbook years searchable on Monash Hub, synced every week</p></div>
+</section>
+
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Computer Science at Monash University. Backend and AI application development.</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">Status</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

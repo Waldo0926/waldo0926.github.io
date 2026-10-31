@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>把机器人的摘句核对做成一个包 | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="把机器人的摘句核对做成一个包" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="zh_Hans" />
+<meta name="description" content="微信机器人里逐字核对摘句的代码，单独做成了一个零依赖的 Python 包。它留下什么、丢掉什么，为什么不用第二个模型当裁判，以及从打 tag 到发上 PyPI 怎么走。" />
+<meta property="og:description" content="微信机器人里逐字核对摘句的代码，单独做成了一个零依赖的 Python 包。它留下什么、丢掉什么，为什么不用第二个模型当裁判，以及从打 tag 到发上 PyPI 怎么走。" />
+<link rel="canonical" href="https://blog.secureview.tech/2026/10/26/quotegate-zh/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/10/26/quotegate-zh/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/quotegate-zh.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-26T11:00:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/quotegate-zh.png" />
+<meta property="twitter:title" content="把机器人的摘句核对做成一个包" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-10-26T11:00:00+08:00","datePublished":"2026-10-26T11:00:00+08:00","description":"微信机器人里逐字核对摘句的代码，单独做成了一个零依赖的 Python 包。它留下什么、丢掉什么，为什么不用第二个模型当裁判，以及从打 tag 到发上 PyPI 怎么走。","headline":"把机器人的摘句核对做成一个包","image":"https://blog.secureview.tech/assets/og/quotegate-zh.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/10/26/quotegate-zh/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/10/26/quotegate-zh/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/10/26/quotegate-zh/">
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/10/26/quotegate/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/zh/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/zh/#writing">文章</a>
+        <a href="/zh/#projects">项目</a>
+        <a href="/zh/about/">关于</a>
+      </nav>
+      <a class="lang-switch" href="/2026/10/26/quotegate/" lang="en" hreflang="en">English</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/zh/#writing">文章</a>
+      <span aria-hidden="true">/</span>
+      <span>quotegate</span>
+    </p>
+    <h1 class="display post-title">把机器人的摘句核对做成一个包</h1><p class="lede">微信机器人里逐字核对摘句的代码，单独做成了一个零依赖的 Python 包。它留下什么、丢掉什么，为什么不用第二个模型当裁判，以及从打 tag 到发上 PyPI 怎么走。</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-10-26T11:00:00+08:00">26 Oct 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>约 7 分钟</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/10/26/quotegate/">English</a>
+        <a href="/2026/10/26/quotegate-zh/" lang="zh-Hans" class="on" aria-current="page">中文</a>
+      </span>
+    </div>
+  </header>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p>我的<a href="https://github.com/Waldo0926/mumguide-wechat-bot">微信问答机器人</a>只许大模型用资料里的原句回答，每一句发出去之前都要经过代码核对。为什么这样做，我在<a href="/2026/10/25/quote-only-rag-zh/">《只许大模型摘原句的问答机器人》</a>里写过。</p>
+
+<p>这段核对代码原来在机器人的 <code class="language-plaintext highlighter-rouge">wxbot/rag.py</code> 里，和检索、校区标签、微信排版混在一起。这个周末我把它抽出来，做成了 <a href="https://github.com/Waldo0926/quotegate">quotegate</a>，发到了 PyPI，MIT 许可证。这篇讲哪些东西放进了包里，哪些留在外面。</p>
+
+<h2 id="它做什么">它做什么</h2>
+
+<p>让模型按 <code class="language-plaintext highlighter-rouge">[2] 原文里的一句话</code> 这样的格式回答。<code class="language-plaintext highlighter-rouge">check()</code> 读这些行，只有那句话确实在第 2 段资料里、单独拿出来也读得通，才留下：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">quotegate</span> <span class="kn">import</span> <span class="n">Passage</span><span class="p">,</span> <span class="n">check</span>
+
+<span class="n">passages</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Passage</span><span class="p">(</span><span class="s">"Special consideration</span><span class="se">\n</span><span class="s">Apply online within two working days of the due date. "</span>
+            <span class="s">"This must include supporting documents."</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"Special consideration"</span><span class="p">),</span>
+<span class="p">]</span>
+<span class="n">reply</span> <span class="o">=</span> <span class="s">"[1] Apply online within two working days</span><span class="se">\n</span><span class="s">[1] This must include supporting documents"</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">check</span><span class="p">(</span><span class="n">reply</span><span class="p">,</span> <span class="n">passages</span><span class="p">)</span>
+<span class="n">result</span><span class="p">.</span><span class="n">status</span>    <span class="c1"># "ok"
+</span><span class="n">result</span><span class="p">.</span><span class="n">kept</span>      <span class="c1"># [Quote(passage=1, text="Apply online within two working days of the due date.", start=22, end=75)]
+</span><span class="n">result</span><span class="p">.</span><span class="n">dropped</span>   <span class="c1"># [Dropped(passage=1, quote="This must include supporting documents.", reason="needs context")]
+</span></code></pre></div></div>
+
+<p>第一句被扩展成它所在的整句话。第二句确实在资料里，但它以 “This” 开头，指的是读者看不到的上一句，所以被丢掉，并写明原因。</p>
+
+<p><code class="language-plaintext highlighter-rouge">status</code> 不是 <code class="language-plaintext highlighter-rouge">"ok"</code> 的时候，模型给的东西一句都不该发。另外四种状态说明原因：模型说不知道、一句都没摘、摘的都不在资料里、在资料里但单独读不通。机器人遇到这些就把问题转给我。</p>
+
+<h2 id="哪些会被丢掉">哪些会被丢掉</h2>
+
+<p>大部分规则来自机器人差点发出去的真实回复：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>原因</th>
+      <th>例子</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">not found</code></td>
+      <td>改写过的句子，或者标错了是第几段</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">needs context</code></td>
+      <td>以 “This must…”、“However”、“不，” 开头；以 “:” 或 “；并且” 结尾</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">list item</code></td>
+      <td>“If you don’t meet any of the requirements above:” 下面的 “- you must contact ISP”</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">table row</code></td>
+      <td>“Oct intake | OCT-MY-01 | 6 Jan”，但没有表头</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">past year</code></td>
+      <td>2026 年读到 “From 2022 exams are online”</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">a question</code></td>
+      <td>资料自己的 FAQ 问题</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>模型也不一定照格式来。解析每一行的正则接受 <code class="language-plaintext highlighter-rouge">【2†L9-L12】</code>、全角括号、前面带圆点、数字后面带冒号，这些我都在免费模型的回复里见过。</p>
+
+<p>断句需要两个开关。默认换行就是一句结束，因为网页里换行通常是标题或列表项。公众号文章和 PDF 里的文字会在句子中间换行，这类资料标 <code class="language-plaintext highlighter-rouge">soft_breaks=True</code>。英文句号只有后面跟空白才算句子结束，所以 “50.0” 和 “monash.edu” 不会被拆开。</p>
+
+<h2 id="哪些留在外面">哪些留在外面</h2>
+
+<p><strong>不用模型。</strong> 检查 RAG 回答常见的办法，是再让一个模型判断每个说法有没有依据，比如 Ragas 的 faithfulness。它给的是事后的分数，裁判本身也会两头出错。在机器人里，用第二个模型核对句子，有的多出来的步骤没拦住，有的对的句子反而被删了。字符串比对每次结果都一样，也没法被说服。</p>
+
+<p><strong>不联网，没有依赖。</strong> 整个包大约 290 行，只用标准库。四句摘句对五段 500 字的资料，核对一次大约 0.3 毫秒。</p>
+
+<p><strong>不管检索，提示词只给个起点。</strong> <code class="language-plaintext highlighter-rouge">quotegate.prompts</code> 里有中英文两个系统提示词，要求模型按这个格式回答，但找对资料是调用方的事。README 里写清楚了它做不到的：一句真实但答非所问的话，照样能通过。</p>
+
+<p>和机器人有关的东西都变成了 <code class="language-plaintext highlighter-rouge">Rules</code> 里的设置：长度、连接词的正则、判断过去年份用的当前年份，还有一个 <code class="language-plaintext highlighter-rouge">checks</code> 列表放你自己的规则。机器人按校区排序的那部分，完全没放进包里。</p>
+
+<h2 id="从打-tag-到-pypi">从打 tag 到 PyPI</h2>
+
+<p>我希望发版是件无聊的事：</p>
+
+<ul>
+  <li>每次推送都在 Ubuntu、macOS、Windows 上，用 Python 3.10 和 3.13 跑测试，再跑 ruff。</li>
+  <li>另一个任务构建 wheel，装进一个干净的虚拟环境，跑一遍 README 里的例子。这能抓住测试都过了、但打包时漏了文件的情况。</li>
+  <li>推一个 <code class="language-plaintext highlighter-rouge">v0.1.0</code> tag 会触发 <code class="language-plaintext highlighter-rouge">release.yml</code>。它先检查 tag 和 <code class="language-plaintext highlighter-rouge">__version__</code> 一致、<code class="language-plaintext highlighter-rouge">CHANGELOG.md</code> 有这一节、打 tag 的提交在 <code class="language-plaintext highlighter-rouge">main</code> 上，然后再跑一遍测试，用 PyPI 的 Trusted Publishing 上传，哪里都不用存令牌。GitHub Release 的内容直接取自更新日志的那一节。</li>
+</ul>
+
+<p>0.1.0 就是 10 月 26 日这样发出去的。</p>
+
+<h2 id="接下来">接下来</h2>
+
+<p>机器人里还留着自己那份核对代码，在 <code class="language-plaintext highlighter-rouge">wxbot/rag.py</code>。下一步是让它改用这个包，两边就不会越改越不一样。</p>
+
+<h2 id="小结">小结</h2>
+
+<ul>
+  <li>输入输出清楚的代码才值得抽出来，懂你产品的那部分留在原地。</li>
+  <li>写清楚这个包拦不住什么。对一个安全检查来说，这比功能列表更重要。</li>
+  <li>发版的检查放进发版流程里：版本号、更新日志、分支，最后从干净环境装一遍。</li>
+</ul>
+
+<p>代码：<a href="https://github.com/Waldo0926/quotegate/blob/main/src/quotegate/core.py">core.py</a>、<a href="https://github.com/Waldo0926/quotegate/blob/main/.github/workflows/test.yml">test.yml</a>、<a href="https://github.com/Waldo0926/quotegate/blob/main/.github/workflows/release.yml">release.yml</a>。PyPI：<a href="https://pypi.org/project/quotegate/">pypi.org/project/quotegate</a>。</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">本文目录</p>
+      <ol><li><a href="#它做什么">它做什么</a></li><li><a href="#哪些会被丢掉">哪些会被丢掉</a></li><li><a href="#哪些留在外面">哪些留在外面</a></li><li><a href="#从打-tag-到-pypi">从打 tag 到 PyPI</a></li><li><a href="#接下来">接下来</a></li><li><a href="#小结">小结</a></li></ol>
+      <a class="toc-back" href="/zh/#writing">全部文章</a>
+    </aside>
+  </div>
+  <nav class="more" aria-label="更多文章">
+    <a class="card more-link" href="/2026/10/26/two-campuses-zh/">
+      <span class="more-label">上一篇 · Monash Hub</span>
+      <span class="more-title">一个问题，两个校区</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/10/26/official-coverage-zh/">
+      <span class="more-label">下一篇 · Monash Hub</span>
+      <span class="more-title">官方页面从 662 页到 3100 页，抓取失败也不丢</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Monash University 计算机科学。后端和 AI 应用开发。</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">运行状态</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

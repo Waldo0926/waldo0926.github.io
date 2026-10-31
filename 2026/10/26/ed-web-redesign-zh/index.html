@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>在浏览器里刷新 Ed 论坛，不用每次全部重抓 | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="在浏览器里刷新 Ed 论坛，不用每次全部重抓" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="zh_Hans" />
+<meta name="description" content="Ed Web 在浏览器里读 Ed 论坛，没有后端。这次改版加了只抓变化帖子的增量刷新、说得清楚的“新”标记、安全地渲染 Ed 的正文格式，还支持了 Ed 的 API 令牌。" />
+<meta property="og:description" content="Ed Web 在浏览器里读 Ed 论坛，没有后端。这次改版加了只抓变化帖子的增量刷新、说得清楚的“新”标记、安全地渲染 Ed 的正文格式，还支持了 Ed 的 API 令牌。" />
+<link rel="canonical" href="https://blog.secureview.tech/2026/10/26/ed-web-redesign-zh/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/10/26/ed-web-redesign-zh/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/ed-web-redesign-zh.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-26T08:30:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/ed-web-redesign-zh.png" />
+<meta property="twitter:title" content="在浏览器里刷新 Ed 论坛，不用每次全部重抓" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-10-26T08:30:00+08:00","datePublished":"2026-10-26T08:30:00+08:00","description":"Ed Web 在浏览器里读 Ed 论坛，没有后端。这次改版加了只抓变化帖子的增量刷新、说得清楚的“新”标记、安全地渲染 Ed 的正文格式，还支持了 Ed 的 API 令牌。","headline":"在浏览器里刷新 Ed 论坛，不用每次全部重抓","image":"https://blog.secureview.tech/assets/og/ed-web-redesign-zh.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/10/26/ed-web-redesign-zh/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/10/26/ed-web-redesign-zh/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/10/26/ed-web-redesign-zh/">
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/10/26/ed-web-redesign/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/zh/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/zh/#writing">文章</a>
+        <a href="/zh/#projects">项目</a>
+        <a href="/zh/about/">关于</a>
+      </nav>
+      <a class="lang-switch" href="/2026/10/26/ed-web-redesign/" lang="en" hreflang="en">English</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/zh/#writing">文章</a>
+      <span aria-hidden="true">/</span>
+      <span>Ed Web</span>
+    </p>
+    <h1 class="display post-title">在浏览器里刷新 Ed 论坛，不用每次全部重抓</h1><p class="lede">Ed Web 在浏览器里读 Ed 论坛，没有后端。这次改版加了只抓变化帖子的增量刷新、说得清楚的“新”标记、安全地渲染 Ed 的正文格式，还支持了 Ed 的 API 令牌。</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-10-26T08:30:00+08:00">26 Oct 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>约 6 分钟</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/10/26/ed-web-redesign/">English</a>
+        <a href="/2026/10/26/ed-web-redesign-zh/" lang="zh-Hans" class="on" aria-current="page">中文</a>
+      </span>
+    </div>
+  </header>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p><a href="https://github.com/Waldo0926/ed-web">Ed Web</a> 是一个静态网页：直接从 Ed 的接口抓一门课的 Ed Discussion 论坛，存进浏览器的 IndexedDB，离线也能看、筛选和搜索。没有后端，token 存在 <code class="language-plaintext highlighter-rouge">sessionStorage</code> 里，只发给 <code class="language-plaintext highlighter-rouge">edstem.org</code>。</p>
+
+<p>它是我自己服务器上一个私人学习工具的公开版。10 月 25 日我给 Ed Web 改了版，把私人工具里能在浏览器里做的部分搬了过来（<a href="https://github.com/Waldo0926/ed-web/pull/6">#6</a>）。这篇讲这几部分。</p>
+
+<h2 id="只刷新变了的帖子">只刷新变了的帖子</h2>
+
+<p>旧版每次刷新都把所有帖子和回复重抓一遍。大的课有几百个帖子，Ed 又限流，刷新要等很久，有时还会遇到 429。</p>
+
+<p>Ed 的帖子列表很便宜，100 个帖子一个请求。抓一个帖子的回复则是一个帖子一个请求。所以现在刷新先读列表，给每个帖子算一个指纹，只有指纹变了才重抓整个帖子：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* 跟私人工具的 content_stamp 一样：updated_at 之外再带几个计数和状态位，
+ * 这样只有内容真变了才重抓正文。 */</span>
+<span class="kd">function</span> <span class="nx">contentStamp</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">[</span><span class="nx">t</span><span class="p">.</span><span class="nx">updated_at</span><span class="p">,</span> <span class="nx">t</span><span class="p">.</span><span class="nx">reply_count</span><span class="p">,</span> <span class="nx">t</span><span class="p">.</span><span class="nx">unresolved_count</span><span class="p">,</span> <span class="nx">t</span><span class="p">.</span><span class="nx">vote_count</span><span class="p">,</span> <span class="nx">t</span><span class="p">.</span><span class="nx">is_staff_answered</span><span class="p">,</span>
+          <span class="nx">t</span><span class="p">.</span><span class="nx">is_answered</span><span class="p">,</span> <span class="nx">t</span><span class="p">.</span><span class="nx">is_locked</span><span class="p">,</span> <span class="nx">t</span><span class="p">.</span><span class="nx">title</span><span class="p">].</span><span class="nx">map</span><span class="p">((</span><span class="nx">x</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nb">String</span><span class="p">(</span><span class="nx">x</span> <span class="o">??</span> <span class="dl">''</span><span class="p">)).</span><span class="nx">join</span><span class="p">(</span><span class="dl">'</span><span class="s1">|</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>只看 <code class="language-plaintext highlighter-rouge">updated_at</code> 不够。新回复或者老师回答不一定会改它，但一定会改某个计数或状态位。</p>
+
+<p>Ed 真的返回 429 时，浏览器能读到 <code class="language-plaintext highlighter-rouge">Retry-After</code> 就按它等，读不到就依次等 1.5、3、4.5 秒。</p>
+
+<h2 id="新是什么意思">“新”是什么意思</h2>
+
+<p>“新”标记只有在表示“上次看过之后才出现的”时才有用。现在每个帖子和回复都存一个 <code class="language-plaintext highlighter-rouge">first_seen</code>，也就是这个浏览器第一次见到它的时间。每次刷新记下开始的时刻，在那之后第一次见到的就是新的：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">isFresh</span><span class="p">(</span><span class="nx">firstSeen</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="o">!!</span><span class="nx">STATE</span><span class="p">.</span><span class="nx">prevSyncedAt</span> <span class="o">&amp;&amp;</span> <span class="o">!!</span><span class="nx">firstSeen</span> <span class="o">&amp;&amp;</span> <span class="nx">firstSeen</span> <span class="o">&gt;=</span> <span class="nx">STATE</span><span class="p">.</span><span class="nx">syncedAt</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>第一次抓的时候没有可比的，就退回“48 小时内发的”。以前就有的帖子，显示有几条新回复。</p>
+
+<h2 id="安全地渲染-ed-的正文">安全地渲染 Ed 的正文</h2>
+
+<p>Ed 用自己的 XML 存帖子：<code class="language-plaintext highlighter-rouge">&lt;document&gt;&lt;paragraph&gt;...</code>，里面有 <code class="language-plaintext highlighter-rouge">&lt;link&gt;</code>、<code class="language-plaintext highlighter-rouge">&lt;snippet&gt;</code>、<code class="language-plaintext highlighter-rouge">&lt;image&gt;</code>、<code class="language-plaintext highlighter-rouge">&lt;file&gt;</code>、列表、表格和提示框。旧版把它全部转成纯文本，代码的格式乱了，附件也没了。</p>
+
+<p>现在 <code class="language-plaintext highlighter-rouge">docToHTML</code> 用 <code class="language-plaintext highlighter-rouge">DOMParser</code> 解析，再遍历整棵树。有两条规则保证安全：</p>
+
+<ul>
+  <li>每一段文字写进页面之前都经过 <code class="language-plaintext highlighter-rouge">esc</code>，帖子里的任何标签都不会原样输出。</li>
+  <li>链接、图片、附件和视频，只有地址以 <code class="language-plaintext highlighter-rouge">http://</code> 或 <code class="language-plaintext highlighter-rouge">https://</code> 开头才做成链接。其他的，比如 <code class="language-plaintext highlighter-rouge">javascript:</code>，只显示成文字。</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">safeHref</span> <span class="o">=</span> <span class="p">(</span><span class="nx">u</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="sr">/^https</span><span class="se">?</span><span class="sr">:</span><span class="se">\/\/</span><span class="sr">/i</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nb">String</span><span class="p">(</span><span class="nx">u</span> <span class="o">||</span> <span class="dl">''</span><span class="p">).</span><span class="nx">trim</span><span class="p">())</span> <span class="p">?</span> <span class="nb">String</span><span class="p">(</span><span class="nx">u</span><span class="p">).</span><span class="nx">trim</span><span class="p">()</span> <span class="p">:</span> <span class="kc">null</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>XML 解析失败的话，退回纯文本，而不是显示一张空卡片。</p>
+
+<h2 id="一句话结论取对的人">一句话结论取对的人</h2>
+
+<p>每张帖子卡片在标题下显示一句话，以前是帖子的开头。对提问帖来说，有用的通常是回答，所以现在取最后一条老师的回复，因为后面的老师回复经常会更正前面的。没有老师回复的提问帖，显示同学的回答，并标明是同学答的。其他帖子显示帖子本身。</p>
+
+<h2 id="api-令牌">API 令牌</h2>
+
+<p>Ed 有两种 token。网页版存在 <code class="language-plaintext highlighter-rouge">localStorage</code> 里的是 JWT，14 天过期。在 Ed 设置里生成的 API 令牌不会过期，可以在那里撤销。两种用的请求头不一样：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">authHeaders</span><span class="p">(</span><span class="nx">token</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">tokenKind</span><span class="p">(</span><span class="nx">token</span><span class="p">)</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">jwt</span><span class="dl">'</span> <span class="p">?</span> <span class="p">{</span> <span class="dl">'</span><span class="s1">x-token</span><span class="dl">'</span><span class="p">:</span> <span class="nx">token</span> <span class="p">}</span> <span class="p">:</span> <span class="p">{</span> <span class="na">authorization</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Bearer </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">token</span> <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>页面会从 JWT 的 <code class="language-plaintext highlighter-rouge">exp</code> 字段读出还剩几天。API 令牌不会过期，适合每周都要打开的页面。这和私人工具里的处理一样，我自己用的就是 API 令牌。</p>
+
+<h2 id="其他小改动">其他小改动</h2>
+
+<ul>
+  <li>搜索要求每个词都出现，不是只要有一个。</li>
+  <li>可以按收藏、关注、我发的筛选，也可以筛出 Ed 记录里你还没看过回复的帖子。</li>
+  <li>被删回复下面的子回复保留，因为 Ed 网页上也还显示。</li>
+  <li>课程内容会存阅读页的正文和测验题，也能搜索。</li>
+</ul>
+
+<h2 id="没有后端的页面怎么测">没有后端的页面怎么测</h2>
+
+<p>抓取和渲染的逻辑都在一个 <code class="language-plaintext highlighter-rouge">app.js</code> 里，没有构建步骤。<code class="language-plaintext highlighter-rouge">tests/sync.test.mjs</code> 按标记字符串把需要的函数从 <code class="language-plaintext highlighter-rouge">app.js</code> 里切出来，在 Node 里执行，不连网。README 里的截图是对着一个假的 Ed 接口拍的，课程、人和帖子都是编的，仓库里没有任何真实的课程数据。</p>
+
+<h2 id="小结">小结</h2>
+
+<ul>
+  <li>一个便宜的列表，加上每一项的指纹，就能把全量刷新变成小刷新。</li>
+  <li>“新”应该从上次刷新算起，而不是从发帖时间算。</li>
+  <li>渲染别人写的标记时，所有文字都转义，只放行你想要的链接协议。</li>
+</ul>
+
+<p>代码：<a href="https://github.com/Waldo0926/ed-web/blob/main/app.js">app.js</a>、<a href="https://github.com/Waldo0926/ed-web/blob/main/ARCHITECTURE.zh-CN.md">ARCHITECTURE.zh-CN.md</a>、<a href="https://github.com/Waldo0926/ed-web/blob/main/tests/sync.test.mjs">sync.test.mjs</a>。使用指南：<a href="https://docs.secureview.tech/zh-cn/ed-web/">docs.secureview.tech/zh-cn/ed-web</a>。</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">本文目录</p>
+      <ol><li><a href="#只刷新变了的帖子">只刷新变了的帖子</a></li><li><a href="#新是什么意思">“新”是什么意思</a></li><li><a href="#安全地渲染-ed-的正文">安全地渲染 Ed 的正文</a></li><li><a href="#一句话结论取对的人">一句话结论取对的人</a></li><li><a href="#api-令牌">API 令牌</a></li><li><a href="#其他小改动">其他小改动</a></li><li><a href="#没有后端的页面怎么测">没有后端的页面怎么测</a></li><li><a href="#小结">小结</a></li></ol>
+      <a class="toc-back" href="/zh/#writing">全部文章</a>
+    </aside>
+  </div>
+  <nav class="more" aria-label="更多文章">
+    <a class="card more-link" href="/2026/10/26/assignment-sources-zh/">
+      <span class="more-label">上一篇 · Study Kit</span>
+      <span class="more-title">AI 读作业要求时，该信哪个来源</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/10/26/chrome-store-zh/">
+      <span class="more-label">下一篇 · Attendance Helper</span>
+      <span class="more-title">把 Chrome 扩展准备好上架应用商店</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Monash University 计算机科学。后端和 AI 应用开发。</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">运行状态</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

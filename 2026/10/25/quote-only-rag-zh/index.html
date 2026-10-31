@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>只许大模型摘原句的问答机器人 | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="只许大模型摘原句的问答机器人" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="zh_Hans" />
+<meta name="description" content="一个在微信上回答同学和家长签证、考试、选课问题的机器人。为什么里面的大模型只能摘原句，程序怎么逐句核对，以及哪些句子明明是真的也不发。" />
+<meta property="og:description" content="一个在微信上回答同学和家长签证、考试、选课问题的机器人。为什么里面的大模型只能摘原句，程序怎么逐句核对，以及哪些句子明明是真的也不发。" />
+<link rel="canonical" href="https://blog.secureview.tech/2026/10/25/quote-only-rag-zh/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/10/25/quote-only-rag-zh/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/quote-only-rag-zh.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-25T19:00:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/quote-only-rag-zh.png" />
+<meta property="twitter:title" content="只许大模型摘原句的问答机器人" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-10-25T19:00:00+08:00","datePublished":"2026-10-25T19:00:00+08:00","description":"一个在微信上回答同学和家长签证、考试、选课问题的机器人。为什么里面的大模型只能摘原句，程序怎么逐句核对，以及哪些句子明明是真的也不发。","headline":"只许大模型摘原句的问答机器人","image":"https://blog.secureview.tech/assets/og/quote-only-rag-zh.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/10/25/quote-only-rag-zh/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/10/25/quote-only-rag-zh/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/10/25/quote-only-rag-zh/">
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/10/25/quote-only-rag/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/zh/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/zh/#writing">文章</a>
+        <a href="/zh/#projects">项目</a>
+        <a href="/zh/about/">关于</a>
+      </nav>
+      <a class="lang-switch" href="/2026/10/25/quote-only-rag/" lang="en" hreflang="en">English</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/zh/#writing">文章</a>
+      <span aria-hidden="true">/</span>
+      <span>Q&A bot</span>
+    </p>
+    <h1 class="display post-title">只许大模型摘原句的问答机器人</h1><p class="lede">一个在微信上回答同学和家长签证、考试、选课问题的机器人。为什么里面的大模型只能摘原句，程序怎么逐句核对，以及哪些句子明明是真的也不发。</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-10-25T19:00:00+08:00">25 Oct 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>约 6 分钟</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/10/25/quote-only-rag/">English</a>
+        <a href="/2026/10/25/quote-only-rag-zh/" lang="zh-Hans" class="on" aria-current="page">中文</a>
+      </span>
+    </div>
+  </header>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p><a href="https://github.com/Waldo0926/mumguide-wechat-bot">马莫百科机器人</a>在微信上回答 Monash 马来西亚校区同学和家长的问题。大部分回答靠规则：我教过的问答、<a href="https://monashhub.secureview.tech">Monash Hub</a> 的接口，还有公众号自己的文章。答不上来的转给我。</p>
+
+<p>规则会漏掉一些问题：答案其实就在这些资料里，只是说法不一样。所以我加了一个可选的 RAG 步骤，只在规则没命中或只有弱命中时才用。我给它定的规矩是：宁可说不知道，也不能说错流程。同学收到“我还答不上来，已经转给作者”，会再问一次；收到一个错的签证截止日期，是会照着去做的。</p>
+
+<h2 id="让模型自己写不行">让模型自己写，不行</h2>
+
+<p>第一版让免费模型根据检索到的片段自己组织回答。读起来很顺，但错在要命的地方。它会加上资料里没有的步骤，比如“老师会替你申请特殊考虑”；还把“ISP 在贴纸剩 14 天或更少时收护照”写成了“过期后有 14 天宽限期”。</p>
+
+<p>我又试了用第二个模型检查第一个模型写的句子。它漏掉了一些，还删掉了一些对的。拿大模型去检查大模型，检查的那个也有同样的问题。</p>
+
+<h2 id="模型只挑句子程序来核对">模型只挑句子，程序来核对</h2>
+
+<p>所以模型不再写回答。提示词要求它从编号的资料里原样摘句子，一个字都不能改，最多 4 句，每行写成 <code class="language-plaintext highlighter-rouge">[资料编号] 原句</code>；资料里没有能回答的，就只回“这个我不确定”。</p>
+
+<p>每一行都由程序核对：去掉空白后，摘的句子必须是它标的那段资料的子串，而且至少 6 个字。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">sentence</span><span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">h</span><span class="p">.</span><span class="n">text</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="p">.</span><span class="n">isspace</span><span class="p">()]</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">_squash</span><span class="p">(</span><span class="n">quote</span><span class="p">)</span>
+    <span class="n">at</span> <span class="o">=</span> <span class="s">""</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">).</span><span class="n">find</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">q</span> <span class="ow">or</span> <span class="n">at</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>
+    <span class="p">...</span>  <span class="c1"># 扩展到它所在的整句
+</span></code></pre></div></div>
+
+<p>改写过的句子、加出来的步骤、把真句子标错了资料编号，这三种都过不了。有一个测试专门喂这三种，要求一句都不发。通过的句子会扩展成它所在的整句，不会只发半句。回复下面列出句子来自哪些页面和链接，并注明是原文摘录。</p>
+
+<p>模型说不确定，或者摘的句子一句都没通过，问题就转给我。这时规则的弱匹配（“你问的是不是…”）也不发：对另一个问题的瞎猜，比“已转给作者”更糟。</p>
+
+<h2 id="真句子也可能误导人">真句子也可能误导人</h2>
+
+<p>一字不差也不够。早期有一次回复摘了续签页面上的这句：</p>
+
+<blockquote>
+  <p>你必须在到期前四个月提交续签申请；并且</p>
+</blockquote>
+
+<p>页面上确实有这句话。但它写在“如果你没有满足上述任何一项要求：”下面，只适用于一部分同学。没有上面那一行，这句话就等于告诉所有人一个错的截止时间。</p>
+
+<p>所以 <code class="language-plaintext highlighter-rouge">_why_not</code> 还会去掉离开上下文就会看错的句子：</p>
+
+<ul>
+  <li>标题以冒号结尾的列表项；</li>
+  <li>以“；并且”或“：”结尾的行；</li>
+  <li>以“此流程”开头的行，或者以“不，”开头、回答的是一个读者看不到的 FAQ 问题的行；</li>
+  <li>没有表头的表格行；</li>
+  <li>里面的年份全都已经过去的句子，比如去年的考试日期。</li>
+</ul>
+
+<p>教过的问答和 Hub 的 FAQ 是专门给这些同学写、核对过的，它们能回答时，不再在旁边混进一般网页的句子。以前就出现过一个旧页面写着“你必须选择参加考核”，旁边教过的问答说的却是可以不考。</p>
+
+<h2 id="马来西亚不是澳洲">马来西亚不是澳洲</h2>
+
+<p>来问的大多是马来西亚校区的同学，但 Monash 很多页面是写给澳洲校区的。Hub 的 FAQ 以前写过“休学会改变你的 CoE”。CoE 是澳洲学生签证的东西，对马来西亚的 Student Pass 没有意义。</p>
+
+<p>现在每一句都按校区分类：来自澳洲校区页面的句子，或者提到 CoE、OSHC、ESOS、Centrelink 的句子，算澳洲；教过的问答、公众号文章和马来西亚校区页面算马来西亚。排序是马来西亚在前，各校区通用其次，澳洲最后。回复里只要有澳洲的句子，就加上小标题，澳洲的规定放在“澳洲校区（澳大利亚的规定，马来西亚校区不一定一样）”下面。签证、保险、修课量这些教过的问答也改成两个校区分开写；有个测试会检查，提到 CoE、OSHC 或 subclass 500 的回答，必须两个校区都标出来。</p>
+
+<h2 id="效果">效果</h2>
+
+<p>评测用固定的 50 道题，分别只用规则、用规则加 RAG 回答，由一个裁判模型对照参考要点打分。第八轮是 2026-10-25 跑的（<a href="https://github.com/Waldo0926/mumguide-wechat-bot/blob/main/docs/EVAL.md">docs/EVAL.md</a>）：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>只用规则</th>
+      <th>规则 + RAG</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>回答正确（裁判判）</td>
+      <td>81%（34/42）</td>
+      <td>88%（38/43）</td>
+    </tr>
+    <tr>
+      <td>没有答案的题交给了我</td>
+      <td>14%（1/7）</td>
+      <td>86%（6/7）</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>我最看重第二行。有 7 道题在所有资料里都没有答案。只用规则时，其中 6 道它都瞎猜了一个回答；加上 RAG 后，7 道里有 6 道转给了我。</p>
+
+<p>第一行要打个折扣。裁判只看参考要点有没有出现，回答里多一个错的步骤，照样可能判对。这也是为什么核对放在程序里，而不是再交给一个模型。</p>
+
+<p>它用的是 Groq 的免费额度（<code class="language-plaintext highlighter-rouge">qwen/qwen3.8-27b</code>），2026-10-24 起在线上打开。第八轮里 95% 的回复不到 1 秒，远低于微信 5 秒的限制。回答缓存 7 天，同样的问题不会再调模型。模型慢了或者挂了（免费额度同时来几个问题就会返回 429），教过的问答、公众号文章和 Hub FAQ 照常发；规则只有弱匹配的话就不猜，转给我。</p>
+
+<h2 id="还做不到的">还做不到的</h2>
+
+<p>核对能保证发出去的每一句确实在它链接的页面上，但保证不了那个页面就是这个问题该看的。检索拿到一段讲别的情况的资料，模型摘得一字不差，也还是答非所问。所以每条回复都附上页面链接、注明是摘录，答不上来的问题也还是会转给我。</p>
+
+<p>代码：<a href="https://github.com/Waldo0926/mumguide-wechat-bot/blob/main/wxbot/rag.py"><code class="language-plaintext highlighter-rouge">rag.py</code></a>、<a href="https://github.com/Waldo0926/mumguide-wechat-bot/blob/main/tests/test_rag.py"><code class="language-plaintext highlighter-rouge">test_rag.py</code></a>、<a href="https://github.com/Waldo0926/mumguide-wechat-bot/blob/main/wxbot/evaluate.py"><code class="language-plaintext highlighter-rouge">evaluate.py</code></a>。</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">本文目录</p>
+      <ol><li><a href="#让模型自己写不行">让模型自己写，不行</a></li><li><a href="#模型只挑句子程序来核对">模型只挑句子，程序来核对</a></li><li><a href="#真句子也可能误导人">真句子也可能误导人</a></li><li><a href="#马来西亚不是澳洲">马来西亚不是澳洲</a></li><li><a href="#效果">效果</a></li><li><a href="#还做不到的">还做不到的</a></li></ol>
+      <a class="toc-back" href="/zh/#writing">全部文章</a>
+    </aside>
+  </div>
+  <nav class="more" aria-label="更多文章">
+    <a class="card more-link" href="/2026/10/24/secureview-pool-zh/">
+      <span class="more-label">上一篇 · SecureView</span>
+      <span class="more-title">100 个用户，3% 的 CPU，大部分上传失败</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/10/26/assignment-sources-zh/">
+      <span class="more-label">下一篇 · Study Kit</span>
+      <span class="more-title">AI 读作业要求时，该信哪个来源</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Monash University 计算机科学。后端和 AI 应用开发。</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">运行状态</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Translating the Monash Handbook without paying for it | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Translating the Monash Handbook without paying for it" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Five thousand units and hundreds of official pages, translated into Chinese for free. Why a glossary sits in front of the model, and how a bad translation falls back to English." />
+<meta property="og:description" content="Five thousand units and hundreds of official pages, translated into Chinese for free. Why a glossary sits in front of the model, and how a bad translation falls back to English." />
+<link rel="canonical" href="https://blog.secureview.tech/2026/10/24/translation-pipeline/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/10/24/translation-pipeline/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/translation-pipeline.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-24T17:00:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/translation-pipeline.png" />
+<meta property="twitter:title" content="Translating the Monash Handbook without paying for it" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-10-24T17:00:00+08:00","datePublished":"2026-10-24T17:00:00+08:00","description":"Five thousand units and hundreds of official pages, translated into Chinese for free. Why a glossary sits in front of the model, and how a bad translation falls back to English.","headline":"Translating the Monash Handbook without paying for it","image":"https://blog.secureview.tech/assets/og/translation-pipeline.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/10/24/translation-pipeline/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/10/24/translation-pipeline/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/10/24/translation-pipeline/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/10/24/translation-pipeline-zh/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/#writing">Writing</a>
+        <a href="/#projects">Projects</a>
+        <a href="/about/">About</a>
+      </nav>
+      <a class="lang-switch" href="/2026/10/24/translation-pipeline-zh/" lang="zh-Hans" hreflang="zh-Hans">中文</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/#writing">Writing</a>
+      <span aria-hidden="true">/</span>
+      <span>Monash Hub</span>
+    </p>
+    <h1 class="display post-title">Translating the Monash Handbook without paying for it</h1><p class="lede">Five thousand units and hundreds of official pages, translated into Chinese for free. Why a glossary sits in front of the model, and how a bad translation falls back to English.</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-10-24T17:00:00+08:00">24 Oct 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>5 min read</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/10/24/translation-pipeline/" class="on" aria-current="page">English</a>
+        <a href="/2026/10/24/translation-pipeline-zh/" lang="zh-Hans">中文</a>
+      </span>
+    </div>
+  </header>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p>Most people who read <a href="https://monashhub.secureview.tech">Monash Hub</a> are Chinese students. What they need to read is in English: about five thousand Handbook units, the degree structures, and several hundred official Monash pages. Monash keeps changing it, so the Handbook is crawled again every week. A paid translation API would cost more than a student project can spend, so the site uses free engines. This post covers what goes wrong when you do that, and what the pipeline does about it.</p>
+
+<h2 id="a-plain-translator-gets-the-important-words-wrong">A plain translator gets the important words wrong</h2>
+
+<p>The first engine was Argos Translate, an offline model that runs on the same VPS. It costs nothing and has no rate limit. On real Handbook pages it translated:</p>
+
+<ul>
+  <li><em>census date</em> as 人口普查日期 (a population census)</li>
+  <li><em>unit</em> as 单位 (an organisation, not a subject)</li>
+  <li><em>Exercise</em> as 锻炼 (physical exercise)</li>
+  <li><em>Breadth studies</em> as 面包研究 (bread studies)</li>
+</ul>
+
+<p>These are exactly the words a student acts on. Miss the census date and you pay for a unit you dropped. So the model is not allowed to decide them.</p>
+
+<h2 id="the-pipeline">The pipeline</h2>
+
+<p>Every string goes through the same steps:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>agreed value?  -&gt;  protect the terms  -&gt;  translate  -&gt;  put the terms back
+</code></pre></div></div>
+
+<p><strong>Agreed values never reach the model.</strong> A campus, a teaching period, an assessment type or a faculty name comes from a closed list. <a href="https://github.com/Waldo0926/monash-hub/blob/main/backend/app/knowledge/glossary.py"><code class="language-plaintext highlighter-rouge">glossary.py</code></a> has a checked wording for each one in Chinese, Japanese and Korean, including all 120 faculty and school names. Degree names are built from parts rather than translated, because English names a degree front to back and Chinese back to front.</p>
+
+<p><strong>Terms inside a sentence are masked.</strong> Before a sentence goes to the model, every glossary term in it is swapped for a placeholder, and the agreed wording is put back afterwards. The placeholders are letters (<code class="language-plaintext highlighter-rouge">Zqa</code>, <code class="language-plaintext highlighter-rouge">Zqb</code>, …) because the model rewrote digits.</p>
+
+<p>Letters were not safe either. “What is Zqa?” came back as 什么是兹卡?, where the model had turned the placeholder into Chinese sounds. I tested other tokens on the 59 sentences that were failing on the live guides. Each token lost a different set of sentences, so the engine now tries five masks in turn until one comes back intact. That recovered 50 of the 59.</p>
+
+<h2 id="the-chat-model-gets-the-glossary-too">The chat model gets the glossary too</h2>
+
+<p>Argos was still weak on grammar. “WAM of 65” became 65 years old. So I added an engine for any OpenAI-compatible chat model (<a href="https://github.com/Waldo0926/monash-hub/pull/115">#115</a>), defaulting to Zhipu’s <code class="language-plaintext highlighter-rouge">glm-4-flash</code> because it is free. Most of the Chinese on the site now comes from it.</p>
+
+<p>A chat model does worse with placeholders. Asked to translate “Zqa units”, it writes 课程 for both. So it gets the agreed wordings in the prompt instead, and the reply is only accepted if nothing was lost (<a href="https://github.com/Waldo0926/monash-hub/pull/116">#116</a>):</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># simplified from crawler/translate/llm.py
+</span><span class="k">def</span> <span class="nf">faithful</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">reply</span><span class="p">,</span> <span class="n">terms</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">agreed</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">reply</span> <span class="k">for</span> <span class="n">_english</span><span class="p">,</span> <span class="n">agreed</span> <span class="ow">in</span> <span class="n">terms</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">code</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">reply</span> <span class="k">for</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">_CODE</span><span class="p">.</span><span class="n">findall</span><span class="p">(</span><span class="n">source</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">if</span> <span class="n">bullets</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="o">!=</span> <span class="n">bullets</span><span class="p">(</span><span class="n">reply</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">n</span> <span class="ow">in</span> <span class="n">reply</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">_NUMBER</span><span class="p">.</span><span class="n">findall</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>If the reply fails this check, the same sentence goes through the masked path, which cannot drop a term.</p>
+
+<h2 id="when-in-doubt-keep-the-english">When in doubt, keep the English</h2>
+
+<p>A chat model can also answer the question instead of translating it, or start with “Here is the translation”. The engine throws a reply away when:</p>
+
+<ul>
+  <li>it is empty, or much longer than the source</li>
+  <li>it opens with a preface, or echoes the prompt back</li>
+  <li>it is in the wrong script, like Simplified Chinese inside a Japanese answer</li>
+  <li>it is identical to the English</li>
+</ul>
+
+<p>A string that fails stays in English. A reader can work with English, but a confident sentence that nobody wrote is worse.</p>
+
+<h2 id="where-translations-live">Where translations live</h2>
+
+<p>Translations are stored in one table, <code class="language-plaintext highlighter-rouge">content_translations</code>, next to the English rather than replacing it. Each row has two things that matter:</p>
+
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">source_hash</code></strong>: the hash of the English it was made from. When Monash edits the page, the hash changes and the page says the translation may be out of date. A rerun skips everything whose hash has not moved, so the weekly refresh only sends new sentences to the model.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">provenance</code></strong>: <code class="language-plaintext highlighter-rouge">machine</code>, <code class="language-plaintext highlighter-rouge">curated</code> (checked against the English) or <code class="language-plaintext highlighter-rouge">human</code>. The human row wins on read. A machine run can never overwrite somebody’s work, and the page tells the reader which kind they are looking at.</li>
+</ul>
+
+<p>The Handbook repeats the same paragraphs across thousands of units, so the engine caches by sentence. That cache is the difference between an hour and a week.</p>
+
+<h2 id="japanese-and-korean">Japanese and Korean</h2>
+
+<p>Japanese and Korean have very few readers, so they get machine output behind the same glossary with no routine review. The first sample still needed fixes (<a href="https://github.com/Waldo0926/monash-hub/pull/182">#182</a>, <a href="https://github.com/Waldo0926/monash-hub/pull/183">#183</a>):</p>
+
+<ul>
+  <li>Korean lost all its spaces, because a rule that joins Chinese words after a glossary term also ran over Korean.</li>
+  <li>Korean particles were chosen for the model’s own word, not the term put back (과목를 instead of 과목을).</li>
+  <li>Japanese doubled words around a term (マレーシアキャンパスキャンパス).</li>
+  <li>Dates came out as 12月2026年.</li>
+</ul>
+
+<p>At about ten seconds a string on the free model, a full Japanese and Korean fill takes a day or more. So it runs under its own lock after the crawl, and Chinese always goes first.</p>
+
+<p><em>Update, 29 October: Japanese and Korean are no longer offered (<a href="https://github.com/Waldo0926/monash-hub/pull/251">#251</a>). The readers are Chinese students, and keeping two more languages translated cost time and free quota that almost nobody used. The site is now English and Chinese.</em></p>
+
+<h2 id="takeaways">Takeaways</h2>
+
+<ul>
+  <li>The glossary is where quality comes from. Most translation bugs were fixed by adding a term, and the fix reaches every page on the next run.</li>
+  <li>Check what the model returns before storing it. Every agreed term, code and number has to be there.</li>
+  <li>Store translations beside the source with a hash, so you know when they go stale.</li>
+  <li>A string you cannot translate well should stay in the original language.</li>
+</ul>
+
+<p>Code: <a href="https://github.com/Waldo0926/monash-hub/blob/main/crawler/translate/engine.py"><code class="language-plaintext highlighter-rouge">engine.py</code></a>, <a href="https://github.com/Waldo0926/monash-hub/blob/main/crawler/translate/llm.py"><code class="language-plaintext highlighter-rouge">llm.py</code></a>, <a href="https://github.com/Waldo0926/monash-hub/blob/main/backend/app/knowledge/glossary.py"><code class="language-plaintext highlighter-rouge">glossary.py</code></a>, and the decision record <a href="https://github.com/Waldo0926/monash-hub/blob/main/docs/adr/0004-glossary-before-machine-translation.md">ADR 0004</a>.</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">On this page</p>
+      <ol><li><a href="#a-plain-translator-gets-the-important-words-wrong">A plain translator gets the important words wrong</a></li><li><a href="#the-pipeline">The pipeline</a></li><li><a href="#the-chat-model-gets-the-glossary-too">The chat model gets the glossary too</a></li><li><a href="#when-in-doubt-keep-the-english">When in doubt, keep the English</a></li><li><a href="#where-translations-live">Where translations live</a></li><li><a href="#japanese-and-korean">Japanese and Korean</a></li><li><a href="#takeaways">Takeaways</a></li></ol>
+      <a class="toc-back" href="/#writing">All writing</a>
+    </aside>
+  </div>
+  <nav class="more" aria-label="More posts">
+    <a class="card more-link" href="/2026/10/24/deploy-rollback/">
+      <span class="more-label">Previous · Monash Hub</span>
+      <span class="more-title">How Monash Hub deploys itself and rolls back</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/10/24/rating-abuse/">
+      <span class="more-label">Next · Monash Hub</span>
+      <span class="more-title">Unit ratings without sign-in, and keeping them honest</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Computer Science at Monash University. Backend and AI application development.</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">Status</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

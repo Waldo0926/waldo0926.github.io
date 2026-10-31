@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>不用登录的课程评分，以及怎么防刷 | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="不用登录的课程评分，以及怎么防刷" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="zh_Hans" />
+<meta name="description" content="不登录也能给课程打分。一个浏览器怎么保证每门课只有一条评分，为什么限流按网络而不按密钥，以及这些还挡不住什么。" />
+<meta property="og:description" content="不登录也能给课程打分。一个浏览器怎么保证每门课只有一条评分，为什么限流按网络而不按密钥，以及这些还挡不住什么。" />
+<link rel="canonical" href="https://blog.secureview.tech/2026/10/24/rating-abuse-zh/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/10/24/rating-abuse-zh/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/rating-abuse-zh.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-24T17:30:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/rating-abuse-zh.png" />
+<meta property="twitter:title" content="不用登录的课程评分，以及怎么防刷" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-10-24T17:30:00+08:00","datePublished":"2026-10-24T17:30:00+08:00","description":"不登录也能给课程打分。一个浏览器怎么保证每门课只有一条评分，为什么限流按网络而不按密钥，以及这些还挡不住什么。","headline":"不用登录的课程评分，以及怎么防刷","image":"https://blog.secureview.tech/assets/og/rating-abuse-zh.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/10/24/rating-abuse-zh/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/10/24/rating-abuse-zh/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/10/24/rating-abuse-zh/">
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/10/24/rating-abuse/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/zh/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/zh/#writing">文章</a>
+        <a href="/zh/#projects">项目</a>
+        <a href="/zh/about/">关于</a>
+      </nav>
+      <a class="lang-switch" href="/2026/10/24/rating-abuse/" lang="en" hreflang="en">English</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/zh/#writing">文章</a>
+      <span aria-hidden="true">/</span>
+      <span>Monash Hub</span>
+    </p>
+    <h1 class="display post-title">不用登录的课程评分，以及怎么防刷</h1><p class="lede">不登录也能给课程打分。一个浏览器怎么保证每门课只有一条评分，为什么限流按网络而不按密钥，以及这些还挡不住什么。</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-10-24T17:30:00+08:00">24 Oct 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>约 6 分钟</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/10/24/rating-abuse/">English</a>
+        <a href="/2026/10/24/rating-abuse-zh/" lang="zh-Hans" class="on" aria-current="page">中文</a>
+      </span>
+    </div>
+  </header>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p><a href="https://monashhub.secureview.tech">Monash Hub</a> 可以给课程打 1 到 5 星，教学、内容、考核、难度、工作量这几项可以选填（<a href="https://github.com/Waldo0926/monash-hub/pull/163">#163</a>）。我希望不登录也能评分。打个分还要先注册，新网站最后往往一条评分都没有。</p>
+
+<p>问题也很明显：谁都能评，那一个人就能评五十次。这篇讲几层让刷分变难的做法，以及它们管不到的地方。</p>
+
+<h2 id="每人每门课一条">每人每门课一条</h2>
+
+<p>登录用户的评分属于账号。没登录的评分属于一个随机密钥：浏览器第一次评分时生成（<code class="language-plaintext highlighter-rouge">crypto.randomUUID()</code>），存在 <code class="language-plaintext highlighter-rouge">localStorage</code> 里，之后每次请求都放在 <code class="language-plaintext highlighter-rouge">X-Guest-Key</code> 请求头里发过来。</p>
+
+<p>数据库保证每个主人每门课只有一条：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">UniqueConstraint</span><span class="p">(</span><span class="s">"author_id"</span><span class="p">,</span> <span class="s">"unit_code"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">"uq_unit_review_once"</span><span class="p">),</span>
+<span class="n">UniqueConstraint</span><span class="p">(</span><span class="s">"guest_key"</span><span class="p">,</span> <span class="s">"unit_code"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">"uq_unit_review_guest_once"</span><span class="p">),</span>
+<span class="n">CheckConstraint</span><span class="p">(</span><span class="s">"author_id IS NOT NULL OR guest_key IS NOT NULL"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">"ck_unit_review_owner"</span><span class="p">),</span>
+</code></pre></div></div>
+
+<p>再评一次就是改原来那条，学生可以改主意。如果同一个人的两次保存同时到达，第二次插入会撞上唯一约束，代码接住 <code class="language-plaintext highlighter-rouge">IntegrityError</code>，把它变成一次修改。</p>
+
+<h2 id="密钥不能原样存">密钥不能原样存</h2>
+
+<p>访客密钥相当于修改这条评分的密码。如果表泄露了，而密钥是原样存的，任何人都能拿着它去改别人的评分。所以存的是用服务器密钥算的 HMAC：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">guest_hash</span><span class="p">(</span><span class="n">raw</span><span class="p">):</span>
+    <span class="n">raw</span> <span class="o">=</span> <span class="p">(</span><span class="n">raw</span> <span class="ow">or</span> <span class="s">""</span><span class="p">).</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">_keyed</span><span class="p">(</span><span class="sa">f</span><span class="s">"guest:</span><span class="si">{</span><span class="n">raw</span><span class="si">}</span><span class="s">"</span><span class="p">)</span> <span class="k">if</span> <span class="n">GUEST_KEY</span><span class="p">.</span><span class="n">match</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span> <span class="k">else</span> <span class="bp">None</span>
+</code></pre></div></div>
+
+<p>有一个测试专门检查存下来的值里不包含发过来的密钥。</p>
+
+<h2 id="密钥限不住人所以按网络限">密钥限不住人，所以按网络限</h2>
+
+<p>浏览器想换密钥随时都能换：清掉存储、开无痕窗口，或者写个脚本。所以密钥只用来认“这条是谁的”，限流按网络地址算：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>对象</th>
+      <th>限制</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>一个账号或一个访客密钥</td>
+      <td>每天最多保存 30 次评分</td>
+    </tr>
+    <tr>
+      <td>同一网络地址的未登录评分</td>
+      <td>每天 100 次</td>
+    </tr>
+    <tr>
+      <td>同一地址的所有 API 请求（nginx）</td>
+      <td>每秒 20 次</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>每天 100 次看起来很宽松，这是故意的。校园 Wi-Fi 下，一整个大课教室可能只共用几个地址。严到能挡住一个人的限制，会把一整个班挡在外面。地址存的也是 HMAC，不是 IP 本身。</p>
+
+<p>拿到真实地址要小心。<code class="language-plaintext highlighter-rouge">X-Forwarded-For</code> 客户端想写什么都行，所以 API 只认 nginx 根据连接本身设置的 <code class="language-plaintext highlighter-rouge">X-Real-IP</code>，而且只在请求来自可信代理时才认。绕过 nginx 直接打到 API 的请求按它自己的地址限流，没法每次换一个地址。</p>
+
+<h2 id="加锁再计数">加锁再计数</h2>
+
+<p>计数放在 PostgreSQL 里而不是内存里，因为 API 有多个 worker，每个 worker 各数各的，限制就变成了好几份。这个限流器最早是给登录写的，当时有个竞态：同时到达的几次猜密码都数到同样的历史次数，结果全部放行。从 <a href="https://github.com/Waldo0926/monash-hub/pull/148">#148</a> 开始，检查前先对这个键加一把事务级 advisory lock，评分用的就是这个版本：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="n">db</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="n">select</span><span class="p">(</span><span class="n">func</span><span class="p">.</span><span class="n">pg_advisory_xact_lock</span><span class="p">(</span><span class="n">func</span><span class="p">.</span><span class="n">hashtext</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">limit</span><span class="p">.</span><span class="n">kind</span><span class="si">}</span><span class="s">:</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s">"</span><span class="p">))))</span>
+    <span class="n">since</span> <span class="o">=</span> <span class="n">_now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">limit</span><span class="p">.</span><span class="n">window_seconds</span><span class="p">)</span>
+    <span class="n">count</span><span class="p">,</span> <span class="n">oldest</span> <span class="o">=</span> <span class="n">db</span><span class="p">.</span><span class="n">execute</span><span class="p">(...).</span><span class="n">one</span><span class="p">()</span>  <span class="c1"># 这个键在窗口期内的次数
+</span>    <span class="k">if</span> <span class="p">(</span><span class="n">count</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">limit</span><span class="p">.</span><span class="n">max_events</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">Throttled</span><span class="p">(</span><span class="n">retry_after</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>同一个键的请求会排队，等前一个提交了再数。被限流的请求返回 429，带 <code class="language-plaintext highlighter-rouge">Retry-After</code>。</p>
+
+<h2 id="评分保存之后">评分保存之后</h2>
+
+<ul>
+  <li><strong>举报和隐藏。</strong> 评分可以像论坛帖子一样被举报，管理员可以隐藏。被隐藏的评分不计入平均分，但作者自己还能看到和修改。</li>
+  <li><strong>作者信息尽量少。</strong> 登录用户的评分别人只看到名字首字母，未登录的评分连首字母都没有。学生评价教学团队时应该能说实话。</li>
+  <li><strong>平均分读取时现算。</strong> 每页一条分组查询，不存平均分，也就不会和实际数据对不上。选填的每一项都有自己的人数，两个人填的平均分就标两个人。</li>
+</ul>
+
+<h2 id="这些挡不住什么">这些挡不住什么</h2>
+
+<p>这些做法提高了刷分的成本，但没法让刷分变成不可能。一个人在手机流量、家里 Wi-Fi 和 VPN 之间切换，每个地址又有 100 次。一个人用一个浏览器每门课只评一次，看起来就和真实学生一模一样，因为对方可能本来就是。</p>
+
+<p>对付这种情况主要不靠代码。页面会显示平均分是多少人打的，不到三个人时会提示平均分仅供参考。举报会有人看。如果刷分从偶尔变成常态，下一步是要求评分前验证邮箱，账号系统本来就支持（<a href="https://github.com/Waldo0926/monash-hub/blob/main/docs/adr/0005-accounts-without-identity.md">ADR 0005</a>）。</p>
+
+<h2 id="测试">测试</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">test_signed_out_ratings_are_limited_per_network</code>：同一地址用三个新密钥评分，第三次返回 429。</li>
+  <li><code class="language-plaintext highlighter-rouge">test_the_browser_key_is_not_stored_as_sent</code>。</li>
+  <li>一个 Playwright 测试：访客给课程评分，另一个浏览器看到的是别人的评分，第一个浏览器再把评分撤回（<a href="https://github.com/Waldo0926/monash-hub/pull/205">#205</a>）。</li>
+</ul>
+
+<p>代码：<a href="https://github.com/Waldo0926/monash-hub/blob/main/backend/app/api/v1/reviews.py"><code class="language-plaintext highlighter-rouge">reviews.py</code></a>、<a href="https://github.com/Waldo0926/monash-hub/blob/main/backend/app/core/throttle.py"><code class="language-plaintext highlighter-rouge">throttle.py</code></a>、<a href="https://github.com/Waldo0926/monash-hub/blob/main/frontend/composables/useGuestKey.ts"><code class="language-plaintext highlighter-rouge">useGuestKey.ts</code></a>。</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">本文目录</p>
+      <ol><li><a href="#每人每门课一条">每人每门课一条</a></li><li><a href="#密钥不能原样存">密钥不能原样存</a></li><li><a href="#密钥限不住人所以按网络限">密钥限不住人，所以按网络限</a></li><li><a href="#加锁再计数">加锁再计数</a></li><li><a href="#评分保存之后">评分保存之后</a></li><li><a href="#这些挡不住什么">这些挡不住什么</a></li><li><a href="#测试">测试</a></li></ol>
+      <a class="toc-back" href="/zh/#writing">全部文章</a>
+    </aside>
+  </div>
+  <nav class="more" aria-label="更多文章">
+    <a class="card more-link" href="/2026/10/24/translation-pipeline-zh/">
+      <span class="more-label">上一篇 · Monash Hub</span>
+      <span class="more-title">不花钱翻译 Monash Handbook</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/10/24/secureview-keys-zh/">
+      <span class="more-label">下一篇 · SecureView</span>
+      <span class="more-title">服务器读不了的文件分享</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Monash University 计算机科学。后端和 AI 应用开发。</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">运行状态</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

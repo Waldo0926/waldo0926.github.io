@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>100 users, 3% CPU, and most uploads failing | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="100 users, 3% CPU, and most uploads failing" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="At 100 concurrent users, up to 78% of uploads failed while the CPU sat at 3%. How the cause was found, a first fix that made things worse, and the fix that brought failures to zero." />
+<meta property="og:description" content="At 100 concurrent users, up to 78% of uploads failed while the CPU sat at 3%. How the cause was found, a first fix that made things worse, and the fix that brought failures to zero." />
+<link rel="canonical" href="https://blog.secureview.tech/2026/10/24/secureview-pool/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/10/24/secureview-pool/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/secureview-pool.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-24T18:20:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/secureview-pool.png" />
+<meta property="twitter:title" content="100 users, 3% CPU, and most uploads failing" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-10-24T18:20:00+08:00","datePublished":"2026-10-24T18:20:00+08:00","description":"At 100 concurrent users, up to 78% of uploads failed while the CPU sat at 3%. How the cause was found, a first fix that made things worse, and the fix that brought failures to zero.","headline":"100 users, 3% CPU, and most uploads failing","image":"https://blog.secureview.tech/assets/og/secureview-pool.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/10/24/secureview-pool/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/10/24/secureview-pool/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/10/24/secureview-pool/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/10/24/secureview-pool-zh/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/#writing">Writing</a>
+        <a href="/#projects">Projects</a>
+        <a href="/about/">About</a>
+      </nav>
+      <a class="lang-switch" href="/2026/10/24/secureview-pool-zh/" lang="zh-Hans" hreflang="zh-Hans">中文</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/#writing">Writing</a>
+      <span aria-hidden="true">/</span>
+      <span>SecureView</span>
+    </p>
+    <h1 class="display post-title">100 users, 3% CPU, and most uploads failing</h1><p class="lede">At 100 concurrent users, up to 78% of uploads failed while the CPU sat at 3%. How the cause was found, a first fix that made things worse, and the fix that brought failures to zero.</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-10-24T18:20:00+08:00">24 Oct 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>5 min read</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/10/24/secureview-pool/" class="on" aria-current="page">English</a>
+        <a href="/2026/10/24/secureview-pool-zh/" lang="zh-Hans">中文</a>
+      </span>
+    </div>
+  </header>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p><a href="https://github.com/Waldo0926/SecureView">SecureView</a>, our final year project, has a load test tool in <code class="language-plaintext highlighter-rouge">loadtest/</code>. It signs in as many users at once, uploads, downloads and shares files, and checks the SHA-256 of every downloaded file against the original. Up to 50 concurrent users the server returned no errors. At 100, 65% to 78% of uploads failed with HTTP 500.</p>
+
+<p>The server’s CPU averaged 3% and memory was flat. So the server was not busy. It was stuck waiting on something.</p>
+
+<h2 id="the-error">The error</h2>
+
+<p>Every failure had the same message in the log:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>QueuePool limit of size 5 overflow 10 reached, connection timed out, timeout 30.00
+</code></pre></div></div>
+
+<p>The API ran as one uvicorn process with SQLAlchemy’s default pool: 5 connections plus 10 overflow, so at most 15 database transactions at once. A request that waits 30 seconds for a connection gets a 500. But 15 connections should be plenty for 100 users if each request holds one for a few milliseconds. Something was holding them much longer.</p>
+
+<h2 id="the-first-guess-was-wrong">The first guess was wrong</h2>
+
+<p>The test report guessed that a file transfer kept its database connection open for the whole transfer. That sounded likely, so I checked it rather than fixing it straight away. I ran three deliberately slow downloads of a 30 MB file while watching MySQL. There were <strong>no open transactions</strong> during the transfers. The download commits before it starts streaming, which gives the connection back.</p>
+
+<p>So downloads were fine. I reproduced the failure on my laptop at 100 users (80% of uploads failed, throughput fell to 0.33 operations a second), which meant I could study it without the shared server. The log showed every timeout happening inside authentication.</p>
+
+<h2 id="the-cause-a-deadlock-between-two-pools">The cause: a deadlock between two pools</h2>
+
+<p>The upload endpoint is <code class="language-plaintext highlighter-rouge">async</code>. Here is what one upload did:</p>
+
+<ol>
+  <li>Authentication checked out a database connection and did not give it back.</li>
+  <li>The upload ran its database calls on the event loop.</li>
+  <li>To write the uploaded file to disk, it awaited the thread pool once per chunk, still holding the connection.</li>
+</ol>
+
+<p>The thread pool has 40 threads. With 100 users, 15 uploads held all 15 connections while waiting for a free thread, and all 40 threads were other requests waiting for a connection. Each side was waiting for the other. Nothing moved until the 30 second pool timeout, and then the requests failed.</p>
+
+<p>This explains the 3% CPU. Nothing was computing. Everything was waiting.</p>
+
+<h2 id="the-fix-that-made-it-worse">The fix that made it worse</h2>
+
+<p>The obvious fix was to release the connection after authentication, before writing the file. I tried only that, and <strong>50 users</strong> became slow too: download p95 went to 30 seconds.</p>
+
+<p>The upload’s remaining database calls still ran on the event loop. Now they waited for a connection <em>on the event loop</em>, which blocks every request in the process, not just the upload. I did not ship it.</p>
+
+<h2 id="the-fix-that-worked">The fix that worked</h2>
+
+<p>The upload is split into three parts so that no database call runs on the event loop and no connection is held while waiting for a thread:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="k">def</span> <span class="nf">upload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">actor</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">ciphertext</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="c1"># 1. checks in the thread pool: keys, limits. The connection is released after.
+</span>    <span class="n">owner_key</span><span class="p">,</span> <span class="n">recovery_key</span> <span class="o">=</span> <span class="k">await</span> <span class="n">run_in_threadpool</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">_check_upload</span><span class="p">,</span> <span class="n">actor</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+
+    <span class="c1"># 2. write the encrypted file to a staging object. No connection held.
+</span>    <span class="n">staged</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">storage</span><span class="p">.</span><span class="n">stage_upload</span><span class="p">(</span><span class="n">ciphertext</span><span class="p">,</span> <span class="n">max_size_bytes</span><span class="o">=</span><span class="p">...)</span>
+
+    <span class="c1"># 3. back in the thread pool: rows, audit event, publish, commit.
+</span>    <span class="k">return</span> <span class="k">await</span> <span class="n">run_in_threadpool</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">_record_upload</span><span class="p">,</span> <span class="n">actor</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">staged</span><span class="p">,</span> <span class="n">owner_key</span><span class="p">,</span> <span class="n">recovery_key</span>
+    <span class="p">)</span>
+</code></pre></div></div>
+
+<p>Authentication also ends its read-only transaction now, so no request carries a connection from authentication into the endpoint. (Error handling is left out above. A failure in step 2 still rolls back and removes the staged object.)</p>
+
+<h2 id="results">Results</h2>
+
+<p>Same laptop, same tool, same accounts, 30 seconds per step with 1 MiB files:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: right">Concurrent users</th>
+      <th style="text-align: right">Failed before</th>
+      <th style="text-align: right">ops/s before</th>
+      <th style="text-align: right">Failed after</th>
+      <th style="text-align: right">ops/s after</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: right">20</td>
+      <td style="text-align: right">0%</td>
+      <td style="text-align: right">53.6</td>
+      <td style="text-align: right">0%</td>
+      <td style="text-align: right">58.4</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">50</td>
+      <td style="text-align: right">0%</td>
+      <td style="text-align: right">54.5</td>
+      <td style="text-align: right">0%</td>
+      <td style="text-align: right">56.1</td>
+    </tr>
+    <tr>
+      <td style="text-align: right"><strong>100</strong></td>
+      <td style="text-align: right"><strong>80%</strong></td>
+      <td style="text-align: right"><strong>0.33</strong></td>
+      <td style="text-align: right"><strong>0%</strong></td>
+      <td style="text-align: right"><strong>56.1</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>After the fix, throughput stays at about 56 operations a second at every step and latency grows with the queue, which is the machine’s real limit. The laptop numbers are a local reproduction. On the real server, the run the night before had 23 of 103 uploads succeed at 100 users (78% failed). The re-run that night had 102 of 102 succeed, and every download matched its original hash.</p>
+
+<h2 id="tests-that-keep-it-fixed">Tests that keep it fixed</h2>
+
+<ul>
+  <li>A unit test checks that the connection is released before staging starts.</li>
+  <li>The fault injection test kills the database connection at the exact commit that writes the file row, and checks that the cleanup job removes the orphaned object.</li>
+  <li>The full backend suite passed on MySQL after the change: 633 tests, 85% coverage.</li>
+</ul>
+
+<h2 id="takeaways">Takeaways</h2>
+
+<ul>
+  <li>Low CPU with failing requests means something is waiting. Look for pools, locks and timeouts, not for slow code.</li>
+  <li>Check a guess before fixing it. The first theory here sounded right and was wrong, and one measurement showed it.</li>
+  <li>In async Python, a blocking database call on the event loop stalls everything. Either make the call async or run it in the thread pool, and do not hold a connection across an <code class="language-plaintext highlighter-rouge">await</code>.</li>
+  <li>Keep the before and after numbers from the same tool. Then the fix is a measurement, not a claim.</li>
+</ul>
+
+<p>The full write-up with raw data is in <a href="https://github.com/Waldo0926/SecureView/tree/main/docs/performance/pool-fix-2026-10-04"><code class="language-plaintext highlighter-rouge">docs/performance/pool-fix-2026-10-04/</code></a>, and the code is <a href="https://github.com/Waldo0926/SecureView/blob/main/backend/app/services/file_service.py"><code class="language-plaintext highlighter-rouge">file_service.py</code></a>.</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">On this page</p>
+      <ol><li><a href="#the-error">The error</a></li><li><a href="#the-first-guess-was-wrong">The first guess was wrong</a></li><li><a href="#the-cause-a-deadlock-between-two-pools">The cause: a deadlock between two pools</a></li><li><a href="#the-fix-that-made-it-worse">The fix that made it worse</a></li><li><a href="#the-fix-that-worked">The fix that worked</a></li><li><a href="#results">Results</a></li><li><a href="#tests-that-keep-it-fixed">Tests that keep it fixed</a></li><li><a href="#takeaways">Takeaways</a></li></ol>
+      <a class="toc-back" href="/#writing">All writing</a>
+    </aside>
+  </div>
+  <nav class="more" aria-label="More posts">
+    <a class="card more-link" href="/2026/10/24/secureview-keys/">
+      <span class="more-label">Previous · SecureView</span>
+      <span class="more-title">Sharing files the server cannot read</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/10/25/quote-only-rag/">
+      <span class="more-label">Next · Q&A bot</span>
+      <span class="more-title">A Q&A bot where the model is only allowed to quote</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Computer Science at Monash University. Backend and AI application development.</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">Status</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

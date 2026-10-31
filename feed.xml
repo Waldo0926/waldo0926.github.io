@@ -1,0 +1,881 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://blog.secureview.tech/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.secureview.tech/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-10-31T14:22:17+08:00</updated><id>https://blog.secureview.tech/feed.xml</id><title type="html">Shuoxun Wen</title><subtitle>How I build and run my own projects.</subtitle><author><name>Shuoxun Wen</name></author><entry xml:lang="zh-Hans"><title type="html">让 ChatGPT 也能用 Study Kit，但只给自己用</title><link href="https://blog.secureview.tech/2026/10/30/study-kit-remote-zh/" rel="alternate" type="text/html" title="让 ChatGPT 也能用 Study Kit，但只给自己用" /><published>2026-10-30T18:00:00+08:00</published><updated>2026-10-30T18:00:00+08:00</updated><id>https://blog.secureview.tech/2026/10/30/study-kit-remote-zh</id><content type="html" xml:base="https://blog.secureview.tech/2026/10/30/study-kit-remote-zh/"><![CDATA[<p><a href="https://github.com/Waldo0926/monash-study-kit">Monash Study Kit</a> 把你自己的 Moodle 和 Ed 同步到电脑上，让 AI 软件通过 MCP 去搜。Claude Desktop 和 Claude Code 是在本机把它当程序启动，用 stdio 通信。ChatGPT 和网页版、手机上的 Claude 做不到这一点，它们跑在别人的服务器上，只能去调一个 HTTPS 地址。</p>
+
+<p>10 月 30 日发布的 1.4.0 加了一个可选的 <code class="language-plaintext highlighter-rouge">monash remote</code> 模式来解决这个问题。这篇讲它是怎么锁住的，因为一个能读你 Moodle 的公网地址，出错的代价很大。</p>
+
+<h2 id="只给一个人只读自己的数据">只给一个人，只读自己的数据</h2>
+
+<p>我之前就决定不替所有人托管 Study Kit。那样我的服务器上会存着每个同学的 Moodle 登录和 Ed 令牌，被攻破一次就全部泄露。<a href="https://docs.secureview.tech/zh-cn/private-tools/">文档</a>里也是这么解释的。</p>
+
+<p>所以远程模式只给数据的主人自己用。你在自己的服务器上跑，或者在自己电脑上开一个 Cloudflare 免费的临时隧道，它把你同步好的资料提供给你自己的 AI 软件。setup 不会启动它，安装和更新也不会开任何端口。只有你自己运行 <code class="language-plaintext highlighter-rouge">monash remote serve</code>，它才开始监听。</p>
+
+<p>服务器还拒绝绑定在本机回环以外的地址：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">make_server</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">con</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">addr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s">"127.0.0.1"</span><span class="p">,</span> <span class="s">"localhost"</span><span class="p">}:</span>
+        <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">"Bind remote MCP on loopback behind an HTTPS reverse proxy"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>HTTPS 由前面的 nginx 或隧道负责。每个请求都会检查 <code class="language-plaintext highlighter-rouge">Host</code> 和 <code class="language-plaintext highlighter-rouge">Origin</code> 是否和你给的公网地址一致，所以别的网页把自己的域名指到你机器上（DNS rebinding）会直接拿到 403。</p>
+
+<h2 id="用配对码代替密码">用配对码代替密码</h2>
+
+<p>ChatGPT 和 Claude 用 OAuth 连接，通常意味着要有一个输密码的登录页。一个只有一个人用的工具，我不想为它做账号系统。所以登录页要的是你在自己终端里拿到的码：</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ monash remote pair
+Pairing code: 3F9A-0C21-B7E4
+Valid for 10 minutes, single use.
+</code></pre></div></div>
+
+<p>数据库里只存它的 SHA-256 哈希。输对一次就作废。输错五次窗口就关掉，要重新运行 <code class="language-plaintext highlighter-rouge">pair</code>。没有打开的窗口时，页面会直接提示，什么都不接受。别人就算知道了你的地址，不在十分钟内坐在你的电脑前也进不来。</p>
+
+<h2 id="谁可以连进来">谁可以连进来</h2>
+
+<p>MCP 软件在登录之前会先自己注册，协议规定注册不需要登录。也就是说谁都能注册。有两点让这件事不要紧。</p>
+
+<p>第一，只有回调地址全部在白名单上，注册才会被接受：<code class="language-plaintext highlighter-rouge">claude.ai</code>、<code class="language-plaintext highlighter-rouge">claude.com</code> 和 <code class="language-plaintext highlighter-rouge">chatgpt.com</code> 上那几条固定的 OAuth 回调路径，整个主机名完全匹配，不能带端口、查询串或片段。想把授权码发到别处的客户端在注册时就被拒了，所以就算授权码被截到，也只能回到 Claude 或 ChatGPT。可以用参数额外加一个精确的地址，但不能写通配。</p>
+
+<p>第二，注册的客户端最多 50 个。满了以后，会清掉注册超过一小时、从来没换到过令牌的客户端。真正在用的客户端一定有刷新令牌，所以不会被清掉。</p>
+
+<p>剩下的是公开客户端的标准 OAuth：</p>
+
+<ul>
+  <li>必须用 PKCE（S256）。只有 verifier 算出来的哈希和登录时的 challenge 一致，授权码才能换令牌。</li>
+  <li>访问令牌一小时过期。刷新令牌 30 天过期，每用一次就换新的，旧的立刻失效。</li>
+  <li>令牌以哈希形式存在 <code class="language-plaintext highlighter-rouge">secrets/remote-mcp.db</code>，文件创建时权限就是 0600。</li>
+  <li><code class="language-plaintext highlighter-rouge">monash remote revoke --all</code> 删掉所有客户端、授权码和令牌，并关掉还开着的配对窗口。</li>
+</ul>
+
+<h2 id="远程只开放读的工具">远程只开放读的工具</h2>
+
+<p>本地的 Study Kit 有 18 个工具。其中两个会启动 Moodle 登录或同步，这需要在那台机器上开浏览器、输密码。远程模式把它们从工具列表里去掉，就算软件硬要按名字调用，也会被拒绝：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">spec</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">spec</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">"jsonrpc"</span><span class="p">:</span> <span class="s">"2.0"</span><span class="p">,</span> <span class="s">"id"</span><span class="p">:</span> <span class="n">msg</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"id"</span><span class="p">),</span> <span class="s">"error"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">"code"</span><span class="p">:</span> <span class="o">-</span><span class="mi">32602</span><span class="p">,</span> <span class="s">"message"</span><span class="p">:</span> <span class="s">"Run login or sync on the server's own terminal"</span><span class="p">}}</span>
+</code></pre></div></div>
+
+<p>所以令牌能碰到的只有 16 个查询工具。令牌被偷的话，在它过期或被你撤销之前，对方能读你的课件，这当然不好，但他没法用你的身份登录，也改不了 Moodle 或 Ed 上的任何东西。不管本地还是远程，Study Kit 都没有提交作业、发帖或做测验的工具。</p>
+
+<h2 id="怎么验证的">怎么验证的</h2>
+
+<p><a href="https://github.com/Waldo0926/monash-study-kit/blob/main/tests/test_remote.py"><code class="language-plaintext highlighter-rouge">tests/test_remote.py</code></a> 里有 22 个测试，用编造的数据在一台机器上走完整个流程：从 401 开始的服务发现、注册、配对、PKCE、令牌过期和轮换、撤销、回调白名单、错误的 Host 和 Origin，以及拒绝登录和同步。有一个测试专门打开旧格式的数据库（令牌还没和服务器地址绑定的时候），确认升级以后之前存的令牌还能用。</p>
+
+<p>10 月 30 日，PyPI 上的 1.4.0 包也在干净环境里用 Claude 和 ChatGPT 真实的回调地址走了一遍同样的登录和查询流程。那次测试没有公网域名。用我自己的域名和服务器，ChatGPT Plus 可以查我的 Moodle 和 Ed。具体步骤在<a href="https://docs.secureview.tech/zh-cn/study-kit/remote/">自己托管</a>。</p>
+
+<h2 id="小结">小结</h2>
+
+<ul>
+  <li>个人工具的远程模式就应该一直是个人的。一个主人，只有他自己的数据，不替别人启动任何东西。</li>
+  <li>只有一个用户的时候，一个从自己终端拿的码就能代替整套账号系统。</li>
+  <li>回调地址在客户端注册时就查清楚，后面每一步都能放心用。</li>
+  <li>想清楚哪些工具可以离开这台机器。会登录或会写东西的，都留在本地。</li>
+</ul>]]></content><author><name>Shuoxun Wen</name></author><summary type="html"><![CDATA[Study Kit 1.4.0 起，ChatGPT 和网页版 Claude 也能连上。它仍然只给一个人用：配对码从你自己的终端拿，回调地址只认几个，令牌会轮换，远程只开放只读的工具。]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/study-kit-remote-zh.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/study-kit-remote-zh.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="en"><title type="html">Letting ChatGPT reach Study Kit, for one person only</title><link href="https://blog.secureview.tech/2026/10/30/study-kit-remote/" rel="alternate" type="text/html" title="Letting ChatGPT reach Study Kit, for one person only" /><published>2026-10-30T18:00:00+08:00</published><updated>2026-10-30T18:00:00+08:00</updated><id>https://blog.secureview.tech/2026/10/30/study-kit-remote</id><content type="html" xml:base="https://blog.secureview.tech/2026/10/30/study-kit-remote/"><![CDATA[<p><a href="https://github.com/Waldo0926/monash-study-kit">Monash Study Kit</a> syncs your own Moodle and Ed to your computer and lets an AI app search them over MCP. Claude Desktop and Claude Code start it as a local program and talk to it over stdio. ChatGPT and Claude on the web or phone cannot do that. They live on someone else’s server, so they need an HTTPS address to call.</p>
+
+<p>Version 1.4.0 came out on 30 October with an optional <code class="language-plaintext highlighter-rouge">monash remote</code> mode for this. This post is about how it is locked down, because a URL on the internet that can read your Moodle is not something to get wrong.</p>
+
+<h2 id="one-person-their-own-data">One person, their own data</h2>
+
+<p>I already decided not to host Study Kit for everyone. That would mean keeping every student’s Moodle login and Ed token on my server, and one break in would expose all of them. The <a href="https://docs.secureview.tech/private-tools/">docs</a> explain the same reason.</p>
+
+<p>So remote mode is for the owner of the data only. You run it on your own server, or on your own laptop behind a free Cloudflare quick tunnel, and it serves your synced files to your own AI apps. Setup never starts it, and installing or updating the package does not open any port. Nothing listens until you run <code class="language-plaintext highlighter-rouge">monash remote serve</code> yourself.</p>
+
+<p>The server also refuses to bind anywhere except loopback:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">make_server</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">con</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">addr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s">"127.0.0.1"</span><span class="p">,</span> <span class="s">"localhost"</span><span class="p">}:</span>
+        <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">"Bind remote MCP on loopback behind an HTTPS reverse proxy"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>HTTPS comes from nginx or the tunnel in front of it. Every request is checked for a <code class="language-plaintext highlighter-rouge">Host</code> and <code class="language-plaintext highlighter-rouge">Origin</code> that match the public address you gave, so a web page that points its own domain at your machine (DNS rebinding) gets a 403.</p>
+
+<h2 id="a-pairing-code-instead-of-a-password">A pairing code instead of a password</h2>
+
+<p>ChatGPT and Claude connect with OAuth, which normally means a sign in page with a password. I did not want to add accounts to a tool for one person. Instead the sign in page asks for a code you get from your own terminal:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ monash remote pair
+Pairing code: 3F9A-0C21-B7E4
+Valid for 10 minutes, single use.
+</code></pre></div></div>
+
+<p>The database keeps only its SHA-256 hash. A right code is used up at once. Five wrong codes close the window, and you run <code class="language-plaintext highlighter-rouge">pair</code> again. If nobody has opened a window, the page says so and does not accept anything. Someone who finds your URL cannot get in without also being at your keyboard in the last ten minutes.</p>
+
+<h2 id="who-is-allowed-to-connect">Who is allowed to connect</h2>
+
+<p>MCP apps register themselves before signing in, and the protocol says registration needs no login. That means anyone can register. Two things keep that from mattering.</p>
+
+<p>First, a registration is only accepted when every callback address is on a short list: the exact OAuth callback paths on <code class="language-plaintext highlighter-rouge">claude.ai</code>, <code class="language-plaintext highlighter-rouge">claude.com</code> and <code class="language-plaintext highlighter-rouge">chatgpt.com</code>, matched on the whole host with no port, query or fragment. A client that wants its code sent anywhere else is turned away at the door, so a stolen code can only travel back to Claude or ChatGPT. You can add one exact extra address with a flag, never a pattern.</p>
+
+<p>Second, registrations are capped at 50. When it is full, clients that registered more than an hour ago and never got a token are cleared out. A client that is really in use always has a refresh token, so it stays.</p>
+
+<p>The rest is standard OAuth for public clients:</p>
+
+<ul>
+  <li>PKCE with S256 is required. The code is only exchanged when the verifier hashes to the challenge from the sign in.</li>
+  <li>The access token lasts one hour. The refresh token lasts 30 days and is replaced every time it is used, so an old one stops working.</li>
+  <li>Tokens are stored as hashes in <code class="language-plaintext highlighter-rouge">secrets/remote-mcp.db</code>, which is created with mode 0600.</li>
+  <li><code class="language-plaintext highlighter-rouge">monash remote revoke --all</code> deletes every client, code and token and closes any open pairing window.</li>
+</ul>
+
+<h2 id="only-the-tools-that-read">Only the tools that read</h2>
+
+<p>Locally Study Kit has 18 tools. Two of them start a Moodle login or a sync, and those need a browser and your password on the machine itself. Remote mode drops them from the tool list and refuses them by name if an app calls them anyway:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">spec</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">spec</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">"jsonrpc"</span><span class="p">:</span> <span class="s">"2.0"</span><span class="p">,</span> <span class="s">"id"</span><span class="p">:</span> <span class="n">msg</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"id"</span><span class="p">),</span> <span class="s">"error"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">"code"</span><span class="p">:</span> <span class="o">-</span><span class="mi">32602</span><span class="p">,</span> <span class="s">"message"</span><span class="p">:</span> <span class="s">"Run login or sync on the server's own terminal"</span><span class="p">}}</span>
+</code></pre></div></div>
+
+<p>So the 16 query tools are all a token can reach. With a stolen token someone could read your course files until it expires or you revoke it, which is bad, but they could not log in as you or change anything on Moodle or Ed. Study Kit has no tool that submits, posts or attempts a quiz, locally or remotely.</p>
+
+<h2 id="how-i-checked-it">How I checked it</h2>
+
+<p><a href="https://github.com/Waldo0926/monash-study-kit/blob/main/tests/test_remote.py"><code class="language-plaintext highlighter-rouge">tests/test_remote.py</code></a> has 22 tests that run the whole flow on one machine with made up data: discovery from a 401, registration, pairing, PKCE, token expiry and rotation, revoke, the callback list, bad hosts and origins, and refusing login and sync. One test opens a database in the older layout, before tokens were tied to the server address, to make sure tokens saved there still work after the upgrade.</p>
+
+<p>On 30 October the 1.4.0 package from PyPI also went through the same sign in and query flow in a clean environment, using the real Claude and ChatGPT callback addresses. That check had no public domain. With my own domain and server, ChatGPT Plus can query my Moodle and Ed. The steps are on <a href="https://docs.secureview.tech/study-kit/remote/">Host it yourself</a>.</p>
+
+<h2 id="takeaways">Takeaways</h2>
+
+<ul>
+  <li>A remote mode for a personal tool should stay personal. One owner, their own data, nothing started for them.</li>
+  <li>A code from your own terminal replaces a whole account system when there is only one user.</li>
+  <li>Check callback addresses when a client registers. After that, every later step can trust them.</li>
+  <li>Decide which tools leave the machine. Anything that logs in or writes stays local.</li>
+</ul>]]></content><author><name>Shuoxun Wen</name></author><summary type="html"><![CDATA[Study Kit 1.4.0 can now be reached from ChatGPT and Claude on the web. It stays a server for one person: a pairing code from your own terminal, a short list of callback addresses, rotating tokens, and only the tools that read.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/study-kit-remote.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/study-kit-remote.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="zh-Hans"><title type="html">官方页面从 662 页到 3100 页，抓取失败也不丢</title><link href="https://blog.secureview.tech/2026/10/26/official-coverage-zh/" rel="alternate" type="text/html" title="官方页面从 662 页到 3100 页，抓取失败也不丢" /><published>2026-10-26T11:30:00+08:00</published><updated>2026-10-26T11:30:00+08:00</updated><id>https://blog.secureview.tech/2026/10/26/official-coverage-zh</id><content type="html" xml:base="https://blog.secureview.tech/2026/10/26/official-coverage-zh/"><![CDATA[<p>除了 Handbook，<a href="https://monashhub.secureview.tech">Monash Hub</a> 还存了一份 Monash 官方的学生页面：选课、考试、签证、学费、毕业。网站会把它们翻成中文、能搜索，站内助手也从这里找答案。到 10 月 25 日之前，这份副本只有 662 页，是从几个入口页顺着链接走出来的。</p>
+
+<p>这篇讲那个周末我把范围扩到 Monash 两个网站的全部学生页面，以及跟着出现的问题。</p>
+
+<h2 id="读-sitemap不再顺着链接走">读 sitemap，不再顺着链接走</h2>
+
+<p>从入口页顺着链接走，只能找到菜单里链到的页面。Monash 两个网站都有 sitemap，里面列了每一页，包括没有任何菜单指向的页。所以爬虫现在直接读 sitemap（<a href="https://github.com/Waldo0926/monash-hub/pull/215">#215</a>）：</p>
+
+<ul>
+  <li>monash.edu.my：整个网站。</li>
+  <li>monash.edu：students、admissions，以及 IT、商科、工程、理科几个学院的 sitemap，只留 <code class="language-plaintext highlighter-rouge">/students</code>、<code class="language-plaintext highlighter-rouge">/admissions</code> 和各学院的 <code class="language-plaintext highlighter-rouge">current-students</code> 部分。</li>
+</ul>
+
+<p>整站的 sitemap 大部分不是给学生看的。一个正则把新闻、活动、校友、教职工主页、开放日、登录和反馈表单、验证文件，以及附件里的 PDF 和图片都去掉。剩下大约 3100 页。</p>
+
+<p>已经收录的页面，就算不在 sitemap 里，只要还有正文就保留。Monash 换了地址的页面，保留原来的 slug 和翻译，挪到新地址。</p>
+
+<h2 id="再把不是指南的页面去掉">再把不是指南的页面去掉</h2>
+
+<p>第一版列表太宽了。“选课与课程规划”这一类有 1331 页，因为学院的页面默认都归到选课。后面分三次清理：</p>
+
+<ol>
+  <li><strong>学院里不是指南的页面</strong>（<a href="https://github.com/Waldo0926/monash-hub/pull/221">#221</a>）：174 页，包括领导名单、排名、竞赛和相册、2005 到 2017 年的游学帖子、实验室页面和测试副本。学院页面现在只有地址和课程有关时才算选课。</li>
+  <li><strong>学生打不开的页面</strong>（<a href="https://github.com/Waldo0926/monash-hub/pull/222">#222</a>）：5 个 eExam 页面就算登录了也返回 “Access Denied”，所以直接去掉，不再留旧内容。学费计算器只是跳转到一个应用，改成一个链接。</li>
+  <li><strong>讲已经过去的年份的页面</strong>（<a href="https://github.com/Waldo0926/monash-hub/pull/223">#223</a>）：152 页，比如 2016 到 2025 年的 OSHC 价目表、往年的校历。</li>
+</ol>
+
+<p>第三条写成了规则，明年一月照样生效：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">COMMENCEMENT_YEARS</span> <span class="o">=</span> <span class="mi">6</span>  <span class="c1"># 最长的双学位五年，再加一个学期休学
+</span>
+<span class="k">def</span> <span class="nf">outdated</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">year</span> <span class="o">=</span> <span class="n">year</span> <span class="ow">or</span> <span class="n">date</span><span class="p">.</span><span class="n">today</span><span class="p">().</span><span class="n">year</span>
+    <span class="n">years</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">YEAR</span><span class="p">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">).</span><span class="n">path</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s">"</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">years</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">if</span> <span class="n">BY_COMMENCEMENT</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s">"</span><span class="p">):</span>   <span class="c1"># 课程地图、“commenced”
+</span>        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">years</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">year</span> <span class="o">-</span> <span class="n">COMMENCEMENT_YEARS</span>
+    <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">years</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">year</span>
+</code></pre></div></div>
+
+<p>课程地图是例外。学生一直按入学那年的课程地图走，所以 2026 年保留 2021 年以后的。<code class="language-plaintext highlighter-rouge">YEAR</code> 这个正则会跳过 C2001 这种课程代码，还有 “students who commenced from 2014” 这种写法，它们说的不是过去的某一年。</p>
+
+<p>后来又发现一个员工工具：“Welcome to the Connect Tutor” 是 Monash Connect 给工作人员检查邮件回复用的（<a href="https://github.com/Waldo0926/monash-hub/pull/230">#230</a>）。它在 sitemap 里，所以被放进了支持类指南。</p>
+
+<h2 id="以前一次抓取失败就会让页面下线">以前一次抓取失败就会让页面下线</h2>
+
+<p>以前只要抓取失败，页面状态就变成 error，指南、搜索、重要日期和站内助手里都看不到它，直到下次抓成功。一次超时或者一次机器人验证，就能把内容还是对的页面藏起来。</p>
+
+<p>这种情况后来不少见了。10 月 25 日起，Monash 马来西亚校区的网站开始拒绝服务器的 IP。当晚一次全量重抓，有 359 页被拒。按旧规则，这些页面会全部下线。</p>
+
+<p>现在只有说明页面本身没了的回应才会让它下线（<a href="https://github.com/Waldo0926/monash-hub/pull/211">#211</a>）：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">record_failure</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">gone</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="n">page</span><span class="p">.</span><span class="n">fetch_error</span> <span class="o">=</span> <span class="n">message</span><span class="p">[:</span><span class="mi">2000</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">gone</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">page</span><span class="p">.</span><span class="n">content_hash</span><span class="p">:</span>      <span class="c1"># 404 或 410，或者还没存过内容
+</span>        <span class="n">page</span><span class="p">.</span><span class="n">status</span> <span class="o">=</span> <span class="s">"error"</span>
+        <span class="n">page</span><span class="p">.</span><span class="n">last_checked</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="n">now</span><span class="p">(</span><span class="n">UTC</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">page</span><span class="p">.</span><span class="n">status</span> <span class="o">==</span> <span class="s">"error"</span><span class="p">:</span>           <span class="c1"># 被旧规则藏起来的，恢复
+</span>        <span class="n">page</span><span class="p">.</span><span class="n">status</span> <span class="o">=</span> <span class="s">"ok"</span>
+</code></pre></div></div>
+
+<p>403 或者超时，保留上一份好的内容，<code class="language-plaintext highlighter-rouge">last_checked</code> 也不动，因为读者看到的“最后检查日期”应该是最后一次真正读到的时间。<code class="language-plaintext highlighter-rouge">fetch_error</code> 会让这一页在下次运行时优先重抓。</p>
+
+<p>还有两种情况看起来成功了，其实没有：</p>
+
+<ul>
+  <li>被删掉的页面常常跳转到上一级栏目或者首页。跳过去的页面看起来很正常，会悄悄替换掉原来的内容。现在跳到上级页面算失败。</li>
+  <li>很长的页面突然只读到很短的内容，保留上一份好的。官网上本来就短的页面，比如一个只有链接的入口页，在没有更长的旧内容可留时照常存（<a href="https://github.com/Waldo0926/monash-hub/pull/217">#217</a>）。</li>
+</ul>
+
+<h2 id="网站拒绝服务器的时候">网站拒绝服务器的时候</h2>
+
+<p>monash.edu.my 拒绝 VPS 的这段时间，它的页面可以在另一台电脑上读，打包成一个 harvest 文件交给服务器。服务器用和自己抓取同一套代码存进去（<code class="language-plaintext highlighter-rouge">deployment/crawl.sh official-harvest FILE</code>）。</p>
+
+<p>第一次 harvest 就出了新问题。一次运行在写文件中途被停掉，文件损坏了，读取到损坏的地方就停，结果服务器 680 页一页都没导入。现在每一页是一个独立的 gzip 成员，读的时候跳过损坏的那个，从下一个接着读（<a href="https://github.com/Waldo0926/monash-hub/pull/216">#216</a>）。服务器也改成一页一页地读，因为 723 页一起放进内存，超过了爬虫容器的 2 GB。</p>
+
+<h2 id="handbook-这边也加了上限">Handbook 这边也加了上限</h2>
+
+<p>同一个周末，每周的 Handbook 抓取也加了几个上限（<a href="https://github.com/Waldo0926/monash-hub/pull/212">#212</a>）：</p>
+
+<ul>
+  <li>一次运行最多把 25 门课标成停开，目标多的时候按 2% 算。不然 Handbook 哪天对所有请求都返回 404，所有课程都会下线一周。</li>
+  <li>连续失败 30 个就停下，并记下原因。以前 Handbook 挂了，5000 门课每门要试三次。</li>
+  <li>运行失败，或者超过 5% 的目标失败，每天最多发一封邮件。<code class="language-plaintext highlighter-rouge">/api/health</code> 能看到每类抓取最近一次的结果。</li>
+</ul>
+
+<h2 id="小结">小结</h2>
+
+<ul>
+  <li>sitemap 比顺着菜单爬全，但它什么都列，所以过滤规则比抓取本身更重要。</li>
+  <li>“过时”要写成带当前年份的规则，不要写成一张页面清单。</li>
+  <li>只有来源说页面没了，才把内容撤下。被拒绝或者超时，说明不了页面本身。</li>
+</ul>
+
+<p>代码：<a href="https://github.com/Waldo0926/monash-hub/blob/main/crawler/official/coverage.py">coverage.py</a>、<a href="https://github.com/Waldo0926/monash-hub/blob/main/crawler/official/discover.py">discover.py</a>、<a href="https://github.com/Waldo0926/monash-hub/blob/main/backend/app/knowledge/repository.py">repository.py</a>。更新日志：<a href="https://github.com/Waldo0926/monash-hub/blob/main/CHANGELOG.md">CHANGELOG.md</a>。</p>]]></content><author><name>Shuoxun Wen</name></author><summary type="html"><![CDATA[一个周末，Monash Hub 收录的官方页面从 662 页变成 3100 页左右。页面列表怎么从两个网站的 sitemap 来，哪些页要剔掉，以及抓取失败为什么不再让页面下线。]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/official-coverage-zh.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/official-coverage-zh.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="en"><title type="html">From 662 official pages to 3,100, without losing any when a crawl fails</title><link href="https://blog.secureview.tech/2026/10/26/official-coverage/" rel="alternate" type="text/html" title="From 662 official pages to 3,100, without losing any when a crawl fails" /><published>2026-10-26T11:30:00+08:00</published><updated>2026-10-26T11:30:00+08:00</updated><id>https://blog.secureview.tech/2026/10/26/official-coverage</id><content type="html" xml:base="https://blog.secureview.tech/2026/10/26/official-coverage/"><![CDATA[<p>Besides the Handbook, <a href="https://monashhub.secureview.tech">Monash Hub</a> keeps a copy of Monash’s official student pages: enrolment, exams, visas, fees, graduation. It translates them into Chinese, searches them and answers questions from them. Until 25 October that copy had 662 pages, found by walking links out from a few hub pages.</p>
+
+<p>This post covers the weekend I widened it to both Monash sites, and the failures that came with it.</p>
+
+<h2 id="read-the-sitemap-instead-of-walking-links">Read the sitemap instead of walking links</h2>
+
+<p>Walking from hubs only finds what menus link to. Both Monash sites publish sitemaps, and a sitemap lists every page, including ones no menu points at. So the crawler now reads them (<a href="https://github.com/Waldo0926/monash-hub/pull/215">#215</a>):</p>
+
+<ul>
+  <li>monash.edu.my: the whole site.</li>
+  <li>monash.edu: the sitemaps of students, admissions and the IT, Business, Engineering and Science faculties, keeping only <code class="language-plaintext highlighter-rouge">/students</code>, <code class="language-plaintext highlighter-rouge">/admissions</code> and each faculty’s <code class="language-plaintext highlighter-rouge">current-students</code> section.</li>
+</ul>
+
+<p>A whole-site sitemap is mostly not for students. One regex drops news, events, alumni, staff profiles, open day pages, sign-in and feedback forms, verification files and attached PDFs and images. What was left was about 3,100 pages.</p>
+
+<p>A page that was already listed stays even when no sitemap has it, as long as it still has text. A page Monash moved keeps its slug and its translations at the new address.</p>
+
+<h2 id="then-take-out-what-is-not-guidance">Then take out what is not guidance</h2>
+
+<p>The first full list was too wide. The 选课与课程规划 category held 1,331 pages, because every faculty page defaulted to enrolment. Three passes cleaned it up:</p>
+
+<ol>
+  <li><strong>School pages that are not guidance</strong> (<a href="https://github.com/Waldo0926/monash-hub/pull/221">#221</a>): 174 pages of leadership lists, rankings, competitions and their galleries, study-trip posts from 2005 to 2017, lab pages and test copies. A school page now counts as enrolment only when its address is about courses.</li>
+  <li><strong>Pages students cannot open</strong> (<a href="https://github.com/Waldo0926/monash-hub/pull/222">#222</a>): five eExam pages answer “Access Denied” even to a signed-in student, so they leave instead of keeping old text. The fee calculator is listed as a link, because the page only forwards to an app.</li>
+  <li><strong>Pages about years that are over</strong> (<a href="https://github.com/Waldo0926/monash-hub/pull/223">#223</a>): 152 pages, such as OSHC price lists from 2016 to 2025 and past principal dates.</li>
+</ol>
+
+<p>The third one is a rule, so it keeps working next January:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">COMMENCEMENT_YEARS</span> <span class="o">=</span> <span class="mi">6</span>  <span class="c1"># five years for the longest double degree, one more for a semester off
+</span>
+<span class="k">def</span> <span class="nf">outdated</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">year</span> <span class="o">=</span> <span class="n">year</span> <span class="ow">or</span> <span class="n">date</span><span class="p">.</span><span class="n">today</span><span class="p">().</span><span class="n">year</span>
+    <span class="n">years</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">YEAR</span><span class="p">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">).</span><span class="n">path</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s">"</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">years</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">if</span> <span class="n">BY_COMMENCEMENT</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s">"</span><span class="p">):</span>   <span class="c1"># course maps, "commenced"
+</span>        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">years</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">year</span> <span class="o">-</span> <span class="n">COMMENCEMENT_YEARS</span>
+    <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">years</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">year</span>
+</code></pre></div></div>
+
+<p>Course maps are the exception. A student follows the map of the year they started, so in 2026 the maps from 2021 on stay. The <code class="language-plaintext highlighter-rouge">YEAR</code> pattern skips course codes like C2001 and “students who commenced from 2014”, which are not about a past year.</p>
+
+<p>Later a staff tool turned up too: “Welcome to the Connect Tutor” is Monash Connect’s tool for checking an email reply before sending it (<a href="https://github.com/Waldo0926/monash-hub/pull/230">#230</a>). It was in the support guides because it is in the sitemap.</p>
+
+<h2 id="a-failed-fetch-used-to-hide-a-page">A failed fetch used to hide a page</h2>
+
+<p>Before this change, any failed fetch set the page’s status to error. That took it off the guides, search, key dates and the assistant until a later fetch worked. One timeout or one bot challenge hid a page whose text was still right.</p>
+
+<p>That stopped being rare. On 25 October, Monash Malaysia’s site started refusing the server’s address. A full re-crawl that night was refused on 359 pages. Under the old rule all of them would have gone dark.</p>
+
+<p>Now only an answer about the page itself takes it down (<a href="https://github.com/Waldo0926/monash-hub/pull/211">#211</a>):</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">record_failure</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">gone</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="n">page</span><span class="p">.</span><span class="n">fetch_error</span> <span class="o">=</span> <span class="n">message</span><span class="p">[:</span><span class="mi">2000</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">gone</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">page</span><span class="p">.</span><span class="n">content_hash</span><span class="p">:</span>      <span class="c1"># 404 or 410, or nothing stored yet
+</span>        <span class="n">page</span><span class="p">.</span><span class="n">status</span> <span class="o">=</span> <span class="s">"error"</span>
+        <span class="n">page</span><span class="p">.</span><span class="n">last_checked</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="n">now</span><span class="p">(</span><span class="n">UTC</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">page</span><span class="p">.</span><span class="n">status</span> <span class="o">==</span> <span class="s">"error"</span><span class="p">:</span>           <span class="c1"># hidden by the old rule; bring it back
+</span>        <span class="n">page</span><span class="p">.</span><span class="n">status</span> <span class="o">=</span> <span class="s">"ok"</span>
+</code></pre></div></div>
+
+<p>A 403 or a timeout keeps the last good copy, and <code class="language-plaintext highlighter-rouge">last_checked</code> keeps the date it was last read, because that is the date readers see. <code class="language-plaintext highlighter-rouge">fetch_error</code> makes the page due on the next run.</p>
+
+<p>Two more cases looked like success but were not:</p>
+
+<ul>
+  <li>A removed page often redirects to the section above it or to the home page. That landing page reads fine, so it would have replaced the real text quietly. A redirect to a parent is now recorded as a failure.</li>
+  <li>A long page that suddenly reads short keeps its last good copy. A page that is short on Monash’s site too, like a hub of links, is stored, as long as there is no longer copy to keep (<a href="https://github.com/Waldo0926/monash-hub/pull/217">#217</a>).</li>
+</ul>
+
+<h2 id="when-the-site-refuses-the-server">When the site refuses the server</h2>
+
+<p>While monash.edu.my refuses the VPS, its pages can be read on another computer and handed to the server as a harvest file. The server stores them with the same code it uses for its own fetches (<code class="language-plaintext highlighter-rouge">deployment/crawl.sh official-harvest FILE</code>).</p>
+
+<p>The first harvest broke in a new way. A run stopped mid-write tore the file, and reading stopped at the tear, so the server loaded none of 680 pages. Each page is now its own gzip member, and the reader skips a torn member and goes on from the next one (<a href="https://github.com/Waldo0926/monash-hub/pull/216">#216</a>). It also reads one page at a time, since 723 pages held in memory went past the crawler container’s 2 GB.</p>
+
+<h2 id="limits-on-the-handbook-side-too">Limits on the Handbook side too</h2>
+
+<p>The same weekend added limits to the weekly Handbook crawl (<a href="https://github.com/Waldo0926/monash-hub/pull/212">#212</a>):</p>
+
+<ul>
+  <li>One run marks at most 25 units inactive, or 2% of its targets if that is more. A Handbook answering 404 for everything would otherwise take every unit off the site for a week.</li>
+  <li>A run stops after 30 failures in a row and records why. Before, a Handbook that was down cost three attempts for each of 5,000 units.</li>
+  <li>A failed run, or one where more than 5% of targets failed, sends one email a day. <code class="language-plaintext highlighter-rouge">/api/health</code> shows the last run of each kind.</li>
+</ul>
+
+<h2 id="takeaways">Takeaways</h2>
+
+<ul>
+  <li>A sitemap is a better list than a crawl from the menu, but it lists everything, so the filter matters more than the fetcher.</li>
+  <li>Write “out of date” as a rule with today’s year in it, not as a list of pages.</li>
+  <li>Only take content down when the source says it is gone. A refusal or a timeout says nothing about the page.</li>
+</ul>
+
+<p>Code: <a href="https://github.com/Waldo0926/monash-hub/blob/main/crawler/official/coverage.py">coverage.py</a>, <a href="https://github.com/Waldo0926/monash-hub/blob/main/crawler/official/discover.py">discover.py</a>, <a href="https://github.com/Waldo0926/monash-hub/blob/main/backend/app/knowledge/repository.py">repository.py</a>. Changelog: <a href="https://github.com/Waldo0926/monash-hub/blob/main/CHANGELOG.md">CHANGELOG.md</a>.</p>]]></content><author><name>Shuoxun Wen</name></author><summary type="html"><![CDATA[Monash Hub's guides went from 662 official pages to about 3,100 in one weekend. How the list is built from two sitemaps, what gets left out, and why a failed fetch no longer takes a page down.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/official-coverage.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/official-coverage.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="zh-Hans"><title type="html">把机器人的摘句核对做成一个包</title><link href="https://blog.secureview.tech/2026/10/26/quotegate-zh/" rel="alternate" type="text/html" title="把机器人的摘句核对做成一个包" /><published>2026-10-26T11:00:00+08:00</published><updated>2026-10-26T11:00:00+08:00</updated><id>https://blog.secureview.tech/2026/10/26/quotegate-zh</id><content type="html" xml:base="https://blog.secureview.tech/2026/10/26/quotegate-zh/"><![CDATA[<p>我的<a href="https://github.com/Waldo0926/mumguide-wechat-bot">微信问答机器人</a>只许大模型用资料里的原句回答，每一句发出去之前都要经过代码核对。为什么这样做，我在<a href="/2026/10/25/quote-only-rag-zh/">《只许大模型摘原句的问答机器人》</a>里写过。</p>
+
+<p>这段核对代码原来在机器人的 <code class="language-plaintext highlighter-rouge">wxbot/rag.py</code> 里，和检索、校区标签、微信排版混在一起。这个周末我把它抽出来，做成了 <a href="https://github.com/Waldo0926/quotegate">quotegate</a>，发到了 PyPI，MIT 许可证。这篇讲哪些东西放进了包里，哪些留在外面。</p>
+
+<h2 id="它做什么">它做什么</h2>
+
+<p>让模型按 <code class="language-plaintext highlighter-rouge">[2] 原文里的一句话</code> 这样的格式回答。<code class="language-plaintext highlighter-rouge">check()</code> 读这些行，只有那句话确实在第 2 段资料里、单独拿出来也读得通，才留下：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">quotegate</span> <span class="kn">import</span> <span class="n">Passage</span><span class="p">,</span> <span class="n">check</span>
+
+<span class="n">passages</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Passage</span><span class="p">(</span><span class="s">"Special consideration</span><span class="se">\n</span><span class="s">Apply online within two working days of the due date. "</span>
+            <span class="s">"This must include supporting documents."</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"Special consideration"</span><span class="p">),</span>
+<span class="p">]</span>
+<span class="n">reply</span> <span class="o">=</span> <span class="s">"[1] Apply online within two working days</span><span class="se">\n</span><span class="s">[1] This must include supporting documents"</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">check</span><span class="p">(</span><span class="n">reply</span><span class="p">,</span> <span class="n">passages</span><span class="p">)</span>
+<span class="n">result</span><span class="p">.</span><span class="n">status</span>    <span class="c1"># "ok"
+</span><span class="n">result</span><span class="p">.</span><span class="n">kept</span>      <span class="c1"># [Quote(passage=1, text="Apply online within two working days of the due date.", start=22, end=75)]
+</span><span class="n">result</span><span class="p">.</span><span class="n">dropped</span>   <span class="c1"># [Dropped(passage=1, quote="This must include supporting documents.", reason="needs context")]
+</span></code></pre></div></div>
+
+<p>第一句被扩展成它所在的整句话。第二句确实在资料里，但它以 “This” 开头，指的是读者看不到的上一句，所以被丢掉，并写明原因。</p>
+
+<p><code class="language-plaintext highlighter-rouge">status</code> 不是 <code class="language-plaintext highlighter-rouge">"ok"</code> 的时候，模型给的东西一句都不该发。另外四种状态说明原因：模型说不知道、一句都没摘、摘的都不在资料里、在资料里但单独读不通。机器人遇到这些就把问题转给我。</p>
+
+<h2 id="哪些会被丢掉">哪些会被丢掉</h2>
+
+<p>大部分规则来自机器人差点发出去的真实回复：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>原因</th>
+      <th>例子</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">not found</code></td>
+      <td>改写过的句子，或者标错了是第几段</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">needs context</code></td>
+      <td>以 “This must…”、“However”、“不，” 开头；以 “:” 或 “；并且” 结尾</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">list item</code></td>
+      <td>“If you don’t meet any of the requirements above:” 下面的 “- you must contact ISP”</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">table row</code></td>
+      <td>“Oct intake | OCT-MY-01 | 6 Jan”，但没有表头</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">past year</code></td>
+      <td>2026 年读到 “From 2022 exams are online”</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">a question</code></td>
+      <td>资料自己的 FAQ 问题</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>模型也不一定照格式来。解析每一行的正则接受 <code class="language-plaintext highlighter-rouge">【2†L9-L12】</code>、全角括号、前面带圆点、数字后面带冒号，这些我都在免费模型的回复里见过。</p>
+
+<p>断句需要两个开关。默认换行就是一句结束，因为网页里换行通常是标题或列表项。公众号文章和 PDF 里的文字会在句子中间换行，这类资料标 <code class="language-plaintext highlighter-rouge">soft_breaks=True</code>。英文句号只有后面跟空白才算句子结束，所以 “50.0” 和 “monash.edu” 不会被拆开。</p>
+
+<h2 id="哪些留在外面">哪些留在外面</h2>
+
+<p><strong>不用模型。</strong> 检查 RAG 回答常见的办法，是再让一个模型判断每个说法有没有依据，比如 Ragas 的 faithfulness。它给的是事后的分数，裁判本身也会两头出错。在机器人里，用第二个模型核对句子，有的多出来的步骤没拦住，有的对的句子反而被删了。字符串比对每次结果都一样，也没法被说服。</p>
+
+<p><strong>不联网，没有依赖。</strong> 整个包大约 290 行，只用标准库。四句摘句对五段 500 字的资料，核对一次大约 0.3 毫秒。</p>
+
+<p><strong>不管检索，提示词只给个起点。</strong> <code class="language-plaintext highlighter-rouge">quotegate.prompts</code> 里有中英文两个系统提示词，要求模型按这个格式回答，但找对资料是调用方的事。README 里写清楚了它做不到的：一句真实但答非所问的话，照样能通过。</p>
+
+<p>和机器人有关的东西都变成了 <code class="language-plaintext highlighter-rouge">Rules</code> 里的设置：长度、连接词的正则、判断过去年份用的当前年份，还有一个 <code class="language-plaintext highlighter-rouge">checks</code> 列表放你自己的规则。机器人按校区排序的那部分，完全没放进包里。</p>
+
+<h2 id="从打-tag-到-pypi">从打 tag 到 PyPI</h2>
+
+<p>我希望发版是件无聊的事：</p>
+
+<ul>
+  <li>每次推送都在 Ubuntu、macOS、Windows 上，用 Python 3.10 和 3.13 跑测试，再跑 ruff。</li>
+  <li>另一个任务构建 wheel，装进一个干净的虚拟环境，跑一遍 README 里的例子。这能抓住测试都过了、但打包时漏了文件的情况。</li>
+  <li>推一个 <code class="language-plaintext highlighter-rouge">v0.1.0</code> tag 会触发 <code class="language-plaintext highlighter-rouge">release.yml</code>。它先检查 tag 和 <code class="language-plaintext highlighter-rouge">__version__</code> 一致、<code class="language-plaintext highlighter-rouge">CHANGELOG.md</code> 有这一节、打 tag 的提交在 <code class="language-plaintext highlighter-rouge">main</code> 上，然后再跑一遍测试，用 PyPI 的 Trusted Publishing 上传，哪里都不用存令牌。GitHub Release 的内容直接取自更新日志的那一节。</li>
+</ul>
+
+<p>0.1.0 就是 10 月 26 日这样发出去的。</p>
+
+<h2 id="接下来">接下来</h2>
+
+<p>机器人里还留着自己那份核对代码，在 <code class="language-plaintext highlighter-rouge">wxbot/rag.py</code>。下一步是让它改用这个包，两边就不会越改越不一样。</p>
+
+<h2 id="小结">小结</h2>
+
+<ul>
+  <li>输入输出清楚的代码才值得抽出来，懂你产品的那部分留在原地。</li>
+  <li>写清楚这个包拦不住什么。对一个安全检查来说，这比功能列表更重要。</li>
+  <li>发版的检查放进发版流程里：版本号、更新日志、分支，最后从干净环境装一遍。</li>
+</ul>
+
+<p>代码：<a href="https://github.com/Waldo0926/quotegate/blob/main/src/quotegate/core.py">core.py</a>、<a href="https://github.com/Waldo0926/quotegate/blob/main/.github/workflows/test.yml">test.yml</a>、<a href="https://github.com/Waldo0926/quotegate/blob/main/.github/workflows/release.yml">release.yml</a>。PyPI：<a href="https://pypi.org/project/quotegate/">pypi.org/project/quotegate</a>。</p>]]></content><author><name>Shuoxun Wen</name></author><summary type="html"><![CDATA[微信机器人里逐字核对摘句的代码，单独做成了一个零依赖的 Python 包。它留下什么、丢掉什么，为什么不用第二个模型当裁判，以及从打 tag 到发上 PyPI 怎么走。]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/quotegate-zh.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/quotegate-zh.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="en"><title type="html">Turning a bot’s quote check into a package</title><link href="https://blog.secureview.tech/2026/10/26/quotegate/" rel="alternate" type="text/html" title="Turning a bot’s quote check into a package" /><published>2026-10-26T11:00:00+08:00</published><updated>2026-10-26T11:00:00+08:00</updated><id>https://blog.secureview.tech/2026/10/26/quotegate</id><content type="html" xml:base="https://blog.secureview.tech/2026/10/26/quotegate/"><![CDATA[<p>My <a href="https://github.com/Waldo0926/mumguide-wechat-bot">WeChat Q&amp;A bot</a> lets a language model answer only with sentences copied from the passages it was given. Code checks each one before anything is sent. I wrote about why in <a href="/2026/10/25/quote-only-rag/">A Q&amp;A bot where the model is only allowed to quote</a>.</p>
+
+<p>That check lived inside the bot’s <code class="language-plaintext highlighter-rouge">wxbot/rag.py</code>, mixed up with retrieval, campus labels and WeChat formatting. This weekend I pulled it out into <a href="https://github.com/Waldo0926/quotegate">quotegate</a>, a Python package on PyPI under MIT. This post is about what went into the package and what stayed out.</p>
+
+<h2 id="what-it-does">What it does</h2>
+
+<p>The model is told to reply with lines like <code class="language-plaintext highlighter-rouge">[2] a sentence, copied</code>. <code class="language-plaintext highlighter-rouge">check()</code> reads those lines and keeps a quote only when it really is in passage 2 and still reads right on its own:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">quotegate</span> <span class="kn">import</span> <span class="n">Passage</span><span class="p">,</span> <span class="n">check</span>
+
+<span class="n">passages</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Passage</span><span class="p">(</span><span class="s">"Special consideration</span><span class="se">\n</span><span class="s">Apply online within two working days of the due date. "</span>
+            <span class="s">"This must include supporting documents."</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"Special consideration"</span><span class="p">),</span>
+<span class="p">]</span>
+<span class="n">reply</span> <span class="o">=</span> <span class="s">"[1] Apply online within two working days</span><span class="se">\n</span><span class="s">[1] This must include supporting documents"</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">check</span><span class="p">(</span><span class="n">reply</span><span class="p">,</span> <span class="n">passages</span><span class="p">)</span>
+<span class="n">result</span><span class="p">.</span><span class="n">status</span>    <span class="c1"># "ok"
+</span><span class="n">result</span><span class="p">.</span><span class="n">kept</span>      <span class="c1"># [Quote(passage=1, text="Apply online within two working days of the due date.", start=22, end=75)]
+</span><span class="n">result</span><span class="p">.</span><span class="n">dropped</span>   <span class="c1"># [Dropped(passage=1, quote="This must include supporting documents.", reason="needs context")]
+</span></code></pre></div></div>
+
+<p>The first quote is widened to the whole sentence it sits in. The second is in the passage, but it starts with “This”, which leans on a sentence the reader will not see, so it is dropped with a reason.</p>
+
+<p>When <code class="language-plaintext highlighter-rouge">status</code> is not <code class="language-plaintext highlighter-rouge">"ok"</code>, nothing from the model should be sent. The four other statuses say why: the model said it does not know, it quoted nothing, none of its quotes are in the passages, or the ones that are cannot be read alone. The bot forwards those questions to me.</p>
+
+<h2 id="what-gets-dropped">What gets dropped</h2>
+
+<p>Most of the rules came from real replies the bot almost sent:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Reason</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">not found</code></td>
+      <td>A paraphrase, or a quote credited to the wrong passage</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">needs context</code></td>
+      <td>Starts with “This must…”, “However”, “不，”; ends with “:” or “；并且”</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">list item</code></td>
+      <td>”- you must contact ISP” under “If you don’t meet any of the requirements above:”</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">table row</code></td>
+      <td>“Oct intake | OCT-MY-01 | 6 Jan”, without the header row</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">past year</code></td>
+      <td>“From 2022 exams are online”, read in 2026</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">a question</code></td>
+      <td>The passage’s own FAQ question</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Models do not always follow the format either. The line parser accepts <code class="language-plaintext highlighter-rouge">【2†L9-L12】</code>, full-width brackets, a bullet in front and a colon after the number, because I saw all of them from free models.</p>
+
+<p>Sentence splitting needed two switches. A line break ends a sentence by default, since in web pages it is usually a heading or a list item. WeChat articles and PDF text break lines mid-sentence, so those passages are marked <code class="language-plaintext highlighter-rouge">soft_breaks=True</code>. A latin full stop only ends a sentence before whitespace, so “50.0” and “monash.edu” stay whole.</p>
+
+<h2 id="what-stayed-out">What stayed out</h2>
+
+<p><strong>No model.</strong> A popular way to check a RAG answer is to ask a second model whether each claim is supported, like Ragas faithfulness. That gives a score after the fact, and the judge can be wrong both ways. In the bot, a second model checking sentences missed some added steps and cut correct ones. A string check gives the same answer every time and cannot be talked round.</p>
+
+<p><strong>No network and no dependencies.</strong> The whole package is about 290 lines of standard library Python. It takes about 0.3 ms to check four quotes against five 500-character passages.</p>
+
+<p><strong>No retrieval, no prompts beyond a starting point.</strong> <code class="language-plaintext highlighter-rouge">quotegate.prompts</code> has an English and a Chinese system prompt that ask for the format, but finding the right passages is the caller’s job. The README says plainly what the package cannot do: a true sentence that answers a different question still passes.</p>
+
+<p>Everything that was specific to the bot became a setting in <code class="language-plaintext highlighter-rouge">Rules</code>: lengths, the connective patterns, the current year for the past-year check, and a <code class="language-plaintext highlighter-rouge">checks</code> list for your own rules. The bot’s campus sorting is not in the package at all.</p>
+
+<h2 id="from-a-tag-to-pypi">From a tag to PyPI</h2>
+
+<p>I wanted releases to be boring:</p>
+
+<ul>
+  <li>Every push runs the tests on Ubuntu, macOS and Windows with Python 3.10 and 3.13, and runs ruff.</li>
+  <li>A separate job builds the wheel, installs it into a clean virtual environment and runs the README example. That catches a package that passes its tests but ships without a file.</li>
+  <li>Pushing a <code class="language-plaintext highlighter-rouge">v0.1.0</code> tag runs <code class="language-plaintext highlighter-rouge">release.yml</code>. It checks that the tag matches <code class="language-plaintext highlighter-rouge">__version__</code>, that <code class="language-plaintext highlighter-rouge">CHANGELOG.md</code> has that section, and that the tagged commit is on <code class="language-plaintext highlighter-rouge">main</code>. Then it runs the tests again and uploads with PyPI Trusted Publishing, so no token is stored anywhere. The GitHub Release is made from the changelog section.</li>
+</ul>
+
+<p>0.1.0 went out this way on 26 October.</p>
+
+<h2 id="what-is-next">What is next</h2>
+
+<p>The bot still has its own copy of the check in <code class="language-plaintext highlighter-rouge">wxbot/rag.py</code>. Moving it onto the package is the next step, so the two cannot drift apart.</p>
+
+<h2 id="takeaways">Takeaways</h2>
+
+<ul>
+  <li>Pull code out when it has a clear input and output, and leave the parts that know about your product behind.</li>
+  <li>Write down what the package does not stop. For a safety check that matters more than the feature list.</li>
+  <li>Check the release in the release workflow: version, changelog and branch, then a clean install.</li>
+</ul>
+
+<p>Code: <a href="https://github.com/Waldo0926/quotegate/blob/main/src/quotegate/core.py">core.py</a>, <a href="https://github.com/Waldo0926/quotegate/blob/main/.github/workflows/test.yml">test.yml</a>, <a href="https://github.com/Waldo0926/quotegate/blob/main/.github/workflows/release.yml">release.yml</a>. Package: <a href="https://pypi.org/project/quotegate/">pypi.org/project/quotegate</a>.</p>]]></content><author><name>Shuoxun Wen</name></author><summary type="html"><![CDATA[The word-for-word check in my WeChat bot is now its own Python package with no dependencies. What it keeps and drops, why it does not use a second model as a judge, and how a release gets from a tag to PyPI.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/quotegate.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/quotegate.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="zh-Hans"><title type="html">一个问题，两个校区</title><link href="https://blog.secureview.tech/2026/10/26/two-campuses-zh/" rel="alternate" type="text/html" title="一个问题，两个校区" /><published>2026-10-26T10:30:00+08:00</published><updated>2026-10-26T10:30:00+08:00</updated><id>https://blog.secureview.tech/2026/10/26/two-campuses-zh</id><content type="html" xml:base="https://blog.secureview.tech/2026/10/26/two-campuses-zh/"><![CDATA[<p><a href="https://monashhub.secureview.tech">Monash Hub</a> 的读者里有不少是马来西亚校区的同学和家长，但 Monash 自己的页面大多是写给澳洲校区的。问题一旦和国家的法规或者校区的安排有关，对一个校区是对的答案，对另一个校区可能就是错的。</p>
+
+<p>这篇讲网站和<a href="https://github.com/Waldo0926/mumguide-wechat-bot">微信问答机器人</a>现在怎么回答这类问题，内容来自 10 月 25 日的几个 PR。</p>
+
+<h2 id="对一半读者是错的答案">对一半读者是错的答案</h2>
+
+<p>“可以休学一个学期吗”这条整理好的回答，以前告诉所有持学生签证的同学：休学会改变你的 CoE。CoE（Confirmation of Enrolment）是澳洲学生签证的东西。马来西亚校区看的是 Student Pass 的规定，而且不一样：因为生病休学可以保留 Student Pass，其他原因要注销，回来时要在开学前 4 到 2 个月重新申请 eVAL。</p>
+
+<p>这段话对澳洲来说没有错，只是没写是哪国的，马来西亚校区的同学就会当成自己的规定。</p>
+
+<h2 id="分两段写各有出处">分两段写，各有出处</h2>
+
+<p>和国家有关的回答，现在分成澳大利亚和马来西亚两段，每段按那个校区的官方页面写（<a href="https://github.com/Waldo0926/monash-hub/pull/219">#219</a>）。FAQ 条目在澳洲页面旁边列出马来西亚的页面，两边都会引用：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">FaqSeed</span><span class="p">(</span>
+    <span class="s">"apply-for-intermission"</span><span class="p">,</span>
+    <span class="s">"Can I take a semester off?"</span><span class="p">,</span>
+    <span class="s">"Yes - it is called intermission, and approval is not automatic. The rules for "</span>
+    <span class="s">"international students depend on the campus. "</span>
+    <span class="s">"Australia: you can take up to 12 months ... a new Confirmation of Enrolment (CoE) ... "</span>
+    <span class="s">"Malaysia: you can take up to two semesters or 12 months ... "</span>
+    <span class="s">"you must cancel your Student Pass and leave Malaysia ..."</span><span class="p">,</span>
+    <span class="p">...</span>
+    <span class="n">malaysia_pages</span><span class="o">=</span><span class="p">(</span><span class="s">"malaysia-changing-your-enrolment-intermission"</span><span class="p">,</span>
+                    <span class="s">"malaysia-international-students-during-your-studies"</span><span class="p">),</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<p>退课、打工时长、census date、医疗保险（澳洲是 OSHC，马来西亚校区是学校随 Student Pass 一起买的保险）、减课和多修课，都按同样的方式拆开写。马来西亚的减课部分来自 SORS 表格自己的说明：用哪张表、第 2 周周五截止、提交前先联系 International Student Pass Office。</p>
+
+<p>对照官网核对的时候，还发现一条对所有人都错的回答：它说挂科在 GPA 里算 0 分。按 Monash 的标准是 0.3。现在这条回答列出整个分数表，还有马来西亚校区的 CGPA。</p>
+
+<h2 id="用测试检查有没有标国家">用测试检查有没有标国家</h2>
+
+<p>手动拆分只能管住现有的回答，下一条新回答可能又忘了。所以加了一个测试，读每一条 FAQ：回答里提到只属于某个国家的规定，却没写是哪个国家，英文和中文翻译任何一边漏了，测试就失败：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">AUSTRALIA_ONLY</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nb">compile</span><span class="p">(</span>
+    <span class="sa">r</span><span class="s">"\b(?:CoE|OSHC|ESOS|Centrelink|HECS|HELP|Home Affairs|student visa)\b"</span><span class="p">)</span>
+<span class="n">MALAYSIA_ONLY</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nb">compile</span><span class="p">(</span><span class="sa">r</span><span class="s">"\b(?:Student Pass|EMGS|eVAL|MOHE|WD-LATE|CGPA)\b"</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">test_a_rule_of_one_country_says_which_country</span><span class="p">(</span><span class="n">seed</span><span class="p">):</span>
+    <span class="n">zh</span> <span class="o">=</span> <span class="s">""</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">FAQ_ZH</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">seed</span><span class="p">.</span><span class="n">slug</span><span class="p">,</span> <span class="p">()))</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">seed</span><span class="p">.</span><span class="n">question</span> <span class="o">+</span> <span class="s">" "</span> <span class="o">+</span> <span class="n">seed</span><span class="p">.</span><span class="n">answer</span>
+    <span class="k">if</span> <span class="n">AUSTRALIA_ONLY</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="n">seed</span><span class="p">.</span><span class="n">answer</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="s">"Australia"</span> <span class="ow">in</span> <span class="n">text</span><span class="p">,</span> <span class="n">seed</span><span class="p">.</span><span class="n">slug</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">zh</span> <span class="ow">or</span> <span class="s">"澳大利亚"</span> <span class="ow">in</span> <span class="n">zh</span><span class="p">,</span> <span class="n">seed</span><span class="p">.</span><span class="n">slug</span>
+    <span class="k">if</span> <span class="n">MALAYSIA_ONLY</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="n">seed</span><span class="p">.</span><span class="n">answer</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="s">"Malaysia"</span> <span class="ow">in</span> <span class="n">text</span><span class="p">,</span> <span class="n">seed</span><span class="p">.</span><span class="n">slug</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">zh</span> <span class="ow">or</span> <span class="s">"马来西亚"</span> <span class="ow">in</span> <span class="n">zh</span><span class="p">,</span> <span class="n">seed</span><span class="p">.</span><span class="n">slug</span>
+</code></pre></div></div>
+
+<p>另一个测试检查回答引用的马来西亚页面确实存在，而且标的是马来西亚校区。</p>
+
+<h2 id="课程停开两个校区日期不同">课程停开，两个校区日期不同</h2>
+
+<p>IT 学院在改学位结构，两个校区各自发布一张 teach-out 表：哪些课停开，用什么课替换。这两张表对不上。FIT3161 在澳洲已经停了，在马来西亚开到 2027 年 S2。FIT1043 在马来西亚还开最后一次，是 2027 年 S1。</p>
+
+<p>以前搜一门停开的课，只会说 Handbook 里没有这门课。现在会说最后一次出现在哪一年的 Handbook，并且把两个校区的停开通知都列出来，读者所在的校区在前，各自附上学院页面的链接（<a href="https://github.com/Waldo0926/monash-hub/pull/225">#225</a>）。</p>
+
+<p>有两条规则：</p>
+
+<ul>
+  <li>通知就是学院自己的表格，原样显示。网站自己从来不推算替换课程。</li>
+  <li>一个校区的表不拿来补另一个校区的空。某个校区的表里没有这门课，页面就照实说没有，因为“没列出来”不等于“没问题”。</li>
+</ul>
+
+<h2 id="机器人也一样">机器人也一样</h2>
+
+<p>微信机器人用的是同一套 FAQ，再加上我教它的问答和公众号文章。签证、保险、修课量这些教过的问答，现在分【马来西亚校区】和【澳洲校区】两段写。需要问大模型的时候，模型只能摘原句；来自澳洲页面的句子，或者带 CoE、OSHC 这类词的句子，放在最后，单独加标题。这部分我在<a href="/2026/10/25/quote-only-rag-zh/">《只许大模型摘原句的问答机器人》</a>里写过。</p>
+
+<h2 id="小结">小结</h2>
+
+<ul>
+  <li>两个来源说的不一样，是因为它们讲的是不同的地方，那就两边都列出来、标清楚，不要合成一句。</li>
+  <li>一张词表就能抓住大部分没标国家的规定。CoE、OSHC、Student Pass 各自只属于一个国家。</li>
+  <li>“我们没有这门课的通知”和“这门课没问题”是两个答案。要说的是前一个。</li>
+</ul>
+
+<p>代码：<a href="https://github.com/Waldo0926/monash-hub/blob/main/backend/app/knowledge/faq_seed.py">faq_seed.py</a>、<a href="https://github.com/Waldo0926/monash-hub/blob/main/backend/app/knowledge/teach_out.py">teach_out.py</a>、<a href="https://github.com/Waldo0926/monash-hub/blob/main/backend/tests/test_faq_matching.py">test_faq_matching.py</a>。</p>]]></content><author><name>Shuoxun Wen</name></author><summary type="html"><![CDATA[签证、保险、休学和课程停开，Monash 澳洲校区和马来西亚校区规定不一样。Monash Hub 怎么把两边并排答出来，以及一个测试怎么拦住忘了写国家的回答。]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/two-campuses-zh.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/two-campuses-zh.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="en"><title type="html">One question, two campuses</title><link href="https://blog.secureview.tech/2026/10/26/two-campuses/" rel="alternate" type="text/html" title="One question, two campuses" /><published>2026-10-26T10:30:00+08:00</published><updated>2026-10-26T10:30:00+08:00</updated><id>https://blog.secureview.tech/2026/10/26/two-campuses</id><content type="html" xml:base="https://blog.secureview.tech/2026/10/26/two-campuses/"><![CDATA[<p>Many readers of <a href="https://monashhub.secureview.tech">Monash Hub</a> study at the Malaysia campus, or are parents of students there. Most of Monash’s own pages are written for the Australian campuses. When a question depends on a country’s law or a campus’s timetable, a right answer for one campus can be a wrong answer for the other.</p>
+
+<p>This post covers how the site and the <a href="https://github.com/Waldo0926/mumguide-wechat-bot">WeChat bot</a> now answer those questions, from the pull requests of 25 October.</p>
+
+<h2 id="the-answer-that-was-wrong-for-half-the-readers">The answer that was wrong for half the readers</h2>
+
+<p>The curated answer to “Can I take a semester off?” told every student on a student visa that intermission changes their CoE. A Confirmation of Enrolment is part of the Australian student visa. In Malaysia the Student Pass rules apply, and they are different: intermission for medical reasons can keep the pass, any other reason cancels it, and coming back needs a new eVAL 4 to 2 months before the semester.</p>
+
+<p>Nothing in the answer was false for Australia. It was just not labelled, so a Malaysia student read it as their rule.</p>
+
+<h2 id="two-parts-two-sources">Two parts, two sources</h2>
+
+<p>Answers that depend on a country now have an Australia part and a Malaysia part, each written from that campus’s official page (<a href="https://github.com/Waldo0926/monash-hub/pull/219">#219</a>). The FAQ entry lists the Malaysia pages next to the Australian one, so both are cited:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">FaqSeed</span><span class="p">(</span>
+    <span class="s">"apply-for-intermission"</span><span class="p">,</span>
+    <span class="s">"Can I take a semester off?"</span><span class="p">,</span>
+    <span class="s">"Yes - it is called intermission, and approval is not automatic. The rules for "</span>
+    <span class="s">"international students depend on the campus. "</span>
+    <span class="s">"Australia: you can take up to 12 months ... a new Confirmation of Enrolment (CoE) ... "</span>
+    <span class="s">"Malaysia: you can take up to two semesters or 12 months ... "</span>
+    <span class="s">"you must cancel your Student Pass and leave Malaysia ..."</span><span class="p">,</span>
+    <span class="p">...</span>
+    <span class="n">malaysia_pages</span><span class="o">=</span><span class="p">(</span><span class="s">"malaysia-changing-your-enrolment-intermission"</span><span class="p">,</span>
+                    <span class="s">"malaysia-international-students-during-your-studies"</span><span class="p">),</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<p>The same split went into withdrawing from a unit, work hours, census dates, health insurance (OSHC in Australia, the insurance Monash Malaysia buys with the Student Pass), underload and overload. The Malaysia underload part comes from the notes on the SORS form itself: the form, the Friday of Week 2 deadline, and talking to the International Student Pass Office first.</p>
+
+<p>While checking these against the pages, one more answer turned out wrong for everyone: it said a fail is worth 0 in the GPA. On Monash’s scale it is 0.3. The answer now gives the whole scale and Malaysia’s CGPA values.</p>
+
+<h2 id="a-test-for-the-label">A test for the label</h2>
+
+<p>Splitting answers by hand only works until the next answer is added. So a test reads every FAQ entry and fails when an answer names a rule of one country without naming the country, in English or in the Chinese translation:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">AUSTRALIA_ONLY</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nb">compile</span><span class="p">(</span>
+    <span class="sa">r</span><span class="s">"\b(?:CoE|OSHC|ESOS|Centrelink|HECS|HELP|Home Affairs|student visa)\b"</span><span class="p">)</span>
+<span class="n">MALAYSIA_ONLY</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nb">compile</span><span class="p">(</span><span class="sa">r</span><span class="s">"\b(?:Student Pass|EMGS|eVAL|MOHE|WD-LATE|CGPA)\b"</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">test_a_rule_of_one_country_says_which_country</span><span class="p">(</span><span class="n">seed</span><span class="p">):</span>
+    <span class="n">zh</span> <span class="o">=</span> <span class="s">""</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">FAQ_ZH</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">seed</span><span class="p">.</span><span class="n">slug</span><span class="p">,</span> <span class="p">()))</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">seed</span><span class="p">.</span><span class="n">question</span> <span class="o">+</span> <span class="s">" "</span> <span class="o">+</span> <span class="n">seed</span><span class="p">.</span><span class="n">answer</span>
+    <span class="k">if</span> <span class="n">AUSTRALIA_ONLY</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="n">seed</span><span class="p">.</span><span class="n">answer</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="s">"Australia"</span> <span class="ow">in</span> <span class="n">text</span><span class="p">,</span> <span class="n">seed</span><span class="p">.</span><span class="n">slug</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">zh</span> <span class="ow">or</span> <span class="s">"澳大利亚"</span> <span class="ow">in</span> <span class="n">zh</span><span class="p">,</span> <span class="n">seed</span><span class="p">.</span><span class="n">slug</span>
+    <span class="k">if</span> <span class="n">MALAYSIA_ONLY</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="n">seed</span><span class="p">.</span><span class="n">answer</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="s">"Malaysia"</span> <span class="ow">in</span> <span class="n">text</span><span class="p">,</span> <span class="n">seed</span><span class="p">.</span><span class="n">slug</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">zh</span> <span class="ow">or</span> <span class="s">"马来西亚"</span> <span class="ow">in</span> <span class="n">zh</span><span class="p">,</span> <span class="n">seed</span><span class="p">.</span><span class="n">slug</span>
+</code></pre></div></div>
+
+<p>A second test checks that every Malaysia page an answer cites exists and is marked as a Malaysia page.</p>
+
+<h2 id="closing-units-close-on-different-dates">Closing units close on different dates</h2>
+
+<p>The Faculty of IT is revising its degrees, and each campus publishes its own teach-out table: which units close and what replaces them. The two tables do not agree. FIT3161 is gone in Australia and runs to S2 2027 in Malaysia. FIT1043 runs once more in Malaysia, with its final offering in S1 2027.</p>
+
+<p>Searching a closed unit used to say only that the Handbook has no such unit. Now it says which Handbook last had it and shows the teach-out notice for both campuses, the reader’s campus first, each with a link to its faculty page (<a href="https://github.com/Waldo0926/monash-hub/pull/225">#225</a>).</p>
+
+<p>Two rules keep this honest:</p>
+
+<ul>
+  <li>The notice is the faculty’s own table, shown word for word. The site never works out a replacement itself.</li>
+  <li>Neither campus’s list fills a gap in the other. When a campus’s table leaves a unit out, the page says so, because “not listed” is not the same as “safe”.</li>
+</ul>
+
+<h2 id="the-bot-does-the-same">The bot does the same</h2>
+
+<p>The WeChat bot answers from the same FAQ, plus Q&amp;As I taught it and the account’s articles. Its taught answers for visas, insurance and study load now give 【马来西亚校区】 and 【澳洲校区】 separately. When the model is asked, it may only quote, and a quote from an Australian page, or one with CoE, OSHC or similar in it, goes last under its own heading. I wrote about that part in <a href="/2026/10/25/quote-only-rag/">A Q&amp;A bot where the model is only allowed to quote</a>.</p>
+
+<h2 id="takeaways">Takeaways</h2>
+
+<ul>
+  <li>When two sources disagree because they describe different places, show both and label them. Do not merge them.</li>
+  <li>A word list is enough to catch most unlabelled rules. CoE, OSHC and Student Pass each belong to one country.</li>
+  <li>“We have no notice for this unit” and “this unit is fine” are different answers. Say the first one.</li>
+</ul>
+
+<p>Code: <a href="https://github.com/Waldo0926/monash-hub/blob/main/backend/app/knowledge/faq_seed.py">faq_seed.py</a>, <a href="https://github.com/Waldo0926/monash-hub/blob/main/backend/app/knowledge/teach_out.py">teach_out.py</a>, <a href="https://github.com/Waldo0926/monash-hub/blob/main/backend/tests/test_faq_matching.py">test_faq_matching.py</a>.</p>]]></content><author><name>Shuoxun Wen</name></author><summary type="html"><![CDATA[Visas, insurance, intermission and closing units follow different rules at Monash's Australian and Malaysian campuses. How Monash Hub answers both side by side, and the test that fails an answer that forgets which country it is about.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/two-campuses.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/two-campuses.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="zh-Hans"><title type="html">服务器看不到的规划码，和不记人的热门搜索</title><link href="https://blog.secureview.tech/2026/10/26/plan-code-and-searches-zh/" rel="alternate" type="text/html" title="服务器看不到的规划码，和不记人的热门搜索" /><published>2026-10-26T10:00:00+08:00</published><updated>2026-10-26T10:00:00+08:00</updated><id>https://blog.secureview.tech/2026/10/26/plan-code-and-searches-zh</id><content type="html" xml:base="https://blog.secureview.tech/2026/10/26/plan-code-and-searches-zh/"><![CDATA[<p><a href="https://monashhub.secureview.tech">Monash Hub</a> 的选课规划不用登录，规划存在浏览器的 <code class="language-plaintext highlighter-rouge">localStorage</code> 里。这样服务器碰不到规划，但规划也就只能留在一台设备上。</p>
+
+<p>这周有两个改动碰到同一个问题：服务器到底需要知道多少？这篇讲这两个改动，还有一处网站说得不够实在的地方。</p>
+
+<h2 id="不用账号把规划搬到另一台设备">不用账号，把规划搬到另一台设备</h2>
+
+<p>原来已经有导出 JSON 文件的功能。电脑上没问题，手机上文件会进下载文件夹，还要发出去再打开，大部分人不会这么做。</p>
+
+<p>一行文字就方便多了，任何聊天软件都能发，包括微信的“文件传输助手”。所以课程地图“更多”菜单里新加了“复制规划码”，把规划写成一行能看懂的文字（<a href="https://github.com/Waldo0926/monash-hub/pull/235">#235</a>）：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MH1|&lt;名称&gt;|&lt;入学年份&gt;|&lt;年数&gt;|&lt;校区&gt;|&lt;专业&gt;|&lt;学期&gt;|&lt;课程&gt;
+
+MH1|My%20plan|2026|3|Malaysia|C2001|S1;S2|FIT1008@0.0,FIT2004@1.1
+</code></pre></div></div>
+
+<p>学期用简写。每门课写成 <code class="language-plaintext highlighter-rouge">代码@第几年.第几个学期</code>，年份从入学那年算起，学期是在学期列表里的位置。文字字段做了 URI 编码，所以 <code class="language-plaintext highlighter-rouge">|</code> 只会是分隔符。我没有压缩它，这样同学能看出里面写了什么，聊天软件识别链接时也不会把它弄乱。</p>
+
+<p>按钮复制的是一个链接，规划码放在 <code class="language-plaintext highlighter-rouge">#</code> 后面：</p>
+
+<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">planLink</span><span class="p">():</span> <span class="kr">string</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="s2">`</span><span class="p">${</span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">origin</span><span class="p">}</span><span class="s2">/plan#plan=</span><span class="p">${</span><span class="nb">encodeURIComponent</span><span class="p">(</span><span class="nx">encodePlan</span><span class="p">(</span><span class="nx">plan</span><span class="p">.</span><span class="nx">value</span><span class="p">))}</span><span class="s2">`</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>浏览器从来不会把 <code class="language-plaintext highlighter-rouge">#</code> 后面的部分发给服务器。页面自己读出来，作为一个新规划打开，再把规划码从地址栏去掉，免得刷新时又导入一次：</p>
+
+<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">readHash</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">hash</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">hash</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">hash</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="dl">'</span><span class="s1">plan=</span><span class="dl">'</span><span class="p">))</span> <span class="k">return</span>
+  <span class="kd">const</span> <span class="nx">code</span> <span class="o">=</span> <span class="nx">findPlanCode</span><span class="p">(</span><span class="nx">hash</span><span class="p">)</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">code</span><span class="p">)</span> <span class="nx">importCode</span><span class="p">(</span><span class="nx">code</span><span class="p">)</span>
+  <span class="nx">history</span><span class="p">.</span><span class="nx">replaceState</span><span class="p">(</span><span class="nx">history</span><span class="p">.</span><span class="nx">state</span><span class="p">,</span> <span class="dl">''</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">pathname</span> <span class="o">+</span> <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">search</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">findPlanCode</code> 接受单独的规划码、整个链接，或者中间夹着规划码的一段消息，因为大家会把聊天软件给的东西整段粘进来。解出来的规划和导入文件走同一个 <code class="language-plaintext highlighter-rouge">sanitise</code> 函数，手动改坏的规划码也写不进奇怪的数据。</p>
+
+<p>它做不到的：拿到链接的人都能打开这个规划。链接本来就是干这个的。规划里只有课程代码，没有成绩，也没有名字，除非同学自己把名字写进规划标题。</p>
+
+<h2 id="隐私说明写错了">隐私说明写错了</h2>
+
+<p>改课程地图的时候，我重新读了下面那行说明。它写的是规划“不会上传”。这不对。检查规划时，课程代码、学期和校区会发给 <code class="language-plaintext highlighter-rouge">/v1/plan/check</code>，由它算先修课和冲突。</p>
+
+<p>现在说明照实写了这一点，并说明服务器不保存这些内容（<a href="https://github.com/Waldo0926/monash-hub/pull/231">#231</a>）。“只保存在这个浏览器”也挪到了规划名字旁边，免得有人以为规划存进了账号。</p>
+
+<h2 id="首页的热门搜索是编的">首页的“热门搜索”是编的</h2>
+
+<p>首页搜索框下面原来有一排六个词，标着“热门搜索”（英文是 Often searched）。其实是代码里写死的，网站根本不记录搜索。在 <a href="https://github.com/Waldo0926/monash-hub/pull/227">#227</a> 里我先把它们改成“试试搜”，标明是例子。</p>
+
+<p>然后才做了真正的版本（<a href="https://github.com/Waldo0926/monash-hub/pull/237">#237</a>）。问题是：怎么统计搜索，又不留下任何关于搜索的人的信息。</p>
+
+<h2 id="只存一个词一个日期和一个次数">只存一个词、一个日期和一个次数</h2>
+
+<p>新的 <code class="language-plaintext highlighter-rouge">search_terms</code> 表里，每一行只有搜索词、日期和次数。没有 IP，没有账号，也没有具体时间。一次搜索只算一次，而且只有搜到了东西才算：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">normalise</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
+    <span class="n">term</span> <span class="o">=</span> <span class="s">" "</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">query</span><span class="p">.</span><span class="n">split</span><span class="p">())</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="mi">2</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">term</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">60</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">term</span><span class="p">.</span><span class="n">split</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>          <span class="c1"># 一整句话不算搜索词
+</span>    <span class="k">if</span> <span class="s">"@"</span> <span class="ow">in</span> <span class="n">term</span> <span class="ow">or</span> <span class="s">"://"</span> <span class="ow">in</span> <span class="n">term</span> <span class="ow">or</span> <span class="n">LONG_NUMBER</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="n">term</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">None</span>          <span class="c1"># 邮箱、链接、电话或学号
+</span>    <span class="k">return</span> <span class="n">term</span>
+</code></pre></div></div>
+
+<p>邮箱、粘贴的链接，或者连着六位以上的数字，不管搜到什么都不存。</p>
+
+<h2 id="一个人不应该能决定首页显示什么">一个人不应该能决定首页显示什么</h2>
+
+<p>网站不大。如果不加限制，一个人把同一个词搜三十遍，它就会出现在所有人的首页上。所以首页读的列表有两道限制：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">capped</span> <span class="o">=</span> <span class="n">func</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">func</span><span class="p">.</span><span class="n">least</span><span class="p">(</span><span class="n">SearchTerm</span><span class="p">.</span><span class="n">hits</span><span class="p">,</span> <span class="n">DAILY_CAP</span><span class="p">))</span>   <span class="c1"># 每天最多算 20 次
+</span><span class="n">rows</span> <span class="o">=</span> <span class="n">db</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span>
+    <span class="n">select</span><span class="p">(</span><span class="n">SearchTerm</span><span class="p">.</span><span class="n">term</span><span class="p">,</span> <span class="n">func</span><span class="p">.</span><span class="nb">max</span><span class="p">(</span><span class="n">SearchTerm</span><span class="p">.</span><span class="n">label</span><span class="p">),</span> <span class="n">capped</span><span class="p">.</span><span class="n">label</span><span class="p">(</span><span class="s">"hits"</span><span class="p">))</span>
+    <span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="n">SearchTerm</span><span class="p">.</span><span class="n">day</span> <span class="o">&gt;=</span> <span class="n">since</span><span class="p">)</span>                            <span class="c1"># 最近 14 天
+</span>    <span class="p">.</span><span class="n">group_by</span><span class="p">(</span><span class="n">SearchTerm</span><span class="p">.</span><span class="n">term</span><span class="p">)</span>
+    <span class="p">.</span><span class="n">having</span><span class="p">(</span><span class="n">func</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">func</span><span class="p">.</span><span class="n">distinct</span><span class="p">(</span><span class="n">SearchTerm</span><span class="p">.</span><span class="n">day</span><span class="p">))</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">)</span>   <span class="c1"># 至少两天有人搜
+</span>    <span class="p">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">capped</span><span class="p">.</span><span class="n">desc</span><span class="p">(),</span> <span class="n">SearchTerm</span><span class="p">.</span><span class="n">term</span><span class="p">)</span>
+    <span class="p">.</span><span class="n">limit</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
+<span class="p">).</span><span class="nb">all</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>一个词一天最多加 20 次，而且要在两个不同的日子被搜过。超过 60 天的记录会删掉。符合条件的词不到三个时，首页还是显示那六个例子，并标明是例子。</p>
+
+<p>这两道限制只是提高了成本，不是做不到：有人连着两天搜同一个真实的词，还是能让它上榜。不过只有在站内搜到东西的词才会被统计，所以最坏的情况是，一个真实的课程代码或话题上了榜，其实没多少人搜过。</p>
+
+<h2 id="小结">小结</h2>
+
+<ul>
+  <li>网址 <code class="language-plaintext highlighter-rouge">#</code> 后面的部分，可以在你自己网站的两个页面之间传数据，不经过服务器。</li>
+  <li>每加一个功能，都重新读一遍隐私说明。我的那句写的时候是对的，过了几个功能就不对了。</li>
+  <li>要显示“热门”之前，先想清楚一个人能对它做什么。每天封顶、至少几天，这种限制成本很低。</li>
+</ul>
+
+<p>代码：<a href="https://github.com/Waldo0926/monash-hub/blob/main/frontend/utils/planCode.ts">planCode.ts</a>、<a href="https://github.com/Waldo0926/monash-hub/blob/main/frontend/pages/plan.vue">plan.vue</a>、<a href="https://github.com/Waldo0926/monash-hub/blob/main/backend/app/search/popular.py">popular.py</a>。</p>]]></content><author><name>Shuoxun Wen</name></author><summary type="html"><![CDATA[Monash Hub 的选课规划不用注册账号。规划怎么通过一个服务器收不到的链接搬到另一台设备，首页怎么显示真实的搜索词却只存词、日期和次数，以及一条要改正的隐私说明。]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/plan-code-and-searches-zh.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/plan-code-and-searches-zh.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="en"><title type="html">A plan code the server never sees, and searches counted without people</title><link href="https://blog.secureview.tech/2026/10/26/plan-code-and-searches/" rel="alternate" type="text/html" title="A plan code the server never sees, and searches counted without people" /><published>2026-10-26T10:00:00+08:00</published><updated>2026-10-26T10:00:00+08:00</updated><id>https://blog.secureview.tech/2026/10/26/plan-code-and-searches</id><content type="html" xml:base="https://blog.secureview.tech/2026/10/26/plan-code-and-searches/"><![CDATA[<p><a href="https://monashhub.secureview.tech">Monash Hub</a> lets students plan their degree semester by semester without signing in. The plan lives in the browser’s <code class="language-plaintext highlighter-rouge">localStorage</code>. That keeps the server out of it, but it also means the plan stays on one device.</p>
+
+<p>Two changes this week ran into the same question: how much does the server need to know? This post covers both, and one place where the site said less than the truth.</p>
+
+<h2 id="moving-a-plan-without-an-account">Moving a plan without an account</h2>
+
+<p>Export already wrote a JSON file. On a laptop that is fine. On a phone the file lands in Downloads and has to be sent on and opened, which most people will not do.</p>
+
+<p>A line of text is easier. It goes through any chat app, including WeChat’s file transfer chat with yourself. So “Copy plan code” in the course map’s More menu now writes the plan as one readable line (<a href="https://github.com/Waldo0926/monash-hub/pull/235">#235</a>):</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MH1|&lt;name&gt;|&lt;start year&gt;|&lt;years&gt;|&lt;campus&gt;|&lt;degree&gt;|&lt;periods&gt;|&lt;entries&gt;
+
+MH1|My%20plan|2026|3|Malaysia|C2001|S1;S2|FIT1008@0.0,FIT2004@1.1
+</code></pre></div></div>
+
+<p>Periods are short codes. Each entry is <code class="language-plaintext highlighter-rouge">CODE@year.period</code>, with the year counted from the start year and the period as an index into the list. Text fields are URI-encoded, so the <code class="language-plaintext highlighter-rouge">|</code> only ever separates fields. I kept it readable instead of compressing it, so a student can see what it says and chat apps do not mangle it with link detection.</p>
+
+<p>The button copies a link with the code after the <code class="language-plaintext highlighter-rouge">#</code>:</p>
+
+<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">planLink</span><span class="p">():</span> <span class="kr">string</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="s2">`</span><span class="p">${</span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">origin</span><span class="p">}</span><span class="s2">/plan#plan=</span><span class="p">${</span><span class="nb">encodeURIComponent</span><span class="p">(</span><span class="nx">encodePlan</span><span class="p">(</span><span class="nx">plan</span><span class="p">.</span><span class="nx">value</span><span class="p">))}</span><span class="s2">`</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>A browser never sends the part after <code class="language-plaintext highlighter-rouge">#</code> to the server. The page reads it, opens the plan as a new plan, and removes the code from the address bar so a reload does not import it twice:</p>
+
+<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">readHash</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">hash</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">hash</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">hash</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="dl">'</span><span class="s1">plan=</span><span class="dl">'</span><span class="p">))</span> <span class="k">return</span>
+  <span class="kd">const</span> <span class="nx">code</span> <span class="o">=</span> <span class="nx">findPlanCode</span><span class="p">(</span><span class="nx">hash</span><span class="p">)</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">code</span><span class="p">)</span> <span class="nx">importCode</span><span class="p">(</span><span class="nx">code</span><span class="p">)</span>
+  <span class="nx">history</span><span class="p">.</span><span class="nx">replaceState</span><span class="p">(</span><span class="nx">history</span><span class="p">.</span><span class="nx">state</span><span class="p">,</span> <span class="dl">''</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">pathname</span> <span class="o">+</span> <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">search</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">findPlanCode</code> accepts a bare code, a whole link, or a message with a code somewhere inside it, because people paste whatever their chat app gives them. The decoded plan goes through the same <code class="language-plaintext highlighter-rouge">sanitise</code> function as an imported file, so a hand-edited code cannot put nonsense into storage.</p>
+
+<p>What this does not do: anyone with the link can open the plan. That is the point of a link, and the plan holds unit codes, not grades or names, unless the student types a name into the plan’s title.</p>
+
+<h2 id="the-privacy-note-was-wrong">The privacy note was wrong</h2>
+
+<p>While working on the course map I reread the note under it. It said the plan is “not uploaded”. That was not true. Checking a plan sends the unit codes, teaching periods and campus to <code class="language-plaintext highlighter-rouge">/v1/plan/check</code>, which works out prerequisites and problems.</p>
+
+<p>The note now says exactly that, and that the server does not keep them (<a href="https://github.com/Waldo0926/monash-hub/pull/231">#231</a>). “Saved in this browser only” also moved next to the plan name, so nobody mistakes the plan for something saved to an account.</p>
+
+<h2 id="the-home-pages-popular-searches-were-made-up">The home page’s “popular searches” were made up</h2>
+
+<p>Under the home search box there was a row of six searches labelled “Often searched” (热门搜索 in Chinese). They were a fixed list in the code. The site did not log searches at all. In <a href="https://github.com/Waldo0926/monash-hub/pull/227">#227</a> I relabelled them as examples: Try, 试试搜, 検索例, 검색 예시.</p>
+
+<p>Then I made the real version (<a href="https://github.com/Waldo0926/monash-hub/pull/237">#237</a>). The question was how to count searches without keeping anything about the people who make them.</p>
+
+<h2 id="a-word-a-day-and-a-count">A word, a day and a count</h2>
+
+<p>Each row in the new <code class="language-plaintext highlighter-rouge">search_terms</code> table holds a term, a day and a count. No IP, no account, no time of day. A search is counted once, and only when it found something:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">normalise</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
+    <span class="n">term</span> <span class="o">=</span> <span class="s">" "</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">query</span><span class="p">.</span><span class="n">split</span><span class="p">())</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="mi">2</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">term</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">60</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">term</span><span class="p">.</span><span class="n">split</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>          <span class="c1"># sentences are not search terms
+</span>    <span class="k">if</span> <span class="s">"@"</span> <span class="ow">in</span> <span class="n">term</span> <span class="ow">or</span> <span class="s">"://"</span> <span class="ow">in</span> <span class="n">term</span> <span class="ow">or</span> <span class="n">LONG_NUMBER</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="n">term</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">None</span>          <span class="c1"># an email, a link, a phone or student number
+</span>    <span class="k">return</span> <span class="n">term</span>
+</code></pre></div></div>
+
+<p>An email address, a pasted link or a run of six or more digits is never stored, whatever it found.</p>
+
+<h2 id="one-person-should-not-be-able-to-put-words-on-the-home-page">One person should not be able to put words on the home page</h2>
+
+<p>The site is small. Without limits, one person searching the same word thirty times would put it on the front page for everyone. So the list the home page reads has two guards:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">capped</span> <span class="o">=</span> <span class="n">func</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">func</span><span class="p">.</span><span class="n">least</span><span class="p">(</span><span class="n">SearchTerm</span><span class="p">.</span><span class="n">hits</span><span class="p">,</span> <span class="n">DAILY_CAP</span><span class="p">))</span>   <span class="c1"># at most 20 a day
+</span><span class="n">rows</span> <span class="o">=</span> <span class="n">db</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span>
+    <span class="n">select</span><span class="p">(</span><span class="n">SearchTerm</span><span class="p">.</span><span class="n">term</span><span class="p">,</span> <span class="n">func</span><span class="p">.</span><span class="nb">max</span><span class="p">(</span><span class="n">SearchTerm</span><span class="p">.</span><span class="n">label</span><span class="p">),</span> <span class="n">capped</span><span class="p">.</span><span class="n">label</span><span class="p">(</span><span class="s">"hits"</span><span class="p">))</span>
+    <span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="n">SearchTerm</span><span class="p">.</span><span class="n">day</span> <span class="o">&gt;=</span> <span class="n">since</span><span class="p">)</span>                            <span class="c1"># the last 14 days
+</span>    <span class="p">.</span><span class="n">group_by</span><span class="p">(</span><span class="n">SearchTerm</span><span class="p">.</span><span class="n">term</span><span class="p">)</span>
+    <span class="p">.</span><span class="n">having</span><span class="p">(</span><span class="n">func</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">func</span><span class="p">.</span><span class="n">distinct</span><span class="p">(</span><span class="n">SearchTerm</span><span class="p">.</span><span class="n">day</span><span class="p">))</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">)</span>   <span class="c1"># on two different days
+</span>    <span class="p">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">capped</span><span class="p">.</span><span class="n">desc</span><span class="p">(),</span> <span class="n">SearchTerm</span><span class="p">.</span><span class="n">term</span><span class="p">)</span>
+    <span class="p">.</span><span class="n">limit</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
+<span class="p">).</span><span class="nb">all</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>A day adds at most 20 to a term, and a term has to have been searched on two different days. Rows older than 60 days are deleted. Until at least three terms pass, the home page shows the six examples again, labelled as examples.</p>
+
+<p>These guards raise the cost. They do not make it impossible: someone who searches the same real term on two days can still get it listed. Since a term only counts when it finds something on the site, the worst case is a real unit code or topic showing up that not many people searched.</p>
+
+<h2 id="takeaways">Takeaways</h2>
+
+<ul>
+  <li>The part of a URL after <code class="language-plaintext highlighter-rouge">#</code> is a free way to pass data between two copies of your own page without the server.</li>
+  <li>Read your privacy notes again after each feature. Mine was true when written and wrong a few features later.</li>
+  <li>Before showing “popular” anything, decide what one person can do to it. Caps per day and a minimum number of days are cheap.</li>
+</ul>
+
+<p>Code: <a href="https://github.com/Waldo0926/monash-hub/blob/main/frontend/utils/planCode.ts">planCode.ts</a>, <a href="https://github.com/Waldo0926/monash-hub/blob/main/frontend/pages/plan.vue">plan.vue</a>, <a href="https://github.com/Waldo0926/monash-hub/blob/main/backend/app/search/popular.py">popular.py</a>.</p>]]></content><author><name>Shuoxun Wen</name></author><summary type="html"><![CDATA[Monash Hub has no accounts for course plans. How a plan moves to another device in a link the server never receives, how the home page shows real searches while storing only a word, a day and a count, and a privacy note that had to be corrected.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/plan-code-and-searches.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/plan-code-and-searches.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>

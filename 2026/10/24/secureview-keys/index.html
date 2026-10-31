@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Sharing files the server cannot read | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Sharing files the server cannot read" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="In SecureView the browser encrypts every file and the server never holds a key that opens one. How sharing works under that rule, and what happens when someone forgets their passphrase." />
+<meta property="og:description" content="In SecureView the browser encrypts every file and the server never holds a key that opens one. How sharing works under that rule, and what happens when someone forgets their passphrase." />
+<link rel="canonical" href="https://blog.secureview.tech/2026/10/24/secureview-keys/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/10/24/secureview-keys/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/secureview-keys.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-24T18:00:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/secureview-keys.png" />
+<meta property="twitter:title" content="Sharing files the server cannot read" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-10-24T18:00:00+08:00","datePublished":"2026-10-24T18:00:00+08:00","description":"In SecureView the browser encrypts every file and the server never holds a key that opens one. How sharing works under that rule, and what happens when someone forgets their passphrase.","headline":"Sharing files the server cannot read","image":"https://blog.secureview.tech/assets/og/secureview-keys.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/10/24/secureview-keys/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/10/24/secureview-keys/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/10/24/secureview-keys/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/10/24/secureview-keys-zh/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/#writing">Writing</a>
+        <a href="/#projects">Projects</a>
+        <a href="/about/">About</a>
+      </nav>
+      <a class="lang-switch" href="/2026/10/24/secureview-keys-zh/" lang="zh-Hans" hreflang="zh-Hans">中文</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/#writing">Writing</a>
+      <span aria-hidden="true">/</span>
+      <span>SecureView</span>
+    </p>
+    <h1 class="display post-title">Sharing files the server cannot read</h1><p class="lede">In SecureView the browser encrypts every file and the server never holds a key that opens one. How sharing works under that rule, and what happens when someone forgets their passphrase.</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-10-24T18:00:00+08:00">24 Oct 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>6 min read</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/10/24/secureview-keys/" class="on" aria-current="page">English</a>
+        <a href="/2026/10/24/secureview-keys-zh/" lang="zh-Hans">中文</a>
+      </span>
+    </div>
+  </header>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p><a href="https://github.com/Waldo0926/SecureView">SecureView</a> is the file sharing platform our team built for our final year project at Monash. It is live, and I wrote 182 of the 203 merged pull requests. The rule behind it is simple to say: files are encrypted in the browser, and the server never receives anything that can decrypt them. Not the file, not the file key, not the user’s private key, not the passphrase.</p>
+
+<p>The rule is easy to say and hard to keep once you add sharing, forgotten passphrases and stolen sessions. First, what the rule buys you.</p>
+
+<h2 id="what-this-buys-you">What this buys you</h2>
+
+<p><strong>1. The server only stores encrypted files.</strong> There is no original file on the server, and no key that opens one. The people running SecureView cannot read a user’s files, and neither can someone who breaks into the server or copies the database. What they get is ciphertext and sealed keys, and without each user’s passphrase that is useless.</p>
+
+<p><strong>2. A stolen account is not a stolen file.</strong> Say someone gets your login password and signs in. They see your file list, but they cannot read any of it. They cannot preview a file, because the server has no original to show. They cannot download the real file or share it with anyone, because both need your private key, and only your passphrase unlocks it. The browser asks for the passphrase again on every download and every share. The most they can download is the encrypted file.</p>
+
+<p>The rest of this post is how the design keeps those two promises, and where they stop.</p>
+
+<h2 id="two-secrets-not-one">Two secrets, not one</h2>
+
+<p>Every account has two separate secrets:</p>
+
+<ul>
+  <li><strong>The login password</strong> proves who you are to the server. The server stores an Argon2id hash of it, like any login.</li>
+  <li><strong>The encryption passphrase</strong> never leaves the browser. It unlocks the account’s private key, and the private key unlocks your files.</li>
+</ul>
+
+<p>Keeping them apart is what makes point 2 work. It is also why a forgotten login password can be reset by email: taking over someone’s mailbox gets you their session, but not their files.</p>
+
+<h2 id="the-key-chain">The key chain</h2>
+
+<p>At registration the browser makes everything and sends the server only sealed copies:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>passphrase  --Argon2id--&gt;       KEK  (key-encryption key)
+KEK         --AES-256-GCM--&gt;    opens the AMK  (account master key, random 256-bit)
+AMK         --HKDF-SHA256--&gt;    opens the RSA private key (3072-bit by default)
+private key --RSA-OAEP--&gt;       opens each file's DEK  (data-encryption key)
+DEK         --AES-256-GCM--&gt;    decrypts the file
+</code></pre></div></div>
+
+<p>The server stores the wrapped AMK, the encrypted private key, the public key and the Argon2id salt and parameters. With all of that and no passphrase, it still cannot open anything. The browser also runs a self-test before registering: it unlocks what it just sealed and checks the private key matches the public key. The server cannot check that, because it cannot decrypt the bundle.</p>
+
+<p>Each upload gets a fresh random DEK. The browser encrypts the file with it (AES-256-GCM by default, or one of five other AEAD suites the user picks), then wraps the DEK with RSA-OAEP-SHA256 twice: once to the owner’s public key, and once to a recovery key whose private half is kept offline. The server receives the ciphertext and the two wrapped DEKs. On download it streams the ciphertext back and the browser decrypts it.</p>
+
+<h2 id="sharing-is-a-rewrap">Sharing is a rewrap</h2>
+
+<p>To share a file with Bob, the server cannot help with the cryptography, because it does not have the DEK. So the sender’s browser does it:</p>
+
+<ol>
+  <li>Fetch Bob’s public key, and compute its fingerprint from the key itself.</li>
+  <li>Show Bob’s name and fingerprint, and warn if it changed since the last share to Bob.</li>
+  <li>Unlock the sender’s private key and unwrap the file’s DEK.</li>
+  <li>Wrap the same DEK to Bob’s public key and send only that.</li>
+</ol>
+
+<p>The server checks permissions: the sender needs SHARE on the file, and Bob cannot get a capability the sender does not have. Then it stores Bob’s grant and wrapped DEK, plus an audit event, in one transaction. The file itself is never re-encrypted.</p>
+
+<p>Step 2 is there because the server hands out public keys. A server that swapped Bob’s key for its own could read everything shared to “Bob”. The fingerprint warning only catches that after the first share, and only if people compare it with what Bob sees in Settings. It is a real limit, and the docs say so.</p>
+
+<h2 id="someone-forgets-their-passphrase">Someone forgets their passphrase</h2>
+
+<p>This is where “the server holds no keys” stops being free. Forget the passphrase and the AMK is gone, and nothing on the server can bring it back.</p>
+
+<p>The way out is the private key file the browser shows once at registration. That file opens every file the account can reach, so letting its holder set a new passphrase gives them nothing they did not already have. The reset:</p>
+
+<ul>
+  <li>reads the key file in the browser and checks it matches the account’s public key</li>
+  <li>makes a <strong>new</strong> AMK, wraps it under the new passphrase, and re-encrypts the same private key under it</li>
+  <li>reopens both new envelopes locally before sending anything</li>
+</ul>
+
+<p>The key pair does not change, so every file, share and wrapped DEK keeps working and nothing is re-encrypted. Lose both the passphrase and the key file and the files are gone for good. Registration says this in plain words.</p>
+
+<h2 id="a-stolen-session-must-not-replace-the-keys">A stolen session must not replace the keys</h2>
+
+<p>The server cannot check that the new envelopes open, because it never sees the passphrase or the AMK. Without another check, someone with a stolen session could upload garbage envelopes and lock the owner out of every file.</p>
+
+<p>So replacing the envelopes needs proof of the private key. The server returns a digest that binds the account, the key, both expected revisions and every field of both new envelopes. The browser signs it with the private key (RSA-PSS-SHA256), and the server verifies the signature before writing anything:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /keys/me/reset-protection/signing-payload  -&gt;  32-byte digest
+browser signs the digest with the account private key
+POST /keys/me/reset-protection  (envelopes + signature)
+  signature from another key  -&gt;  422, nothing changed
+  stale revision              -&gt;  409
+</code></pre></div></div>
+
+<p>Each signed operation (reset, rewrap, adding a key) has its own domain label in the digest, so a signature for one cannot be replayed as another. Since the reset shipped, the same path also handles changing a passphrase you still know.</p>
+
+<h2 id="what-the-server-can-still-see">What the server can still see</h2>
+
+<p>Key custody is not the same as hiding everything. The server still sees:</p>
+
+<ul>
+  <li>filenames, MIME types and exact file sizes</li>
+  <li>who shared what with whom, and when</li>
+  <li>the Argon2id envelope, which allows offline guessing of a weak passphrase if the database is stolen</li>
+</ul>
+
+<p>For that last point, the browser refuses passphrases that are common, patterned or mostly the username, and requires at least 10 characters. A modified client could skip those checks. They protect users from their own weak choices, not the server from an attacker.</p>
+
+<p>A server that is actively malicious can also serve old ciphertext or a swapped key bundle. The design gives zero-knowledge key custody at the API, not protection from a hostile operator.</p>
+
+<h2 id="takeaways">Takeaways</h2>
+
+<ul>
+  <li>Write down what the server must never receive, and check every endpoint against it.</li>
+  <li>If the server cannot validate something, ask the client to prove it, like the signed envelope replacement.</li>
+  <li>Recovery has to be designed with the encryption, not added later. Here it is a file the user keeps, and the docs say what losing it costs.</li>
+  <li>Write the limits down. A security claim reads better when it says what it does not cover.</li>
+</ul>
+
+<p>More detail: <a href="https://github.com/Waldo0926/SecureView/blob/main/docs/SECURITY_FLOWS.md"><code class="language-plaintext highlighter-rouge">docs/SECURITY_FLOWS.md</code></a>, and the browser code in <a href="https://github.com/Waldo0926/SecureView/tree/main/frontend/src/crypto"><code class="language-plaintext highlighter-rouge">frontend/src/crypto/</code></a> (<code class="language-plaintext highlighter-rouge">share.ts</code>, <code class="language-plaintext highlighter-rouge">passphrase-reset.ts</code>).</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">On this page</p>
+      <ol><li><a href="#what-this-buys-you">What this buys you</a></li><li><a href="#two-secrets-not-one">Two secrets, not one</a></li><li><a href="#the-key-chain">The key chain</a></li><li><a href="#sharing-is-a-rewrap">Sharing is a rewrap</a></li><li><a href="#someone-forgets-their-passphrase">Someone forgets their passphrase</a></li><li><a href="#a-stolen-session-must-not-replace-the-keys">A stolen session must not replace the keys</a></li><li><a href="#what-the-server-can-still-see">What the server can still see</a></li><li><a href="#takeaways">Takeaways</a></li></ol>
+      <a class="toc-back" href="/#writing">All writing</a>
+    </aside>
+  </div>
+  <nav class="more" aria-label="More posts">
+    <a class="card more-link" href="/2026/10/24/rating-abuse/">
+      <span class="more-label">Previous · Monash Hub</span>
+      <span class="more-title">Unit ratings without sign-in, and keeping them honest</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/10/24/secureview-pool/">
+      <span class="more-label">Next · SecureView</span>
+      <span class="more-title">100 users, 3% CPU, and most uploads failing</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Computer Science at Monash University. Backend and AI application development.</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">Status</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

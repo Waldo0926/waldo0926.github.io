@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>能离线用，但有新版本时绝不显示旧页面 | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="能离线用，但有新版本时绝不显示旧页面" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="zh_Hans" />
+<meta name="description" content="Monash Hub 现在可以添加到手机主屏幕，没信号也能打开看过的页面。为什么 service worker 永远先走网络，哪些东西坚决不存，以及开着好几天的应用怎么拿到新版本。" />
+<meta property="og:description" content="Monash Hub 现在可以添加到手机主屏幕，没信号也能打开看过的页面。为什么 service worker 永远先走网络，哪些东西坚决不存，以及开着好几天的应用怎么拿到新版本。" />
+<link rel="canonical" href="https://blog.secureview.tech/2026/10/26/offline-app-zh/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/10/26/offline-app-zh/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/offline-app-zh.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-26T09:30:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/offline-app-zh.png" />
+<meta property="twitter:title" content="能离线用，但有新版本时绝不显示旧页面" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-10-26T09:30:00+08:00","datePublished":"2026-10-26T09:30:00+08:00","description":"Monash Hub 现在可以添加到手机主屏幕，没信号也能打开看过的页面。为什么 service worker 永远先走网络，哪些东西坚决不存，以及开着好几天的应用怎么拿到新版本。","headline":"能离线用，但有新版本时绝不显示旧页面","image":"https://blog.secureview.tech/assets/og/offline-app-zh.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/10/26/offline-app-zh/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/10/26/offline-app-zh/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/10/26/offline-app-zh/">
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/10/26/offline-app/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/zh/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/zh/#writing">文章</a>
+        <a href="/zh/#projects">项目</a>
+        <a href="/zh/about/">关于</a>
+      </nav>
+      <a class="lang-switch" href="/2026/10/26/offline-app/" lang="en" hreflang="en">English</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/zh/#writing">文章</a>
+      <span aria-hidden="true">/</span>
+      <span>Monash Hub</span>
+    </p>
+    <h1 class="display post-title">能离线用，但有新版本时绝不显示旧页面</h1><p class="lede">Monash Hub 现在可以添加到手机主屏幕，没信号也能打开看过的页面。为什么 service worker 永远先走网络，哪些东西坚决不存，以及开着好几天的应用怎么拿到新版本。</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-10-26T09:30:00+08:00">26 Oct 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>约 7 分钟</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/10/26/offline-app/">English</a>
+        <a href="/2026/10/26/offline-app-zh/" lang="zh-Hans" class="on" aria-current="page">中文</a>
+      </span>
+    </div>
+  </header>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p>同学查 <a href="https://monashhub.secureview.tech">Monash Hub</a> 的时候，可能在公交上、在地下的阶梯教室里，或者为了省流量关了数据。10 月 24 日我让它可以“安装”：能添加到手机主屏幕，有自己的图标，像应用一样全屏打开，没信号时也能打开已经看过的页面（<a href="https://github.com/Waldo0926/monash-hub/pull/207">#207</a>）。</p>
+
+<p>我没有做原生应用。一个 web app manifest 加一个 service worker，同一套代码就能覆盖 iPhone Safari、安卓浏览器和电脑上的 Chrome。难的是决定 service worker 能做什么、不能做什么。</p>
+
+<h2 id="只有一条规则不能比服务器旧">只有一条规则：不能比服务器旧</h2>
+
+<p>service worker 可以先从缓存里拿内容，让网站看起来更快。对 Monash Hub 来说这不划算。一个旧了一周的课程页或选课指南，可能让同学填错表。所以 <code class="language-plaintext highlighter-rouge">sw.js</code> 开头的注释写明了它是干什么的：</p>
+
+<blockquote>
+  <p>把 Monash Hub 加到主屏幕的同学，没信号时可以打开已经看过的课程、学位和指南页面。就这些。它不是用来让网站在有网时变快的，也绝不能让同学看到比服务器上更旧的内容。</p>
+</blockquote>
+
+<p>每个页面和接口请求都先走网络。只有完全连不上网络时，才用存下来的副本：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span> <span class="nx">networkFirst</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">cacheName</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">request</span><span class="p">)</span>
+    <span class="nx">save</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">cacheName</span><span class="p">,</span> <span class="nx">response</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nx">response</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">saved</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">caches</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="nx">cacheName</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">cache</span> <span class="o">=&gt;</span> <span class="nx">cache</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">request</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">saved</span><span class="p">)</span> <span class="k">return</span> <span class="nx">saved</span>
+    <span class="k">throw</span> <span class="nx">error</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>服务器返回 404 或 500，照原样交给页面。这不算网络故障，所以不会退回旧副本。显示存下来的页面时，页面上会提示现在没有网络，内容可能不是最新的。</p>
+
+<h2 id="哪些东西坚决不存">哪些东西坚决不存</h2>
+
+<p>值得离线看的只有资料类页面：首页、课程、学位、指南，还有课程地图、先修树和分数计算器，它们本来就把数据存在浏览器里。所有实时的、个人的东西都故意不存：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* The API calls those pages make. Reviews, community, auth and search are left out on purpose. */</span>
+<span class="kd">const</span> <span class="nx">OFFLINE_API</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="sr">/^</span><span class="se">\/</span><span class="sr">api</span><span class="se">\/</span><span class="sr">v1</span><span class="se">\/</span><span class="sr">units</span><span class="se">(\/</span><span class="sr">|$</span><span class="se">)</span><span class="sr">/</span><span class="p">,</span>
+  <span class="sr">/^</span><span class="se">\/</span><span class="sr">api</span><span class="se">\/</span><span class="sr">v1</span><span class="se">\/</span><span class="sr">courses</span><span class="se">(\/</span><span class="sr">|$</span><span class="se">)</span><span class="sr">/</span><span class="p">,</span>
+  <span class="sr">/^</span><span class="se">\/</span><span class="sr">api</span><span class="se">\/</span><span class="sr">v1</span><span class="se">\/</span><span class="sr">guides</span><span class="se">(\/</span><span class="sr">|$</span><span class="se">)</span><span class="sr">/</span><span class="p">,</span>
+  <span class="sr">/^</span><span class="se">\/</span><span class="sr">api</span><span class="se">\/</span><span class="sr">v1</span><span class="se">\/(</span><span class="sr">faq|key-dates</span><span class="se">)</span><span class="sr">$/</span><span class="p">,</span>
+  <span class="sr">/^</span><span class="se">\/</span><span class="sr">api</span><span class="se">\/</span><span class="sr">v1</span><span class="se">\/</span><span class="sr">exchange$/</span><span class="p">,</span>
+  <span class="sr">/^</span><span class="se">\/</span><span class="sr">api</span><span class="se">\/</span><span class="sr">v1</span><span class="se">\/</span><span class="sr">marks</span><span class="se">\/(</span><span class="sr">reference|units</span><span class="se">)</span><span class="sr">$/</span>
+<span class="p">]</span>
+</code></pre></div></div>
+
+<p>而且只存完整、成功的响应：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">save</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">cacheName</span><span class="p">,</span> <span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span> <span class="o">!==</span> <span class="mi">200</span> <span class="o">||</span> <span class="nx">response</span><span class="p">.</span><span class="nx">type</span> <span class="o">!==</span> <span class="dl">'</span><span class="s1">basic</span><span class="dl">'</span><span class="p">)</span> <span class="k">return</span>
+  <span class="k">if</span> <span class="p">((</span><span class="nx">response</span><span class="p">.</span><span class="nx">headers</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">Cache-Control</span><span class="dl">'</span><span class="p">)</span> <span class="o">||</span> <span class="dl">''</span><span class="p">).</span><span class="nx">includes</span><span class="p">(</span><span class="dl">'</span><span class="s1">no-store</span><span class="dl">'</span><span class="p">))</span> <span class="k">return</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这条规则让页面那边也要改一处。接口出错时，课程、学位和指南的列表页面还是返回 200 状态，显示一张错误卡片。service worker 会把这张卡片存下来，盖掉原来好的副本。现在它们和详情页一样返回 503。</p>
+
+<p>还有两个小细节：</p>
+
+<ul>
+  <li>存下来的页面是当时的语言。读者切换语言时，存的页面全部删掉。接口的响应在网址里带着语言，可以留着。</li>
+  <li>缓存名字里有 <code class="language-plaintext highlighter-rouge">VERSION</code>，缓存规则一改就加一。新的 worker 会删掉旧 worker 建的所有缓存，按旧规则存的东西一样都不留。</li>
+</ul>
+
+<h2 id="从没打开过的页面">从没打开过的页面</h2>
+
+<p>离线时，打开一个从没存过的页面，会显示一个离线页，用读者的语言，列出已经存了哪些页面。在应用里点链接，平时是从接口拿数据，而接口的响应只存了一部分。所以手机离线时，点链接会改成整页加载，这样 service worker 就能返回存下来的页面或者离线页。</p>
+
+<h2 id="开着好几天的应用">开着好几天的应用</h2>
+
+<p>先走网络，意味着下次加载页面就是新版本。剩下的情况是应用在手机上一开好几天。Nuxt 发现新版本后，下次跳转就会重新加载，但它一小时才检查一次，而手机会在应用退到后台时暂停计时器。</p>
+
+<p>所以应用回到前台时也检查一次，最多五分钟一次：</p>
+
+<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">document</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">'</span><span class="s1">visibilitychange</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">visibilityState</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">visible</span><span class="dl">'</span><span class="p">)</span> <span class="nx">checkForNewBuild</span><span class="p">()</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">checkForNewBuild</code> 会让浏览器检查 <code class="language-plaintext highlighter-rouge">sw.js</code> 有没有更新，并且对比当前运行的版本号和 <code class="language-plaintext highlighter-rouge">/_nuxt/builds/latest.json</code>。不一样的话，下次点链接就加载新版本。</p>
+
+<h2 id="告诉大家可以安装">告诉大家可以安装</h2>
+
+<p>大部分同学不知道网站可以加到主屏幕，不同浏览器的步骤也不一样。在手机上看过几个页面后，会出现一行提示，说明 iPhone Safari、安卓浏览器（包括华为、小米、OPPO、vivo）和微信里怎么操作。点“不再显示”就永远不出现，页脚里也有同样的步骤。</p>
+
+<h2 id="怎么测试">怎么测试</h2>
+
+<p>CI 里的 Playwright 测试覆盖了容易坏的地方：</p>
+
+<ul>
+  <li>manifest 的名字、介绍和快捷方式，中英文都对，每个图标都存在</li>
+  <li>看过一次的课程页，断网后还能打开，并显示“现在没有网络”的提示，同时评分和社区的请求从来没被存过</li>
+  <li>从没打开过的页面显示离线页，网络恢复后点“重试”能正常打开</li>
+  <li>找不到的课程不会被存</li>
+  <li>安装提示要看过几个页面才出现，关掉后不再出现</li>
+</ul>
+
+<h2 id="小结">小结</h2>
+
+<ul>
+  <li>写 service worker 之前先想清楚它是干什么的，写在文件开头。</li>
+  <li>先走网络，只有真正连不上才用缓存，出错的响应永远不存。</li>
+  <li>装到主屏幕的应用可能一开好几天，回到前台时检查有没有新版本。</li>
+</ul>
+
+<p>代码：<a href="https://github.com/Waldo0926/monash-hub/blob/main/frontend/public/sw.js">sw.js</a>、<a href="https://github.com/Waldo0926/monash-hub/blob/main/frontend/plugins/pwa.client.ts">pwa.client.ts</a>、<a href="https://github.com/Waldo0926/monash-hub/blob/main/e2e/tests/pwa.spec.ts">pwa.spec.ts</a>。</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">本文目录</p>
+      <ol><li><a href="#只有一条规则不能比服务器旧">只有一条规则：不能比服务器旧</a></li><li><a href="#哪些东西坚决不存">哪些东西坚决不存</a></li><li><a href="#从没打开过的页面">从没打开过的页面</a></li><li><a href="#开着好几天的应用">开着好几天的应用</a></li><li><a href="#告诉大家可以安装">告诉大家可以安装</a></li><li><a href="#怎么测试">怎么测试</a></li><li><a href="#小结">小结</a></li></ol>
+      <a class="toc-back" href="/zh/#writing">全部文章</a>
+    </aside>
+  </div>
+  <nav class="more" aria-label="更多文章">
+    <a class="card more-link" href="/2026/10/26/chrome-store-zh/">
+      <span class="more-label">上一篇 · Attendance Helper</span>
+      <span class="more-title">把 Chrome 扩展准备好上架应用商店</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/10/26/plan-code-and-searches-zh/">
+      <span class="more-label">下一篇 · Monash Hub</span>
+      <span class="more-title">服务器看不到的规划码，和不记人的热门搜索</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Monash University 计算机科学。后端和 AI 应用开发。</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">运行状态</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

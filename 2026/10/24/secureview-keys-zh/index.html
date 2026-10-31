@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>服务器读不了的文件分享 | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="服务器读不了的文件分享" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="zh_Hans" />
+<meta name="description" content="SecureView 里每个文件都在浏览器里加密，服务器手里没有任何能打开文件的密钥。在这个前提下怎么分享文件，忘了 passphrase 又怎么办。" />
+<meta property="og:description" content="SecureView 里每个文件都在浏览器里加密，服务器手里没有任何能打开文件的密钥。在这个前提下怎么分享文件，忘了 passphrase 又怎么办。" />
+<link rel="canonical" href="https://blog.secureview.tech/2026/10/24/secureview-keys-zh/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/10/24/secureview-keys-zh/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/secureview-keys-zh.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-24T18:00:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/secureview-keys-zh.png" />
+<meta property="twitter:title" content="服务器读不了的文件分享" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-10-24T18:00:00+08:00","datePublished":"2026-10-24T18:00:00+08:00","description":"SecureView 里每个文件都在浏览器里加密，服务器手里没有任何能打开文件的密钥。在这个前提下怎么分享文件，忘了 passphrase 又怎么办。","headline":"服务器读不了的文件分享","image":"https://blog.secureview.tech/assets/og/secureview-keys-zh.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/10/24/secureview-keys-zh/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/10/24/secureview-keys-zh/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/10/24/secureview-keys-zh/">
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/10/24/secureview-keys/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/zh/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/zh/#writing">文章</a>
+        <a href="/zh/#projects">项目</a>
+        <a href="/zh/about/">关于</a>
+      </nav>
+      <a class="lang-switch" href="/2026/10/24/secureview-keys/" lang="en" hreflang="en">English</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/zh/#writing">文章</a>
+      <span aria-hidden="true">/</span>
+      <span>SecureView</span>
+    </p>
+    <h1 class="display post-title">服务器读不了的文件分享</h1><p class="lede">SecureView 里每个文件都在浏览器里加密，服务器手里没有任何能打开文件的密钥。在这个前提下怎么分享文件，忘了 passphrase 又怎么办。</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-10-24T18:00:00+08:00">24 Oct 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>约 7 分钟</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/10/24/secureview-keys/">English</a>
+        <a href="/2026/10/24/secureview-keys-zh/" lang="zh-Hans" class="on" aria-current="page">中文</a>
+      </span>
+    </div>
+  </header>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p><a href="https://github.com/Waldo0926/SecureView">SecureView</a> 是我们团队在 Monash 做的毕业设计，一个文件分享平台，已经上线，合并的 203 个 PR 里有 182 个是我写的。它背后的规则说起来很简单：文件在浏览器里加密，服务器收不到任何能解密它的东西。文件本身、文件密钥、用户私钥、passphrase，都收不到。</p>
+
+<p>规则好说，加上分享、忘记 passphrase、会话被盗这几种情况之后就难守了。先说这条规则带来的好处。</p>
+
+<h2 id="这样做有什么用">这样做有什么用</h2>
+
+<p><strong>1. 服务器上只有加密后的文件。</strong> 服务器上没有原文件，也没有能打开文件的密钥。运营 SecureView 的人看不到用户的文件，就算服务器被攻破、数据库被整个拷走，拿到的也只是密文和封装好的密钥。没有每个用户自己的 passphrase，这些都没用。</p>
+
+<p><strong>2. 账号被盗不等于文件被盗。</strong> 假设别人拿到了你的登录密码并登录进来，对方能看到你的文件列表，但读不到任何内容。预览不了，因为服务器上根本没有原文件可以给对方看。下载原文件和分享也做不到，因为这两件事都要用你的私钥，而私钥只有你的 passphrase 能解开。每次下载、每次分享，浏览器都会重新要 passphrase。对方最多只能下载到加密后的文件。</p>
+
+<p>下面讲这个设计怎么守住这两点，以及它管不到的地方。</p>
+
+<h2 id="两个密码不是一个">两个密码，不是一个</h2>
+
+<p>每个账号有两个互相独立的秘密：</p>
+
+<ul>
+  <li><strong>登录密码</strong>用来向服务器证明你是谁。服务器存它的 Argon2id 哈希，和普通登录一样。</li>
+  <li><strong>加密 passphrase</strong> 从不离开浏览器。它解锁账号的私钥，私钥再解锁你的文件。</li>
+</ul>
+
+<p>两者分开，上面第 2 点才成立。这也是忘了登录密码可以放心用邮件重置的原因：别人就算拿下了你的邮箱，也只能拿到会话，拿不到文件。</p>
+
+<h2 id="密钥链">密钥链</h2>
+
+<p>注册时所有密钥都在浏览器里生成，服务器只收到封装好的副本：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>passphrase  --Argon2id--&gt;       KEK（密钥加密密钥）
+KEK         --AES-256-GCM--&gt;    打开 AMK（账户主密钥，随机 256 位）
+AMK         --HKDF-SHA256--&gt;    打开 RSA 私钥（默认 3072 位）
+私钥        --RSA-OAEP--&gt;       打开每个文件的 DEK（数据加密密钥）
+DEK         --AES-256-GCM--&gt;    解密文件
+</code></pre></div></div>
+
+<p>服务器存的是包装后的 AMK、加密后的私钥、公钥，以及 Argon2id 的盐和参数。这些全拿到，没有 passphrase 也打不开任何东西。注册前浏览器还会自检：把刚封装好的东西重新解开，确认私钥和公钥是一对。这一步服务器做不了，因为它解不开。</p>
+
+<p>每次上传都生成一个新的随机 DEK。浏览器用它加密文件（默认 AES-256-GCM，用户也可以选另外五种 AEAD 算法），然后用 RSA-OAEP-SHA256 把 DEK 包装两次：一次给文件所有者的公钥，一次给一把私钥离线保管的恢复密钥。服务器收到的是密文和两份包装后的 DEK。下载时服务器把密文原样传回，由浏览器解密。</p>
+
+<h2 id="分享就是重新包装">分享就是重新包装</h2>
+
+<p>要把文件分享给 Bob，服务器在密码学上帮不上忙，因为它没有 DEK。所以由发送方的浏览器来做：</p>
+
+<ol>
+  <li>取 Bob 的公钥，用公钥本身算出指纹。</li>
+  <li>显示 Bob 的名字和指纹，如果和上次分享给 Bob 时不一样就警告。</li>
+  <li>解锁发送方的私钥，解开这个文件的 DEK。</li>
+  <li>用 Bob 的公钥重新包装同一个 DEK，只把这个发给服务器。</li>
+</ol>
+
+<p>服务器负责检查权限：发送方要对这个文件有 SHARE 权限，Bob 拿到的权限不能超过发送方自己有的。然后在一个事务里写入 Bob 的授权、包装后的 DEK 和一条审计记录。文件本身不用重新加密。</p>
+
+<p>第 2 步存在是因为公钥是服务器发的。如果服务器把 Bob 的公钥换成自己的，分享给“Bob”的东西它就都能读。指纹警告只能在第一次分享之后起作用，而且要大家真的去和 Bob 在设置页看到的指纹对一下。这是真实存在的局限，文档里也写明了。</p>
+
+<h2 id="忘了-passphrase">忘了 passphrase</h2>
+
+<p>“服务器不拿密钥”到这里开始有代价。passphrase 忘了，AMK 就没了，服务器上没有任何东西能把它找回来。</p>
+
+<p>出路是注册时浏览器只显示一次的私钥文件。这个文件本来就能打开账号能访问的所有文件，所以让持有它的人设置新的 passphrase，并没有给他任何新能力。重置的过程是：</p>
+
+<ul>
+  <li>在浏览器里读取密钥文件，确认它和账号的公钥匹配</li>
+  <li>生成一个<strong>新的</strong> AMK，用新 passphrase 包装它，再用它重新加密同一把私钥</li>
+  <li>发送之前，先在本地把两个新信封重新打开一遍</li>
+</ul>
+
+<p>密钥对不变，所以所有文件、分享和包装过的 DEK 都继续有效，什么都不用重新加密。passphrase 和密钥文件都丢了，文件就永远打不开了。注册页上用大白话写明了这一点。</p>
+
+<h2 id="被盗的会话不能换掉密钥">被盗的会话不能换掉密钥</h2>
+
+<p>服务器没法检查新信封能不能打开，因为它从来见不到 passphrase 和 AMK。如果没有别的检查，拿到被盗会话的人可以上传一堆垃圾信封，让主人再也打不开任何文件。</p>
+
+<p>所以替换信封必须证明持有私钥。服务器返回一个摘要，绑定账号、密钥、两个预期 revision，以及两个新信封的每一个字段。浏览器用私钥签名（RSA-PSS-SHA256），服务器先验签再写入：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /keys/me/reset-protection/signing-payload  -&gt;  32 字节摘要
+浏览器用账户私钥签名
+POST /keys/me/reset-protection（信封 + 签名）
+  别的密钥签的名   -&gt;  422，什么都不改
+  revision 过期    -&gt;  409
+</code></pre></div></div>
+
+<p>每种需要签名的操作（重置、重新包装、添加密钥）在摘要里都有自己的域标签，一种操作的签名不能拿去重放成另一种。重置上线之后，记得旧 passphrase 时修改 passphrase 也走同一条路径。</p>
+
+<h2 id="服务器还能看到什么">服务器还能看到什么</h2>
+
+<p>密钥托管不等于什么都藏住了。服务器仍然能看到：</p>
+
+<ul>
+  <li>文件名、MIME 类型和准确的文件大小</li>
+  <li>谁在什么时候把什么分享给了谁</li>
+  <li>Argon2id 信封。数据库被偷的话，弱 passphrase 可以被离线猜出来</li>
+</ul>
+
+<p>针对最后一点，浏览器会拒绝常见的、有规律的、或者基本就是用户名的 passphrase，并要求至少 10 个字符。改过的客户端可以跳过这些检查，它们保护的是用户不选弱密码，不是保护服务器不受攻击。</p>
+
+<p>一个主动作恶的服务器还可以返回旧的密文或者换掉的密钥包。这个设计做到的是 API 层面的零知识密钥托管，不能防住一个恶意的运营方。</p>
+
+<h2 id="小结">小结</h2>
+
+<ul>
+  <li>把服务器绝不能收到的东西写下来，每个接口都拿这张清单对一遍。</li>
+  <li>服务器验证不了的东西，就让客户端来证明，比如签名后才能替换信封。</li>
+  <li>恢复方案要和加密一起设计，不能事后补。这里是用户自己保管的一个文件，文档写清楚了丢了会怎样。</li>
+  <li>把局限写出来。一个安全声明说清楚了自己不管什么，反而更可信。</li>
+</ul>
+
+<p>更多细节见 <a href="https://github.com/Waldo0926/SecureView/blob/main/docs/SECURITY_FLOWS.zh-CN.md"><code class="language-plaintext highlighter-rouge">docs/SECURITY_FLOWS.md</code></a>，浏览器端代码在 <a href="https://github.com/Waldo0926/SecureView/tree/main/frontend/src/crypto"><code class="language-plaintext highlighter-rouge">frontend/src/crypto/</code></a>（<code class="language-plaintext highlighter-rouge">share.ts</code>、<code class="language-plaintext highlighter-rouge">passphrase-reset.ts</code>）。</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">本文目录</p>
+      <ol><li><a href="#这样做有什么用">这样做有什么用</a></li><li><a href="#两个密码不是一个">两个密码，不是一个</a></li><li><a href="#密钥链">密钥链</a></li><li><a href="#分享就是重新包装">分享就是重新包装</a></li><li><a href="#忘了-passphrase">忘了 passphrase</a></li><li><a href="#被盗的会话不能换掉密钥">被盗的会话不能换掉密钥</a></li><li><a href="#服务器还能看到什么">服务器还能看到什么</a></li><li><a href="#小结">小结</a></li></ol>
+      <a class="toc-back" href="/zh/#writing">全部文章</a>
+    </aside>
+  </div>
+  <nav class="more" aria-label="更多文章">
+    <a class="card more-link" href="/2026/10/24/rating-abuse-zh/">
+      <span class="more-label">上一篇 · Monash Hub</span>
+      <span class="more-title">不用登录的课程评分，以及怎么防刷</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/10/24/secureview-pool-zh/">
+      <span class="more-label">下一篇 · SecureView</span>
+      <span class="more-title">100 个用户，3% 的 CPU，大部分上传失败</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Monash University 计算机科学。后端和 AI 应用开发。</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">运行状态</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

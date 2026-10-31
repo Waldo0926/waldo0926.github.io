@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Getting a Chrome extension ready for the Web Store | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Getting a Chrome extension ready for the Web Store" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Before putting my attendance extension on the Chrome Web Store, I removed a permission, deleted URLs from a library I never call, and made the build refuse to package remote code. What the store checks, and how I checked it myself first." />
+<meta property="og:description" content="Before putting my attendance extension on the Chrome Web Store, I removed a permission, deleted URLs from a library I never call, and made the build refuse to package remote code. What the store checks, and how I checked it myself first." />
+<link rel="canonical" href="https://blog.secureview.tech/2026/10/26/chrome-store/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/10/26/chrome-store/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/chrome-store.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-26T09:00:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/chrome-store.png" />
+<meta property="twitter:title" content="Getting a Chrome extension ready for the Web Store" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-10-26T09:00:00+08:00","datePublished":"2026-10-26T09:00:00+08:00","description":"Before putting my attendance extension on the Chrome Web Store, I removed a permission, deleted URLs from a library I never call, and made the build refuse to package remote code. What the store checks, and how I checked it myself first.","headline":"Getting a Chrome extension ready for the Web Store","image":"https://blog.secureview.tech/assets/og/chrome-store.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/10/26/chrome-store/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/10/26/chrome-store/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/10/26/chrome-store/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/10/26/chrome-store-zh/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/#writing">Writing</a>
+        <a href="/#projects">Projects</a>
+        <a href="/about/">About</a>
+      </nav>
+      <a class="lang-switch" href="/2026/10/26/chrome-store-zh/" lang="zh-Hans" hreflang="zh-Hans">中文</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/#writing">Writing</a>
+      <span aria-hidden="true">/</span>
+      <span>Attendance Helper</span>
+    </p>
+    <h1 class="display post-title">Getting a Chrome extension ready for the Web Store</h1><p class="lede">Before putting my attendance extension on the Chrome Web Store, I removed a permission, deleted URLs from a library I never call, and made the build refuse to package remote code. What the store checks, and how I checked it myself first.</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-10-26T09:00:00+08:00">26 Oct 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>5 min read</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/10/26/chrome-store/" class="on" aria-current="page">English</a>
+        <a href="/2026/10/26/chrome-store-zh/" lang="zh-Hans">中文</a>
+      </span>
+    </div>
+  </header>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p><a href="https://github.com/Waldo0926/monash-attendance-reminder">Monash Attendance Helper</a> is a Chrome extension for Monash students. It reads your recent classes from Monash Attendance, finds the codes teaching staff posted in Gmail, Moodle and Ed, and shows them on one page. Nothing is submitted until you tick that you attended and press submit.</p>
+
+<p>Until now it was installed from a zip in developer mode, which is too much to ask of most students. So on 25 October I submitted v1.3.52 to the Chrome Web Store. It is still waiting for review. This post is about what I changed to get there.</p>
+
+<p><em>Update, 30 October: it passed review and is now <a href="https://chromewebstore.google.com/detail/monash-attendance-helper/mnbkcmgkjmfngcifndchaidndhdfafcd">on the Chrome Web Store</a>. The zip is still on GitHub for anyone who wants to load it unpacked.</em></p>
+
+<h2 id="remote-code-that-never-runs-still-counts">Remote code that never runs still counts</h2>
+
+<p>Codes are often posted as screenshots, so the extension bundles Tesseract.js for OCR. It runs in an offscreen document, because a service worker has no DOM or canvas, and it loads its worker, WebAssembly core and English data from the package with <code class="language-plaintext highlighter-rouge">chrome.runtime.getURL</code>.</p>
+
+<p>The store forbids remotely hosted code under Manifest V3, and its scan reads the files, not what the code does at runtime. The upstream Tesseract.js files still had jsDelivr URLs as fallbacks. My code always passed local paths, so those URLs were never used, but the scan treats them as remote code anyway.</p>
+
+<p>v1.3.49 replaced the fallback URLs with the packaged files, and a test fails if any URL literal comes back in the bundled Tesseract files:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">assert</span><span class="p">.</span><span class="nx">doesNotMatch</span><span class="p">(</span><span class="nx">source</span><span class="p">,</span> <span class="sr">/https</span><span class="se">?</span><span class="sr">:</span><span class="se">\/\/</span><span class="sr">/i</span><span class="p">,</span> <span class="s2">`</span><span class="p">${</span><span class="nx">asset</span><span class="p">}</span><span class="s2"> must not contain remote URL literals`</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="make-the-build-refuse">Make the build refuse</h2>
+
+<p>One test for one library is not enough. The next library update, or a stray <code class="language-plaintext highlighter-rouge">&lt;script src&gt;</code> in a page, would bring the problem back. So the store zip is built by <code class="language-plaintext highlighter-rouge">scripts/build-store-zip.sh</code>, which unpacks what it just zipped and refuses to keep it if it finds:</p>
+
+<ul>
+  <li>a CDN host (jsDelivr, unpkg, cdnjs, Google’s font and API hosts) anywhere in code, pages or JSON</li>
+  <li>any <code class="language-plaintext highlighter-rouge">http(s)://</code> inside the bundled Tesseract files</li>
+  <li>a <code class="language-plaintext highlighter-rouge">&lt;script&gt;</code> or <code class="language-plaintext highlighter-rouge">&lt;link&gt;</code> that loads from another origin</li>
+  <li>a remote <code class="language-plaintext highlighter-rouge">import</code>, <code class="language-plaintext highlighter-rouge">importScripts</code>, <code class="language-plaintext highlighter-rouge">eval</code> or <code class="language-plaintext highlighter-rouge">new Function</code> in the extension’s own code</li>
+  <li>a remote origin in the content security policy</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if </span><span class="nb">grep</span> <span class="nt">-rIEn</span> <span class="s1">'import\(?\s*["'</span><span class="se">\'</span><span class="s1">'](https?:)?//|importScripts\(\s*["'</span><span class="se">\'</span><span class="s1">']https?:|new Function\(|\beval\('</span> <span class="se">\</span>
+     <span class="s2">"</span><span class="nv">$tmp</span><span class="s2">"</span> <span class="nt">--include</span><span class="o">=</span><span class="s1">'*.js'</span> <span class="nt">--exclude-dir</span><span class="o">=</span>vendor<span class="p">;</span> <span class="k">then
+  </span>flag <span class="s2">"remote import or eval in extension code"</span>
+<span class="k">fi</span>
+...
+<span class="k">if</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$fail</span><span class="s2">"</span> <span class="nt">-ne</span> 0 <span class="o">]</span><span class="p">;</span> <span class="k">then
+  </span><span class="nb">rm</span> <span class="nt">-f</span> <span class="s2">"</span><span class="nv">$out</span><span class="s2">"</span>
+  <span class="nb">exit </span>1
+<span class="k">fi</span>
+</code></pre></div></div>
+
+<p>CI runs it on every pull request, not only on <code class="language-plaintext highlighter-rouge">main</code>, so a change that would fail review fails before it is merged.</p>
+
+<h2 id="drop-the-permission-that-scares-people">Drop the permission that scares people</h2>
+
+<p>The manifest asked for <code class="language-plaintext highlighter-rouge">tabs</code>. With it, Chrome warns on install that the extension can “read your browsing history”. That is a bad first impression for a tool that touches your Monash login.</p>
+
+<p>The extension only needed <code class="language-plaintext highlighter-rouge">tabs</code> for two things: opening background tabs and reading the URL of its own Attendance, Moodle, Ed and Gmail tabs. <code class="language-plaintext highlighter-rouge">chrome.tabs.create</code> needs no permission at all. And host permissions already let an extension see the URL and title of tabs on those hosts.</p>
+
+<p>I checked that in Chromium with the extension loaded before removing it. <code class="language-plaintext highlighter-rouge">chrome.tabs.query</code> still returned the URL of an open Ed thread and still hid other sites. v1.3.52 ships without <code class="language-plaintext highlighter-rouge">tabs</code>, and the warning is gone.</p>
+
+<p>What is left, each with one sentence in the store form:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Permission</th>
+      <th>Why</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">scripting</code></td>
+      <td>Injects the page reader into a tab that was open before the extension was reloaded</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">storage</code></td>
+      <td>Settings, the latest scan and a diagnostic log, on the device</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">alarms</code>, <code class="language-plaintext highlighter-rouge">notifications</code></td>
+      <td>The weekly reminder and the “scan finished” notice</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">offscreen</code></td>
+      <td>Runs Tesseract, since a service worker has no canvas</td>
+    </tr>
+    <tr>
+      <td>Six host permissions</td>
+      <td>Attendance, Gmail, Moodle, Ed, Ed’s image host, and the CloudFront host Moodle serves uploaded files from</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="check-the-privacy-claim-yourself">Check the privacy claim yourself</h2>
+
+<p>The listing says no server, no analytics and no remote code. I wanted to check it myself. So I ran OCR end to end with every request that did not go to the extension itself logged. It read “Workshop 02 GU2ZP” and “Tutorial 16 ST8CT” from a test image and made no network request.</p>
+
+<h2 id="success-has-to-mean-success">Success has to mean success</h2>
+
+<p>One more fix went in before submitting, because strangers would now rely on it. In v1.3.50 and earlier, the page could say “已处理 2/2” while Attendance still showed a question mark for one class. “Success” only meant something had been clicked. Attendance is an ASP.NET page where the whole page is one form. The button search ran over every link in it, header and footer included, and took the first one with a word like “enter” in it.</p>
+
+<p>Since v1.3.51 the search only takes real buttons and postback links, never home, back, cancel or logout. After the click, the extension reopens that day in Attendance in a fresh tab and only counts a class as done when its row shows completed. The confirm page lists each class with its own result and the reason when it failed.</p>
+
+<h2 id="takeaways">Takeaways</h2>
+
+<ul>
+  <li>Store scans read files. A URL in code you never call is still a URL.</li>
+  <li>Put the review rules in your build script, and run it on every pull request.</li>
+  <li>Before asking for a permission, check whether a narrower API or a host permission already gives you what you need.</li>
+</ul>
+
+<p>Code: <a href="https://github.com/Waldo0926/monash-attendance-reminder/blob/main/scripts/build-store-zip.sh">build-store-zip.sh</a>, <a href="https://github.com/Waldo0926/monash-attendance-reminder/blob/main/extension/manifest.json">manifest.json</a>, <a href="https://github.com/Waldo0926/monash-attendance-reminder/blob/main/store/LISTING.md">store/LISTING.md</a>, <a href="https://github.com/Waldo0926/monash-attendance-reminder/blob/main/CHANGELOG.md">CHANGELOG.md</a>. Install guide: <a href="https://docs.secureview.tech/attendance/">docs.secureview.tech/attendance</a>.</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">On this page</p>
+      <ol><li><a href="#remote-code-that-never-runs-still-counts">Remote code that never runs still counts</a></li><li><a href="#make-the-build-refuse">Make the build refuse</a></li><li><a href="#drop-the-permission-that-scares-people">Drop the permission that scares people</a></li><li><a href="#check-the-privacy-claim-yourself">Check the privacy claim yourself</a></li><li><a href="#success-has-to-mean-success">Success has to mean success</a></li><li><a href="#takeaways">Takeaways</a></li></ol>
+      <a class="toc-back" href="/#writing">All writing</a>
+    </aside>
+  </div>
+  <nav class="more" aria-label="More posts">
+    <a class="card more-link" href="/2026/10/26/ed-web-redesign/">
+      <span class="more-label">Previous · Ed Web</span>
+      <span class="more-title">Refreshing an Ed forum in the browser without fetching it all again</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/10/26/offline-app/">
+      <span class="more-label">Next · Monash Hub</span>
+      <span class="more-title">An offline app that never shows an old page when a new one is there</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Computer Science at Monash University. Backend and AI application development.</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">Status</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

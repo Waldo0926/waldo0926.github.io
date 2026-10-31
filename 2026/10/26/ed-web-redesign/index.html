@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Refreshing an Ed forum in the browser without fetching it all again | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Refreshing an Ed forum in the browser without fetching it all again" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Ed Web reads a course’s Ed forum in the browser with no backend. The redesign added a refresh that only fetches posts that changed, an honest meaning for “new”, Ed’s post format rendered safely, and support for Ed’s API tokens." />
+<meta property="og:description" content="Ed Web reads a course’s Ed forum in the browser with no backend. The redesign added a refresh that only fetches posts that changed, an honest meaning for “new”, Ed’s post format rendered safely, and support for Ed’s API tokens." />
+<link rel="canonical" href="https://blog.secureview.tech/2026/10/26/ed-web-redesign/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/10/26/ed-web-redesign/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/ed-web-redesign.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-10-26T08:30:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/ed-web-redesign.png" />
+<meta property="twitter:title" content="Refreshing an Ed forum in the browser without fetching it all again" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-10-26T08:30:00+08:00","datePublished":"2026-10-26T08:30:00+08:00","description":"Ed Web reads a course’s Ed forum in the browser with no backend. The redesign added a refresh that only fetches posts that changed, an honest meaning for “new”, Ed’s post format rendered safely, and support for Ed’s API tokens.","headline":"Refreshing an Ed forum in the browser without fetching it all again","image":"https://blog.secureview.tech/assets/og/ed-web-redesign.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/10/26/ed-web-redesign/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/10/26/ed-web-redesign/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/10/26/ed-web-redesign/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/10/26/ed-web-redesign-zh/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/#writing">Writing</a>
+        <a href="/#projects">Projects</a>
+        <a href="/about/">About</a>
+      </nav>
+      <a class="lang-switch" href="/2026/10/26/ed-web-redesign-zh/" lang="zh-Hans" hreflang="zh-Hans">中文</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/#writing">Writing</a>
+      <span aria-hidden="true">/</span>
+      <span>Ed Web</span>
+    </p>
+    <h1 class="display post-title">Refreshing an Ed forum in the browser without fetching it all again</h1><p class="lede">Ed Web reads a course's Ed forum in the browser with no backend. The redesign added a refresh that only fetches posts that changed, an honest meaning for "new", Ed's post format rendered safely, and support for Ed's API tokens.</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-10-26T08:30:00+08:00">26 Oct 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>4 min read</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/10/26/ed-web-redesign/" class="on" aria-current="page">English</a>
+        <a href="/2026/10/26/ed-web-redesign-zh/" lang="zh-Hans">中文</a>
+      </span>
+    </div>
+  </header>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p><a href="https://github.com/Waldo0926/ed-web">Ed Web</a> is a static page that fetches a unit’s Ed Discussion forum straight from Ed’s API, stores it in the browser’s IndexedDB, and lets you read, filter and search it offline. There is no backend: the token stays in <code class="language-plaintext highlighter-rouge">sessionStorage</code> and is only sent to <code class="language-plaintext highlighter-rouge">edstem.org</code>.</p>
+
+<p>It is the public version of a private tool I run on my own server for my study workflow. On 25 October I redesigned Ed Web and brought over the parts of the private tool that work in a browser (<a href="https://github.com/Waldo0926/ed-web/pull/6">#6</a>). This post is about those parts.</p>
+
+<h2 id="refresh-only-what-changed">Refresh only what changed</h2>
+
+<p>The old page fetched every thread and every reply on each refresh. A big unit has hundreds of threads, and Ed rate-limits, so a refresh took a while and sometimes hit 429.</p>
+
+<p>Ed’s thread list is cheap, one request per 100 threads. Fetching a thread’s replies is one request per thread. So the refresh now reads the list, works out a fingerprint for each thread, and only fetches the full thread when its fingerprint changed:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* Same as the private tool's content_stamp: updated_at plus a few counts and flags,
+ * so a thread's body is fetched again only when something in it really changed. */</span>
+<span class="kd">function</span> <span class="nx">contentStamp</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">[</span><span class="nx">t</span><span class="p">.</span><span class="nx">updated_at</span><span class="p">,</span> <span class="nx">t</span><span class="p">.</span><span class="nx">reply_count</span><span class="p">,</span> <span class="nx">t</span><span class="p">.</span><span class="nx">unresolved_count</span><span class="p">,</span> <span class="nx">t</span><span class="p">.</span><span class="nx">vote_count</span><span class="p">,</span> <span class="nx">t</span><span class="p">.</span><span class="nx">is_staff_answered</span><span class="p">,</span>
+          <span class="nx">t</span><span class="p">.</span><span class="nx">is_answered</span><span class="p">,</span> <span class="nx">t</span><span class="p">.</span><span class="nx">is_locked</span><span class="p">,</span> <span class="nx">t</span><span class="p">.</span><span class="nx">title</span><span class="p">].</span><span class="nx">map</span><span class="p">((</span><span class="nx">x</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nb">String</span><span class="p">(</span><span class="nx">x</span> <span class="o">??</span> <span class="dl">''</span><span class="p">)).</span><span class="nx">join</span><span class="p">(</span><span class="dl">'</span><span class="s1">|</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">updated_at</code> alone is not enough. A new reply or a staff answer does not always move it, but it does change a count or a flag.</p>
+
+<p>When Ed does answer 429, the page waits for <code class="language-plaintext highlighter-rouge">Retry-After</code> if the browser can read it, and otherwise backs off 1.5, 3 and 4.5 seconds.</p>
+
+<h2 id="what-new-means">What “new” means</h2>
+
+<p>A “new” badge is only useful if it means “new since I last looked”. Each thread and reply now stores <code class="language-plaintext highlighter-rouge">first_seen</code>, the time this browser first saw it. A refresh records when it started, and anything first seen at or after that moment is new:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">isFresh</span><span class="p">(</span><span class="nx">firstSeen</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="o">!!</span><span class="nx">STATE</span><span class="p">.</span><span class="nx">prevSyncedAt</span> <span class="o">&amp;&amp;</span> <span class="o">!!</span><span class="nx">firstSeen</span> <span class="o">&amp;&amp;</span> <span class="nx">firstSeen</span> <span class="o">&gt;=</span> <span class="nx">STATE</span><span class="p">.</span><span class="nx">syncedAt</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The first fetch has nothing to compare with, so it falls back to “posted in the last 48 hours”. A thread you already had shows how many replies are new.</p>
+
+<h2 id="render-eds-format-safely">Render Ed’s format, safely</h2>
+
+<p>Ed stores a post as its own XML: <code class="language-plaintext highlighter-rouge">&lt;document&gt;&lt;paragraph&gt;...</code>, with <code class="language-plaintext highlighter-rouge">&lt;link&gt;</code>, <code class="language-plaintext highlighter-rouge">&lt;snippet&gt;</code>, <code class="language-plaintext highlighter-rouge">&lt;image&gt;</code>, <code class="language-plaintext highlighter-rouge">&lt;file&gt;</code>, lists, tables and callouts. The old page stripped it to plain text, so code lost its layout and attachments were gone.</p>
+
+<p><code class="language-plaintext highlighter-rouge">docToHTML</code> now parses it with <code class="language-plaintext highlighter-rouge">DOMParser</code> and walks the tree. Two rules keep it safe:</p>
+
+<ul>
+  <li>Every piece of text goes through <code class="language-plaintext highlighter-rouge">esc</code> before it is written into the page. No markup from the post is passed through.</li>
+  <li>Links, images, files and videos are only linked when the address starts with <code class="language-plaintext highlighter-rouge">http://</code> or <code class="language-plaintext highlighter-rouge">https://</code>. Anything else, such as <code class="language-plaintext highlighter-rouge">javascript:</code>, becomes plain text.</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">safeHref</span> <span class="o">=</span> <span class="p">(</span><span class="nx">u</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="sr">/^https</span><span class="se">?</span><span class="sr">:</span><span class="se">\/\/</span><span class="sr">/i</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nb">String</span><span class="p">(</span><span class="nx">u</span> <span class="o">||</span> <span class="dl">''</span><span class="p">).</span><span class="nx">trim</span><span class="p">())</span> <span class="p">?</span> <span class="nb">String</span><span class="p">(</span><span class="nx">u</span><span class="p">).</span><span class="nx">trim</span><span class="p">()</span> <span class="p">:</span> <span class="kc">null</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>If the XML does not parse, the post falls back to plain text instead of a blank card.</p>
+
+<h2 id="a-one-line-takeaway-from-the-right-person">A one-line takeaway from the right person</h2>
+
+<p>Each thread card shows one line under the title. It used to be the start of the post. For a question, the useful line is usually the answer, so the card now takes the last staff reply, because a later staff reply often corrects an earlier one. With no staff reply, a question shows a student’s answer, labelled as such. Otherwise it shows the post itself.</p>
+
+<h2 id="api-tokens">API tokens</h2>
+
+<p>Ed has two kinds of token. The one the web app keeps in <code class="language-plaintext highlighter-rouge">localStorage</code> is a JWT that expires after 14 days. The ones you create under Ed’s settings are long-lived and can be revoked there. They use different headers:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">authHeaders</span><span class="p">(</span><span class="nx">token</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">tokenKind</span><span class="p">(</span><span class="nx">token</span><span class="p">)</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">jwt</span><span class="dl">'</span> <span class="p">?</span> <span class="p">{</span> <span class="dl">'</span><span class="s1">x-token</span><span class="dl">'</span><span class="p">:</span> <span class="nx">token</span> <span class="p">}</span> <span class="p">:</span> <span class="p">{</span> <span class="na">authorization</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Bearer </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">token</span> <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The page shows how many days a JWT has left, read from its <code class="language-plaintext highlighter-rouge">exp</code> field. An API token has no expiry, so it suits a page you come back to every week. This is the same token handling as the private tool, where I use an API token myself.</p>
+
+<h2 id="smaller-things">Smaller things</h2>
+
+<ul>
+  <li>Search needs every word to appear.</li>
+  <li>Filters for starred, watched and my own threads, and for threads with replies Ed says you have not read.</li>
+  <li>Replies under a deleted reply are kept, since Ed still shows them.</li>
+  <li>Lessons save the text of reading pages and quiz questions, so they can be searched too.</li>
+</ul>
+
+<h2 id="testing-a-page-with-no-backend">Testing a page with no backend</h2>
+
+<p>The fetch and render logic lives in one <code class="language-plaintext highlighter-rouge">app.js</code> with no build step. The tests in <code class="language-plaintext highlighter-rouge">tests/sync.test.mjs</code> cut the functions they need out of <code class="language-plaintext highlighter-rouge">app.js</code> by marker strings and run them in Node, with no network. The screenshots in the README were taken against a fake Ed API with made-up units, people and posts, so no real course data is in the repository.</p>
+
+<h2 id="takeaways">Takeaways</h2>
+
+<ul>
+  <li>A cheap list plus a fingerprint per item turns a full refresh into a small one.</li>
+  <li>“New” should be measured from the last refresh, not from the post date.</li>
+  <li>When rendering someone else’s markup, escape all text and allow only the link schemes you mean.</li>
+</ul>
+
+<p>Code: <a href="https://github.com/Waldo0926/ed-web/blob/main/app.js">app.js</a>, <a href="https://github.com/Waldo0926/ed-web/blob/main/ARCHITECTURE.md">ARCHITECTURE.md</a>, <a href="https://github.com/Waldo0926/ed-web/blob/main/tests/sync.test.mjs">sync.test.mjs</a>. Guide: <a href="https://docs.secureview.tech/ed-web/">docs.secureview.tech/ed-web</a>.</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">On this page</p>
+      <ol><li><a href="#refresh-only-what-changed">Refresh only what changed</a></li><li><a href="#what-new-means">What “new” means</a></li><li><a href="#render-eds-format-safely">Render Ed’s format, safely</a></li><li><a href="#a-one-line-takeaway-from-the-right-person">A one-line takeaway from the right person</a></li><li><a href="#api-tokens">API tokens</a></li><li><a href="#smaller-things">Smaller things</a></li><li><a href="#testing-a-page-with-no-backend">Testing a page with no backend</a></li><li><a href="#takeaways">Takeaways</a></li></ol>
+      <a class="toc-back" href="/#writing">All writing</a>
+    </aside>
+  </div>
+  <nav class="more" aria-label="More posts">
+    <a class="card more-link" href="/2026/10/26/assignment-sources/">
+      <span class="more-label">Previous · Study Kit</span>
+      <span class="more-title">Which source wins when an AI reads your assignment</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/10/26/chrome-store/">
+      <span class="more-label">Next · Attendance Helper</span>
+      <span class="more-title">Getting a Chrome extension ready for the Web Store</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Computer Science at Monash University. Backend and AI application development.</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">Status</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
