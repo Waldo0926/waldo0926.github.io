@@ -1,6 +1,6 @@
 ---
 layout: post
-date: 2026-11-01 09:00:00 +0800
+date: 2026-11-01 04:10:00 +0800
 project: Homelab
 description: "家里有两台J1900和一台N1，另外还有VPS。机器多了以后，我反而需要先想清楚哪些东西值得一直开着。"
 ref: spare-machines
