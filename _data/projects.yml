@@ -22,8 +22,8 @@
   pill: open
   main: true
   icon: '<path d="M4 6h16v12H4z"/><path d="M8 10l2 2-2 2M12 14h4"/>'
-  desc: Your Moodle and Ed in Claude, ChatGPT or any MCP app, with full-text search of course files
-  desc_zh: 让 Claude、ChatGPT 等 AI 软件通过 MCP 读 Moodle 和 Ed，课件可以全文搜索
+  desc: Your Moodle and Ed in Claude, ChatGPT or any MCP app, with full-text search of course files, plus optional school mail and attendance
+  desc_zh: 让 Claude、ChatGPT 等 AI 软件通过 MCP 读 Moodle 和 Ed，课件可以全文搜索，还可以接上学校邮箱和考勤
 - name: Student Q&A bot
   zh: 学生问答机器人
   url: https://github.com/Waldo0926/mumguide-wechat-bot
