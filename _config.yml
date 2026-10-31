@@ -1,10 +1,10 @@
 title: Shuoxun Wen
-description: How I build and run my own projects.
+description: Projects, code and engineering notes from Shuoxun Wen, Computer Science at Monash University Malaysia.
 author: Shuoxun Wen
 url: https://blog.secureview.tech
 baseurl: ""
 lang: en
-timezone: Asia/Shanghai
+timezone: Asia/Kuala_Lumpur
 permalink: /:year/:month/:day/:title/
 
 plugins:
