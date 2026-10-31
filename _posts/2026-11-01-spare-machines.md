@@ -1,6 +1,6 @@
 ---
 layout: post
-date: 2026-11-01 09:00:00 +0800
+date: 2026-11-01 04:10:00 +0800
 project: Homelab
 description: "Two J1900 boxes, a Debian N1 and a VPS. Before finding more services to run, I need to decide what should stay online and what should remain disposable."
 ref: spare-machines
