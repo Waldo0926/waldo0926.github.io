@@ -1,6 +1,6 @@
 ---
 layout: post
-date: 2026-11-01 10:00:00 +0800
+date: 2026-11-01 04:20:00 +0800
 project: Algorithms
 description: "把以前写的字符串算法重新整理成独立仓库：Z匹配、BWT、后缀树、Rabin–Karp，还有那些不该被隐藏的实现限制。"
 ref: string-algorithms
