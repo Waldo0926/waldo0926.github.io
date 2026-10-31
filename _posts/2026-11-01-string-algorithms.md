@@ -1,6 +1,6 @@
 ---
 layout: post
-date: 2026-11-01 10:00:00 +0800
+date: 2026-11-01 04:20:00 +0800
 project: Algorithms
 description: "A post-course rebuild of Z matching, BWT search, Ukkonen suffix trees and Rabin–Karp, including the limitations I don't want to hide behind complexity claims."
 ref: string-algorithms
