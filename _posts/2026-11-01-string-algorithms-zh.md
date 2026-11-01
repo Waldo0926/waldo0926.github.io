@@ -6,7 +6,7 @@ description: "把以前写的字符串算法重新整理成独立仓库：Z匹�
 ref: string-algorithms
 lang: zh-Hans
 title: "字符串算法课结束后，我还留着哪些代码"
-image: /assets/og/site.png
+image: /assets/og/string-algorithms-zh.png
 ---
 
 整理以前的算法课代码时，我不太想把每个作业文件原样扔上GitHub。课程已经结束了，有些代码能运行，但如果不把设计思路、复杂度和边界情况说明白，别人看不懂，我隔一段时间也未必记得为什么这么写。

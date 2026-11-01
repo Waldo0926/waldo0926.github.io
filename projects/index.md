@@ -1,5 +1,6 @@
 ---
 layout: page
+wide: true
 title: Projects
 permalink: /projects/
 alt: /zh/projects/

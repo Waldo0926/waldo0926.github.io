@@ -6,7 +6,7 @@ description: "连接池耗尽和数据库死锁，是加密文件分享系统在
 ref: mysql-concurrency
 lang: zh-Hans
 title: "SecureView的并发测试为什么比单人演示更重要"
-image: /assets/og/site.png
+image: /assets/og/mysql-concurrency-zh.png
 source_repo: SecureView
 source_checked: 2026-11-01
 ---

@@ -1,4 +1,4 @@
-{%- assign zh = false -%}{%- if page.lang == "zh-Hans" -%}{%- assign zh = true -%}{%- endif -%}
+{%- assign zh = false -%}{%- assign post_lang = "en" -%}{%- if page.lang == "zh-Hans" -%}{%- assign zh = true -%}{%- assign post_lang = "zh-Hans" -%}{%- endif -%}
 <section class="portfolio-browser" id="portfolio">
   <form class="portfolio-filters" id="portfolio-filters" role="search" action="#" onsubmit="return false">
     <label class="portfolio-query">
@@ -67,7 +67,7 @@
       </ul>
       <p class="portfolio-meta small muted">{{ p.year }} · {% if p.ownership == "team" %}{% if zh %}团队{% else %}Team{% endif %}{% else %}{% if zh %}个人作品{% else %}Individual work{% endif %}{% endif %}</p>
       {%- if p.post_project != "" %}
-      {%- assign posts = site.posts | where: "project", p.post_project | where: "lang", lang -%}
+      {%- assign posts = site.posts | where: "project", p.post_project | where: "lang", post_lang -%}
       {%- if posts.size > 0 %}
       <div class="portfolio-writing">
         <span>{% if zh %}写过这些{% else %}Related writing{% endif %}</span>
@@ -81,4 +81,4 @@
   <p id="portfolio-empty" class="portfolio-empty" hidden>{% if zh %}没有找到符合条件的项目，试试减少筛选条件{% else %}No matching projects. Try removing a filter.{% endif %}</p>
   <p class="portfolio-note small muted">{% if zh %}年份是GitHub公开仓库的创建年份，不一定是项目最初开发的时间。状态是作品集分类，不代表GitHub已归档或线上服务当前可用。项目的最新说明以仓库README为准{% else %}Year means GitHub repository creation, not necessarily when work first began. Status is a portfolio category, not GitHub's archived flag or a guarantee of live service. Check each README for current details.{% endif %}</p>
 </section>
-<script defer src="{{ '/assets/portfolio.js' | relative_url }}"></script>
+<script defer src="{{ '/assets/portfolio.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

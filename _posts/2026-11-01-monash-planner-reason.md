@@ -6,7 +6,7 @@ description: "Putting units into semesters is easy. Checking prerequisites, camp
 ref: monash-planner-reason
 lang: en
 title: "Why I built a degree planner for Monash students"
-image: /assets/og/site.png
+image: /assets/og/monash-planner-reason.png
 source_repo: monash-hub
 source_checked: 2026-11-01
 ---

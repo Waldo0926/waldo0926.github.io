@@ -291,6 +291,9 @@ p { margin: 0; }
   gap: 40px;
   padding: 36px;
 }
+/* The newest post without a preview: one column, the text kept to a readable width. */
+.post-card--featured.post-card--solo { grid-template-columns: minmax(0, 1fr); }
+.post-card--solo .post-main { max-width: 68ch; }
 .post-card--featured h3 { font-size: 1.9rem; line-height: 1.22; }
 .post-card--featured .post-excerpt { font-size: 1.02rem; line-height: 1.7; }
 .new {
@@ -443,6 +446,8 @@ p { margin: 0; }
 .prose blockquote { margin: 0 0 1.2em; padding: 4px 0 4px 18px; border-left: 3px solid var(--brand); color: var(--muted); }
 
 .page-card { max-width: 760px; margin-top: 32px; }
+.page-card--wide { max-width: none; }
+.page-card--wide > p { max-width: 70ch; }
 
 /* Rouge's token colours, for the dark code blocks. */
 .highlight .c, .highlight .c1, .highlight .cm { color: #7f93a8; font-style: italic; }
@@ -556,13 +561,19 @@ p { margin: 0; }
 .portfolio-filters input, .portfolio-filters select { min-height: 42px; width: 100%; border: 1px solid var(--border-strong); border-radius: 9px; padding: 8px 10px; background: #fff; font: 400 .9rem/1.25 var(--font); color: var(--text); }
 .portfolio-filters button { flex: 0 0 auto; }
 .portfolio-count { margin: 18px 0; }
-.portfolio-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 17px; }
-.portfolio-card { display: flex; flex-direction: column; gap: 12px; padding: 22px; }
+.portfolio-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; }
+@media (max-width: 980px) { .portfolio-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+.portfolio-card { display: flex; flex-direction: column; gap: 10px; padding: 22px; transition: border-color .15s, box-shadow .15s, transform .15s; }
+.portfolio-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow); transform: translateY(-1px); }
+/* The archive sits inside .prose; its headings, paragraphs and lists must not pick up article spacing. */
+.prose .portfolio-card h2, .prose .portfolio-card p, .prose .portfolio-card ul, .prose .portfolio-card li { margin: 0; }
+.prose .portfolio-card h2 { border: 0; padding: 0; }
+.prose .portfolio-card a { text-decoration: none; }
 .portfolio-card[hidden], .portfolio-empty[hidden] { display: none !important; }
 .portfolio-top { display: flex; justify-content: space-between; gap: 15px; align-items: baseline; }
 .portfolio-type { font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--brand); }
 .portfolio-status { color: var(--muted); background: var(--surface-2); border-radius: 999px; font-size: .73rem; padding: 1px 9px; flex-shrink: 0; }
-.portfolio-name { font-family: var(--font-display); font-size: 1.25rem; }
+.portfolio-name { font-family: var(--font-display); font-size: 1.22rem; line-height: 1.3; }
 .portfolio-name a { color: var(--text); }
 .portfolio-name a:hover { color: var(--brand); }
 .portfolio-desc { color: var(--muted); line-height: 1.55; font-size: .9rem; }
@@ -570,6 +581,9 @@ p { margin: 0; }
 .portfolio-tags li { font-size: .76rem; border: 1px solid var(--border); border-radius: 6px; padding: 2px 7px; background: var(--bg); color: var(--ink-700); }
 .portfolio-meta { margin-top: auto; }
 .portfolio-writing { padding-top: 12px; border-top: 1px solid var(--border); font-size: .82rem; }
+.prose .portfolio-writing ul { padding-left: 18px; }
+.prose .portfolio-tags { padding: 0; }
+.portfolio-desc::first-letter { text-transform: uppercase; }
 .portfolio-writing > span { display: block; margin-bottom: 5px; color: var(--muted); }
 .portfolio-writing ul { margin: 0; padding-left: 19px; }
 .portfolio-writing li + li { margin-top: 4px; }
@@ -594,3 +608,38 @@ p { margin: 0; }
 .post-related h2 { font-size: 1.18rem; }
 .post-related ul { padding-left: 20px; }
 .post-related li { margin-top: 8px; }
+
+/* --- screenshots ------------------------------------------------------------ */
+
+/* A real screenshot in a quiet window frame: captured at 2x, shown at its own width or the column's. */
+.shot { margin: 1.8em 0 2em; }
+.shot-frame {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgba(12, 27, 42, 0.05), 0 24px 48px -28px rgba(12, 27, 42, 0.35);
+}
+.shot-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.shot-bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--border-strong); }
+.shot-bar span {
+  flex: 1;
+  margin-left: 10px;
+  overflow: hidden;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.shot img { display: block; width: 100%; }
+.shot figcaption { margin-top: 12px; color: var(--muted); font-size: 0.86rem; line-height: 1.55; }
+.post-card--featured .shot { margin: 0; align-self: center; }
+.post-card--featured .shot-frame { box-shadow: 0 18px 40px -18px rgba(12, 27, 42, 0.35); }
