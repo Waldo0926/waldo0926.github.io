@@ -7,6 +7,8 @@ ref: stateful-alerts
 lang: zh-Hans
 title: "服务器告警最怕什么都说，最后什么都没告诉我"
 image: /assets/og/site.png
+source_repo: edge-fleet-ops-automation
+source_checked: 2026-11-01
 ---
 
 几台Linux机器分开运行时，最容易想到的监控办法是每隔几分钟SSH进去检查一下磁盘和进程，再把不正常的结果发到手机。
