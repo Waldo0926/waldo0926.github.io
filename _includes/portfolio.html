@@ -59,7 +59,7 @@
       </ul>
       <p class="portfolio-meta small muted">{{ p.year }} · {% if p.ownership == "team" %}{% if zh %}团队{% else %}Team{% endif %}{% else %}{% if zh %}个人作品{% else %}Individual work{% endif %}{% endif %}</p>
       {%- if p.post_project != "" %}
-      {%- assign posts = site.posts | where: "project", p.post_project | where: "lang", page.lang -%}
+      {%- assign posts = site.posts | where: "project", p.post_project | where: "lang", lang -%}
       {%- if posts.size > 0 %}
       <div class="portfolio-writing">
         <span>{% if zh %}写过这些{% else %}Related writing{% endif %}</span>
