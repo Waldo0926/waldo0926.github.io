@@ -6,7 +6,7 @@ description: "Connection-pool exhaustion and deadlocks became real questions onl
 ref: mysql-concurrency
 lang: en
 title: "What SecureView's concurrency tests caught that a demo didn't"
-image: /assets/og/site.png
+image: /assets/og/mysql-concurrency.png
 source_repo: SecureView
 source_checked: 2026-11-01
 ---

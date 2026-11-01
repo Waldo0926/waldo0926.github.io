@@ -6,7 +6,7 @@ description: "把课程摆进学期表不难，难的是检查先修要求、校
 ref: monash-planner-reason
 lang: zh-Hans
 title: "我为什么做了Monash选课规划工具"
-image: /assets/og/site.png
+image: /assets/og/monash-planner-reason-zh.png
 source_repo: monash-hub
 source_checked: 2026-11-01
 ---

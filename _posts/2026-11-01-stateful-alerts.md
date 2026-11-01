@@ -6,7 +6,7 @@ description: "Monitoring Linux nodes isn't just about running checks on a schedu
 ref: stateful-alerts
 lang: en
 title: "Why I want alerts about changes, not an endless stream of pings"
-image: /assets/og/site.png
+image: /assets/og/stateful-alerts.png
 source_repo: edge-fleet-ops-automation
 source_checked: 2026-11-01
 ---

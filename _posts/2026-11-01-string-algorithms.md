@@ -6,7 +6,7 @@ description: "A post-course rebuild of Z matching, BWT search, Ukkonen suffix tr
 ref: string-algorithms
 lang: en
 title: "The string algorithms I kept after the course ended"
-image: /assets/og/site.png
+image: /assets/og/string-algorithms.png
 ---
 
 When I revisited my algorithms coursework, I didn't want to dump the old assignment directory straight onto GitHub. The code might still run, but without the design choices, complexity notes and boundary tests, it wouldn't mean much to someone else—or to me a year later.

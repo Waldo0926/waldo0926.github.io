@@ -6,7 +6,7 @@ description: "家里有两台J1900和一台N1，另外还有VPS。机器多了�
 ref: spare-machines
 lang: zh-Hans
 title: "有了两台J1900和一台N1，反而不能什么都往上放"
-image: /assets/og/site.png
+image: /assets/og/spare-machines-zh.png
 ---
 
 最近整理家里的旧机器，两台J1900都能用了，N1盒子也刷好了Debian。手里还有一台VPS。以前机器不够，想的是“还能跑点什么”；现在几台设备空着，最先想到的反而是别把它们都变成需要照看的服务器。

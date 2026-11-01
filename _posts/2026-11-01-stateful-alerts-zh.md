@@ -6,7 +6,7 @@ description: "Linux巡检不只是定时执行命令：需要区分新故障、�
 ref: stateful-alerts
 lang: zh-Hans
 title: "服务器告警最怕什么都说，最后什么都没告诉我"
-image: /assets/og/site.png
+image: /assets/og/stateful-alerts-zh.png
 source_repo: edge-fleet-ops-automation
 source_checked: 2026-11-01
 ---

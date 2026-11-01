@@ -6,7 +6,7 @@ description: "Two J1900 boxes, a Debian N1 and a VPS. Before finding more servic
 ref: spare-machines
 lang: en
 title: "Two J1900 boxes and an N1: why I don't need more production servers"
-image: /assets/og/site.png
+image: /assets/og/spare-machines.png
 ---
 
 I recently got two older J1900 machines working again. There's also an N1 box running Debian, and the VPS that already hosts my public services. Having spare hardware brought back a familiar question: what else can I run on it?

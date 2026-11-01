@@ -1,5 +1,6 @@
 ---
 layout: page
+wide: true
 title: 项目归档
 lang: zh-Hans
 permalink: /zh/projects/

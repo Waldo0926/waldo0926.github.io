@@ -6,7 +6,7 @@ description: "把写文章、构建静态页面和实际部署分开，GitHub Pa
 ref: blog-build-rollback
 lang: zh-Hans
 title: "为什么博客用Jekyll，网站却放在自己的VPS上"
-image: /assets/og/site.png
+image: /assets/og/blog-build-rollback-zh.png
 source_repo: waldo0926.github.io
 source_checked: 2026-11-01
 ---

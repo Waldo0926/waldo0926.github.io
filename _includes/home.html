@@ -99,7 +99,7 @@
       {%- assign other = site.posts | where: "ref", post.ref | where: "lang", "zh-Hans" | first -%}
       {%- assign card = post -%}
     {%- endif -%}
-    <article class="card post-card{% if forloop.first %} post-card--featured{% endif %}" data-project="{{ post.project }}">
+    <article class="card post-card{% if forloop.first %} post-card--featured{% unless card.preview %} post-card--solo{% endunless %}{% endif %}" data-project="{{ post.project }}">
       <div class="post-main">
         <p class="post-tag">{% if forloop.first %}<span class="new">{{ t.latest_tag }}</span>{% endif %}{{ post.project }}</p>
         <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>

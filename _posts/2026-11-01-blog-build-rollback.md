@@ -6,7 +6,7 @@ description: "Writing, building and serving a static blog are different jobs. Gi
 ref: blog-build-rollback
 lang: en
 title: "Why I use Jekyll but serve the blog from my own VPS"
-image: /assets/og/site.png
+image: /assets/og/blog-build-rollback.png
 source_repo: waldo0926.github.io
 source_checked: 2026-11-01
 ---
