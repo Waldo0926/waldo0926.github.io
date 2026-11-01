@@ -7,6 +7,8 @@ ref: stateful-alerts
 lang: en
 title: "Why I want alerts about changes, not an endless stream of pings"
 image: /assets/og/site.png
+source_repo: edge-fleet-ops-automation
+source_checked: 2026-11-01
 ---
 
 With several Linux machines running separately, the obvious first monitor is a scheduled SSH check: inspect disks and containers and send a message if something looks wrong.
