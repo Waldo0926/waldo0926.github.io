@@ -7,6 +7,8 @@ ref: blog-build-rollback
 lang: zh-Hans
 title: "为什么博客用Jekyll，网站却放在自己的VPS上"
 image: /assets/og/site.png
+source_repo: waldo0926.github.io
+source_checked: 2026-11-01
 ---
 
 以前想把博客做复杂一点：写文章、展示项目、加搜索，似乎很容易一路做成需要数据库的Web应用。但博客最常做的事其实只有一件：把Markdown变成网页。
