@@ -7,6 +7,8 @@ ref: monash-planner-reason
 lang: zh-Hans
 title: "我为什么做了Monash选课规划工具"
 image: /assets/og/site.png
+source_repo: monash-hub
+source_checked: 2026-11-01
 ---
 
 选课时最烦的并不是填几个课程代码，而是反复确认：这门课在马来西亚开吗？有没有先修？明年这个学期会不会不开？
