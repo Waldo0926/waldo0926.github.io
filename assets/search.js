@@ -16,7 +16,7 @@
   function render() {
     results.replaceChildren()
     if (!ready) return
-    const q = norm(input.value).trim().split(/\\s+/).filter(Boolean)
+    const q = norm(input.value).trim().split(/\s+/).filter(Boolean)
     if (!q.length) {
       count.textContent = zh ? '输入关键词开始搜索' : 'Type to search'
       return
