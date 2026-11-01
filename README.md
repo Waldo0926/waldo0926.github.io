@@ -16,3 +16,12 @@ Preview locally / 本地预览：
 gem install jekyll jekyll-feed jekyll-seo-tag jekyll-sitemap
 jekyll serve
 ```
+
+## Portfolio and search / 项目归档与搜索
+
+- `_data/portfolio.json` lists public projects, GitHub **creation** years, status categories, technology tags and article groupings. GitHub creation year is **not** claimed as a project's original start date.
+- `_data/areas.json` provides six bilingual homepage directions, five linking to filtered portfolio categories and one to writing.
+- `projects/index.md` and `zh/projects/index.md` render `_includes/portfolio.html`. Filtering is performed locally by `assets/portfolio.js`, without sending keywords to a server.
+- `search/index.md` and `zh/search/index.md` search the generated `search-index.json` in the browser. The index only contains **published posts**; Jekyll excludes `_drafts/` from standard builds.
+- Published notes can set `source_repo` and `source_checked` in front matter to identify their code source and review date. The latter is a source-review date, **not** a live system validation or benchmark date.
+- `_drafts/` contains incomplete, bilingual article outlines that require fact-checking. Their source files are public in the repository, but they aren't included as published blog pages.

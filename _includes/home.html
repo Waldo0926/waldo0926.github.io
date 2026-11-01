@@ -51,6 +51,31 @@
   </aside>
 </section>
 
+
+<section class="container topic-section section" id="topics">
+  <div class="section-head">
+    <h2>{% if zh %}我平时在做什么{% else %}What I work on{% endif %}</h2>
+    <p class="muted">{% if zh %}按方向看看项目和文章，不必从头翻GitHub{% else %}Find the projects and notes behind each subject{% endif %}</p>
+  </div>
+  <div class="topic-grid">
+    {%- for area in site.data.areas %}
+    {%- if area.slug == "writing" %}
+    {%- assign area_url = '#writing' -%}
+    {%- elsif zh -%}
+    {%- capture area_url %}/zh/projects/?category={{ area.slug }}{% endcapture -%}
+    {%- else -%}
+    {%- capture area_url %}/projects/?category={{ area.slug }}{% endcapture -%}
+    {%- endif %}
+    <a class="card topic-card" href="{{ area_url | relative_url }}">
+      <span class="topic-index mono">0{{ forloop.index }}</span>
+      <strong>{% if zh %}{{ area.zh }}{% else %}{{ area.title }}{% endif %}</strong>
+      <span>{% if zh %}{{ area.description_zh }}{% else %}{{ area.description }}{% endif %}</span>
+      <span class="topic-arrow" aria-hidden="true">→</span>
+    </a>
+    {%- endfor %}
+  </div>
+</section>
+
 <section id="writing" class="container section">
   <div class="section-head">
     <h2>{{ t.writing }}</h2>

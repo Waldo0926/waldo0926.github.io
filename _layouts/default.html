@@ -38,6 +38,7 @@
         <a href="{{ t.home | append: '#writing' | relative_url }}">{{ t.nav_writing }}</a>
         <a href="{{ t.home | append: '#projects' | relative_url }}">{{ t.nav_projects }}</a>
         <a href="{% if lang == 'zh-Hans' %}{{ '/zh/projects/' | relative_url }}{% else %}{{ '/projects/' | relative_url }}{% endif %}">{{ t.nav_archive }}</a>
+        <a href="{% if lang == 'zh-Hans' %}{{ '/zh/search/' | relative_url }}{% else %}{{ '/search/' | relative_url }}{% endif %}">{{ t.nav_search }}</a>
         <a href="{{ t.about | relative_url }}">{{ t.nav_about }}</a>
       </nav>
       {%- if alt_url %}

@@ -33,6 +33,15 @@ layout: default
     </div>
   </header>
 
+  {%- if page.source_repo or page.source_checked %}
+  <p class="post-source small muted">
+    {%- if page.source_repo %}
+    <a href="https://github.com/Waldo0926/{{ page.source_repo }}" rel="noopener external" target="_blank">{% if zh %}对应源码{% else %}Source repository{% endif %}</a>
+    {%- endif %}
+    {%- if page.source_checked %} · {% if zh %}资料核对：{% else %}Source reviewed: {% endif %}{{ page.source_checked }}{% endif %}
+  </p>
+  {%- endif %}
+
   <div class="post-body">
     <article class="card prose">
       {{ content }}
@@ -53,6 +62,19 @@ layout: default
     </aside>
     {%- endif %}
   </div>
+
+  {%- assign related = site.posts | where: "lang", page.lang | where: "project", page.project -%}
+  {%- assign related_count = 0 -%}
+  {%- for r in related -%}{%- unless r.ref == page.ref -%}{%- assign related_count = related_count | plus: 1 -%}{%- endunless -%}{%- endfor -%}
+  {%- if related_count > 0 %}
+  <section class="post-related" aria-label="{% if zh %}相关文章{% else %}Related posts{% endif %}">
+    <h2>{% if zh %}同一方向的其他文章{% else %}More on this subject{% endif %}</h2>
+    <ul>{%- assign shown = 0 -%}{%- for r in related -%}{%- unless r.ref == page.ref or shown >= 3 -%}
+      <li><a href="{{ r.url | relative_url }}">{{ r.title }}</a></li>
+      {%- assign shown = shown | plus: 1 -%}
+    {%- endunless -%}{%- endfor %}</ul>
+  </section>
+  {%- endif %}
 
   {%- assign same = site.posts | where: "lang", page.lang -%}
   {%- for post in same -%}
