@@ -7,6 +7,8 @@ ref: monash-planner-reason
 lang: en
 title: "Why I built a degree planner for Monash students"
 image: /assets/og/site.png
+source_repo: monash-hub
+source_checked: 2026-11-01
 ---
 
 The annoying part of planning a Monash degree isn't entering unit codes. It's checking whether each unit is available at your campus, whether it runs in the semester you chose and whether its prerequisites can be completed beforehand.
