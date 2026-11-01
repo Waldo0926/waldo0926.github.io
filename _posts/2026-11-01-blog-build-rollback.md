@@ -7,6 +7,8 @@ ref: blog-build-rollback
 lang: en
 title: "Why I use Jekyll but serve the blog from my own VPS"
 image: /assets/og/site.png
+source_repo: waldo0926.github.io
+source_checked: 2026-11-01
 ---
 
 I was tempted to make the blog a full web app. More projects, better navigation and search can all make a database-backed rewrite sound appealing. But the thing this site does most is still simple: it turns Markdown into pages.
