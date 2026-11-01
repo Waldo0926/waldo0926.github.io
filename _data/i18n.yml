@@ -6,6 +6,7 @@ en:
   nav_writing: Writing
   nav_projects: Projects
   nav_archive: Archive
+  nav_search: Search
   nav_about: About
   switch_label: 中文
   switch_lang: zh-Hans
@@ -33,6 +34,7 @@ zh-Hans:
   nav_writing: 文章
   nav_projects: 项目
   nav_archive: 归档
+  nav_search: 搜索
   nav_about: 关于
   switch_label: English
   switch_lang: en
