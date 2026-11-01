@@ -1,0 +1,32 @@
+name: Blog PR checks
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check post preview images
+        run: |
+          missing=0
+          for post in _posts/*.md; do
+            image=$(sed -n '2,/^---$/s/^image: //p' "$post")
+            if [ -z "$image" ] || [ ! -f ".$image" ]; then
+              echo "::error file=$post::Preview image missing"
+              missing=1
+            fi
+          done
+          exit "$missing"
+
+      - name: Compile Jekyll site without deploying
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site

@@ -26,7 +26,7 @@
   <aside id="projects" class="card panel">
     <div class="panel-head">
       <h2 class="panel-title">{{ t.projects }}</h2>
-      <a class="small" href="https://github.com/{{ site.github_username }}?tab=repositories">{{ t.all_repos }}</a>
+      <a class="small" href="{% if zh %}{{ '/zh/projects/' | relative_url }}{% else %}{{ '/projects/' | relative_url }}{% endif %}">{{ t.all_repos }}</a>
     </div>
     <ul class="projects">
       {%- for p in site.data.projects %}{% if p.main %}
@@ -117,8 +117,3 @@
   </script>
 </section>
 
-<section class="container facts">
-  {%- for f in t.facts %}
-  <div><p class="fact-num">{{ f.num }}</p><p class="fact-text">{{ f.text }}</p></div>
-  {%- endfor %}
-</section>
