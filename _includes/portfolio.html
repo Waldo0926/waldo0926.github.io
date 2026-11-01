@@ -47,9 +47,17 @@
   <p class="portfolio-count small muted" id="portfolio-count" role="status" aria-live="polite"></p>
   <div class="portfolio-grid" id="portfolio-grid">
     {%- for p in site.data.portfolio %}
-    <article class="card portfolio-card" data-category="{{ p.category }}" data-year="{{ p.year }}" data-status="{{ p.status }}" data-ownership="{{ p.ownership }}" data-search="{{ p.name | append: ' ' | append: p.zh | append: ' ' | append: p.description | append: ' ' | append: p.description_zh | append: ' ' | append: p.tech | downcase | escape }}">
+    {%- assign tech_text = p.tech | join: ' ' -%}
+    <article class="card portfolio-card" data-category="{{ p.category }}" data-year="{{ p.year }}" data-status="{{ p.status }}" data-ownership="{{ p.ownership }}" data-search="{{ p.name | append: ' ' | append: p.zh | append: ' ' | append: p.description | append: ' ' | append: p.description_zh | append: ' ' | append: tech_text | downcase | escape }}">
       <div class="portfolio-top">
-        <span class="portfolio-type">{{ p.category | replace: "engineering", "Development" | replace: "monash", "Monash" | replace: "homelab", "Homelab" | replace: "algorithms", "Algorithms" | replace: "data", "AI & Data" | replace: "experiments", "Experiments" }}</span>
+        <span class="portfolio-type">{% case p.category %}
+        {% when "monash" %}{% if zh %}Monash学生工具{% else %}Monash{% endif %}
+        {% when "engineering" %}{% if zh %}开发与安全{% else %}Development{% endif %}
+        {% when "homelab" %}Homelab
+        {% when "algorithms" %}{% if zh %}算法与编程{% else %}Algorithms{% endif %}
+        {% when "data" %}{% if zh %}AI与数据{% else %}AI & Data{% endif %}
+        {% when "experiments" %}{% if zh %}工程实验{% else %}Experiments{% endif %}
+        {% endcase %}</span>
         <span class="portfolio-status">{% if p.status == "current" %}{% if zh %}当前项目{% else %}Current{% endif %}{% elsif p.status == "historical" %}{% if zh %}历史部署{% else %}Historical{% endif %}{% else %}{% if zh %}作品集{% else %}Portfolio{% endif %}{% endif %}</span>
       </div>
       <h2 class="portfolio-name"><a href="{{ p.repo }}" target="_blank" rel="noopener noreferrer">{% if zh %}{{ p.zh }}{% else %}{{ p.name }}{% endif %}</a></h2>
