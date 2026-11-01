@@ -1,0 +1,558 @@
+[
+  {
+    "slug": "monash-hub",
+    "name": "Monash Hub",
+    "zh": "Monash Hub",
+    "description": "unit and degree search, course planning, WAM/GPA and official student guides",
+    "description_zh": "查课程与学位、排选课计划、算WAM/GPA、找官方资料（网站）",
+    "category": "monash",
+    "tech": [
+      "Nuxt",
+      "FastAPI",
+      "PostgreSQL"
+    ],
+    "year": 2026,
+    "status": "current",
+    "ownership": "individual",
+    "post_project": "Monash Hub",
+    "repo": "https://github.com/Waldo0926/monash-hub"
+  },
+  {
+    "slug": "monash-study-kit",
+    "name": "Monash Study Kit",
+    "zh": "Monash Study Kit",
+    "description": "local-first Moodle/Ed tools for MCP clients, with optional school mail and attendance",
+    "description_zh": "本地Moodle/Ed学习工具，可选学校邮箱与考勤（使用指南）",
+    "category": "monash",
+    "tech": [
+      "Python",
+      "MCP",
+      "Moodle",
+      "Ed"
+    ],
+    "year": 2026,
+    "status": "current",
+    "ownership": "individual",
+    "post_project": "Study Kit",
+    "repo": "https://github.com/Waldo0926/monash-study-kit"
+  },
+  {
+    "slug": "ed-web",
+    "name": "Ed Web",
+    "zh": "Ed Web",
+    "description": "reading and searching Ed discussions in the browser",
+    "description_zh": "在浏览器里整理、搜索Ed讨论区",
+    "category": "monash",
+    "tech": [
+      "JavaScript",
+      "Ed"
+    ],
+    "year": 2026,
+    "status": "current",
+    "ownership": "individual",
+    "post_project": "Ed Web",
+    "repo": "https://github.com/Waldo0926/ed-web"
+  },
+  {
+    "slug": "monash-attendance-reminder",
+    "name": "Monash Attendance Helper",
+    "zh": "Monash Attendance Helper",
+    "description": "Chrome extension that looks up attendance codes; the student confirms each submission",
+    "description_zh": "找签到码的Chrome扩展，学生自行确认提交",
+    "category": "monash",
+    "tech": [
+      "Chrome Extension",
+      "JavaScript"
+    ],
+    "year": 2026,
+    "status": "current",
+    "ownership": "individual",
+    "post_project": "Attendance Helper",
+    "repo": "https://github.com/Waldo0926/monash-attendance-reminder"
+  },
+  {
+    "slug": "mumguide-wechat-bot",
+    "name": "MUMGuide WeChat Bot",
+    "zh": "马莫百科问答机器人",
+    "description": "source-linked student Q&A for the 马莫百科 account",
+    "description_zh": "在公众号里给同学答疑，附原始来源",
+    "category": "monash",
+    "tech": [
+      "Python",
+      "WeChat",
+      "Q&A"
+    ],
+    "year": 2026,
+    "status": "current",
+    "ownership": "individual",
+    "post_project": "Q&A bot",
+    "repo": "https://github.com/Waldo0926/mumguide-wechat-bot"
+  },
+  {
+    "slug": "monash-abroad-tracker-demo",
+    "name": "Monash Exchange Tracker Demo",
+    "zh": "Monash Exchange Tracker演示",
+    "description": "a public demonstration using synthetic data, not private exchange records",
+    "description_zh": "使用模拟数据的公开演示，不包含私人的交换记录",
+    "category": "monash",
+    "tech": [
+      "HTML",
+      "Exchange"
+    ],
+    "year": 2026,
+    "status": "portfolio",
+    "ownership": "individual",
+    "post_project": "",
+    "repo": "https://github.com/Waldo0926/monash-abroad-tracker-demo"
+  },
+  {
+    "slug": "monash-tools-docs",
+    "name": "Student Tools Documentation",
+    "zh": "学生工具文档",
+    "description": "the English and Chinese guides, installers and agent setup notes",
+    "description_zh": "中英文教程、安装脚本和AI安装说明",
+    "category": "monash",
+    "tech": [
+      "Astro",
+      "Starlight",
+      "MDX"
+    ],
+    "year": 2026,
+    "status": "current",
+    "ownership": "individual",
+    "post_project": "",
+    "repo": "https://github.com/Waldo0926/monash-tools-docs"
+  },
+  {
+    "slug": "SecureView",
+    "name": "SecureView",
+    "zh": "SecureView",
+    "description": "a team final-year project for encrypted file sharing, key management, integrity checks and audit records",
+    "description_zh": "四人毕业设计，涉及文件加密分享、密钥管理、完整性校验和审计",
+    "category": "engineering",
+    "tech": [
+      "Python",
+      "Cryptography",
+      "Security"
+    ],
+    "year": 2026,
+    "status": "current",
+    "ownership": "team",
+    "post_project": "SecureView",
+    "repo": "https://github.com/Waldo0926/SecureView"
+  },
+  {
+    "slug": "quotegate",
+    "name": "quotegate",
+    "zh": "quotegate",
+    "description": "verifies whether a model's quotations actually appear in their cited source",
+    "description_zh": "检查AI摘录的文字是否真的出自来源",
+    "category": "engineering",
+    "tech": [
+      "Python",
+      "RAG"
+    ],
+    "year": 2026,
+    "status": "current",
+    "ownership": "individual",
+    "post_project": "quotegate",
+    "repo": "https://github.com/Waldo0926/quotegate"
+  },
+  {
+    "slug": "streamswitch",
+    "name": "StreamSwitch",
+    "zh": "StreamSwitch",
+    "description": "TypeScript/RxJS project exploring deterministic state and reactive event streams",
+    "description_zh": "TypeScript和RxJS的事件流、状态管理实验",
+    "category": "engineering",
+    "tech": [
+      "TypeScript",
+      "RxJS"
+    ],
+    "year": 2026,
+    "status": "portfolio",
+    "ownership": "individual",
+    "post_project": "",
+    "repo": "https://github.com/Waldo0926/streamswitch"
+  },
+  {
+    "slug": "edge-fleet-ops-automation",
+    "name": "Edge Fleet Ops Automation",
+    "zh": "Edge Fleet Ops Automation",
+    "description": "sanitized Linux fleet monitoring, storage health and alerts; original deployment is not published",
+    "description_zh": "Linux节点巡检、磁盘健康和告警；公开版已脱敏",
+    "category": "homelab",
+    "tech": [
+      "Python",
+      "Linux",
+      "SSH"
+    ],
+    "year": 2026,
+    "status": "historical",
+    "ownership": "individual",
+    "post_project": "Homelab",
+    "repo": "https://github.com/Waldo0926/edge-fleet-ops-automation"
+  },
+  {
+    "slug": "homelab-network-automation",
+    "name": "Homelab Network Automation",
+    "zh": "Homelab Network Automation",
+    "description": "reconstructed iKuai monitoring and guarded network operations; original deployment retired",
+    "description_zh": "iKuai网络监控、连接管理和告警；原部署已停用",
+    "category": "homelab",
+    "tech": [
+      "Python",
+      "Linux",
+      "iKuai"
+    ],
+    "year": 2026,
+    "status": "historical",
+    "ownership": "individual",
+    "post_project": "Homelab",
+    "repo": "https://github.com/Waldo0926/homelab-network-automation"
+  },
+  {
+    "slug": "uptime",
+    "name": "Uptime",
+    "zh": "Uptime",
+    "description": "checks for services I operate",
+    "description_zh": "自己维护的网站状态监控（状态页）",
+    "category": "homelab",
+    "tech": [
+      "Monitoring",
+      "GitHub Actions"
+    ],
+    "year": 2026,
+    "status": "current",
+    "ownership": "individual",
+    "post_project": "",
+    "repo": "https://github.com/Waldo0926/uptime"
+  },
+  {
+    "slug": "waldo0926.github.io",
+    "name": "This blog",
+    "zh": "这个博客",
+    "description": "Jekyll, GitHub Pages and VPS deployment",
+    "description_zh": "Jekyll、GitHub Pages和VPS部署",
+    "category": "homelab",
+    "tech": [
+      "Jekyll",
+      "VPS",
+      "GitHub Pages"
+    ],
+    "year": 2026,
+    "status": "current",
+    "ownership": "individual",
+    "post_project": "Blog",
+    "repo": "https://github.com/Waldo0926/waldo0926.github.io"
+  },
+  {
+    "slug": "advanced-string-algorithms",
+    "name": "Advanced String Algorithms",
+    "zh": "高级字符串算法",
+    "description": "Z-based matching, BWT search, suffix trees and Rabin–Karp",
+    "description_zh": "Z算法、BWT、后缀树和Rabin–Karp",
+    "category": "algorithms",
+    "tech": [
+      "Python",
+      "Algorithms"
+    ],
+    "year": 2026,
+    "status": "portfolio",
+    "ownership": "individual",
+    "post_project": "Algorithms",
+    "repo": "https://github.com/Waldo0926/advanced-string-algorithms"
+  },
+  {
+    "slug": "classical-algorithms-cpp",
+    "name": "Classical Algorithms in C++",
+    "zh": "C++经典算法",
+    "description": "algorithm design and comparisons",
+    "description_zh": "算法设计、实现和比较",
+    "category": "algorithms",
+    "tech": [
+      "C++",
+      "Algorithms"
+    ],
+    "year": 2026,
+    "status": "portfolio",
+    "ownership": "individual",
+    "post_project": "",
+    "repo": "https://github.com/Waldo0926/classical-algorithms-cpp"
+  },
+  {
+    "slug": "n-queens-algorithm-visualizer",
+    "name": "N-Queens Algorithm Visualizer",
+    "zh": "N皇后算法可视化",
+    "description": "backtracking, pruning and local search",
+    "description_zh": "回溯、剪枝和局部搜索",
+    "category": "algorithms",
+    "tech": [
+      "Algorithms",
+      "Visualization"
+    ],
+    "year": 2026,
+    "status": "portfolio",
+    "ownership": "individual",
+    "post_project": "",
+    "repo": "https://github.com/Waldo0926/n-queens-algorithm-visualizer"
+  },
+  {
+    "slug": "data-structures-labs-cpp",
+    "name": "Data Structures Labs in C++",
+    "zh": "C++数据结构实验",
+    "description": "reconstructed data-structure exercises",
+    "description_zh": "整理后的数据结构练习",
+    "category": "algorithms",
+    "tech": [
+      "C++",
+      "Data Structures"
+    ],
+    "year": 2026,
+    "status": "portfolio",
+    "ownership": "individual",
+    "post_project": "",
+    "repo": "https://github.com/Waldo0926/data-structures-labs-cpp"
+  },
+  {
+    "slug": "bst-record-management-cpp",
+    "name": "BST Record Management",
+    "zh": "二叉搜索树记录管理",
+    "description": "a modernized binary-search-tree record manager",
+    "description_zh": "用现代C++重写的记录管理程序",
+    "category": "algorithms",
+    "tech": [
+      "C++",
+      "Trees"
+    ],
+    "year": 2026,
+    "status": "portfolio",
+    "ownership": "individual",
+    "post_project": "",
+    "repo": "https://github.com/Waldo0926/bst-record-management-cpp"
+  },
+  {
+    "slug": "MARIE-Bitmap-Text-Renderer",
+    "name": "MARIE Bitmap Text Renderer",
+    "zh": "MARIE位图文字显示",
+    "description": "low-level bitmap text rendering in MARIE",
+    "description_zh": "简单计算机上的底层图形实验",
+    "category": "algorithms",
+    "tech": [
+      "Assembly",
+      "MARIE"
+    ],
+    "year": 2026,
+    "status": "portfolio",
+    "ownership": "individual",
+    "post_project": "",
+    "repo": "https://github.com/Waldo0926/MARIE-Bitmap-Text-Renderer"
+  },
+  {
+    "slug": "c-cpp-programming-foundations",
+    "name": "C/C++ Programming Foundations",
+    "zh": "C/C++编程基础",
+    "description": "early programming exercises and CCF CSP practice",
+    "description_zh": "早期编程练习和CCF CSP题目",
+    "category": "algorithms",
+    "tech": [
+      "C",
+      "C++"
+    ],
+    "year": 2026,
+    "status": "portfolio",
+    "ownership": "individual",
+    "post_project": "",
+    "repo": "https://github.com/Waldo0926/c-cpp-programming-foundations"
+  },
+  {
+    "slug": "tensorflow-cnn-image-classification",
+    "name": "TensorFlow CNN Image Classification",
+    "zh": "TensorFlow CNN图像分类",
+    "description": "CIFAR-10/MNIST experiments and comparisons",
+    "description_zh": "CIFAR-10、MNIST和模型比较",
+    "category": "data",
+    "tech": [
+      "TensorFlow",
+      "CNN",
+      "Machine Learning"
+    ],
+    "year": 2026,
+    "status": "portfolio",
+    "ownership": "individual",
+    "post_project": "",
+    "repo": "https://github.com/Waldo0926/tensorflow-cnn-image-classification"
+  },
+  {
+    "slug": "pattern-recognition-from-scratch",
+    "name": "Pattern Recognition from Scratch",
+    "zh": "从零实现模式识别算法",
+    "description": "NumPy implementations of classical methods",
+    "description_zh": "用NumPy实现经典算法",
+    "category": "data",
+    "tech": [
+      "Python",
+      "NumPy",
+      "ML"
+    ],
+    "year": 2026,
+    "status": "portfolio",
+    "ownership": "individual",
+    "post_project": "",
+    "repo": "https://github.com/Waldo0926/pattern-recognition-from-scratch"
+  },
+  {
+    "slug": "animal-expert-system",
+    "name": "Animal Expert System",
+    "zh": "动物识别专家系统",
+    "description": "symbolic rules and forward chaining",
+    "description_zh": "规则推理和正向链推理",
+    "category": "data",
+    "tech": [
+      "Expert Systems",
+      "Rules"
+    ],
+    "year": 2026,
+    "status": "portfolio",
+    "ownership": "individual",
+    "post_project": "",
+    "repo": "https://github.com/Waldo0926/animal-expert-system"
+  },
+  {
+    "slug": "student-performance-ml-pipeline",
+    "name": "Student Performance ML Pipeline",
+    "zh": "学生成绩机器学习流程",
+    "description": "leakage-aware, reproducible evaluation",
+    "description_zh": "数据泄漏检查和可复现实验",
+    "category": "data",
+    "tech": [
+      "Machine Learning",
+      "Data"
+    ],
+    "year": 2026,
+    "status": "portfolio",
+    "ownership": "individual",
+    "post_project": "",
+    "repo": "https://github.com/Waldo0926/student-performance-ml-pipeline"
+  },
+  {
+    "slug": "million-row-tweet-analysis-bash-r",
+    "name": "Million-Row Tweet Analysis",
+    "zh": "百万行推文分析",
+    "description": "streaming text analysis in Bash, Python and R",
+    "description_zh": "Bash、Python和R的数据处理",
+    "category": "data",
+    "tech": [
+      "Bash",
+      "R",
+      "Data"
+    ],
+    "year": 2026,
+    "status": "portfolio",
+    "ownership": "individual",
+    "post_project": "",
+    "repo": "https://github.com/Waldo0926/million-row-tweet-analysis-bash-r"
+  },
+  {
+    "slug": "database-systems-sql-labs",
+    "name": "Database Systems SQL Labs",
+    "zh": "SQL数据库实验",
+    "description": "SQL Server schemas, queries and verification",
+    "description_zh": "SQL Server查询、表结构和验证",
+    "category": "data",
+    "tech": [
+      "SQL Server",
+      "Databases"
+    ],
+    "year": 2026,
+    "status": "portfolio",
+    "ownership": "individual",
+    "post_project": "",
+    "repo": "https://github.com/Waldo0926/database-systems-sql-labs"
+  },
+  {
+    "slug": "bike-share-visualizer-cpp",
+    "name": "Bike-Share Visualizer",
+    "zh": "共享单车可视化",
+    "description": "C++ station data and map rendering",
+    "description_zh": "C++站点数据处理和地图绘制",
+    "category": "experiments",
+    "tech": [
+      "C++",
+      "Visualization"
+    ],
+    "year": 2026,
+    "status": "portfolio",
+    "ownership": "individual",
+    "post_project": "",
+    "repo": "https://github.com/Waldo0926/bike-share-visualizer-cpp"
+  },
+  {
+    "slug": "puma560-robot-trajectory-planning",
+    "name": "PUMA 560 Robot Trajectory Planning",
+    "zh": "PUMA 560机器人轨迹规划",
+    "description": "MATLAB robotics and kinematics",
+    "description_zh": "MATLAB机器人运动学",
+    "category": "experiments",
+    "tech": [
+      "MATLAB",
+      "Robotics"
+    ],
+    "year": 2026,
+    "status": "portfolio",
+    "ownership": "individual",
+    "post_project": "",
+    "repo": "https://github.com/Waldo0926/puma560-robot-trajectory-planning"
+  },
+  {
+    "slug": "digital-signal-processing-matlab",
+    "name": "Digital Signal Processing in MATLAB",
+    "zh": "MATLAB数字信号处理",
+    "description": "sampling, FFT, windows and filtering",
+    "description_zh": "FFT、采样与滤波",
+    "category": "experiments",
+    "tech": [
+      "MATLAB",
+      "DSP"
+    ],
+    "year": 2026,
+    "status": "portfolio",
+    "ownership": "individual",
+    "post_project": "",
+    "repo": "https://github.com/Waldo0926/digital-signal-processing-matlab"
+  },
+  {
+    "slug": "wifi-site-survey-analysis",
+    "name": "Wi-Fi Site Survey Analysis",
+    "zh": "Wi-Fi现场勘测分析",
+    "description": "indoor WLAN measurements and analysis",
+    "description_zh": "室内无线网络测量",
+    "category": "experiments",
+    "tech": [
+      "Wi-Fi",
+      "Networking"
+    ],
+    "year": 2026,
+    "status": "portfolio",
+    "ownership": "individual",
+    "post_project": "",
+    "repo": "https://github.com/Waldo0926/wifi-site-survey-analysis"
+  },
+  {
+    "slug": "enterprise-network-security-architecture",
+    "name": "Enterprise Network Security Architecture",
+    "zh": "企业网络安全架构",
+    "description": "a fictional network architecture and validation",
+    "description_zh": "虚构企业场景中的网络设计",
+    "category": "experiments",
+    "tech": [
+      "Networking",
+      "Security"
+    ],
+    "year": 2026,
+    "status": "portfolio",
+    "ownership": "individual",
+    "post_project": "",
+    "repo": "https://github.com/Waldo0926/enterprise-network-security-architecture"
+  }
+]
