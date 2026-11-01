@@ -7,6 +7,8 @@ ref: mysql-concurrency
 lang: zh-Hans
 title: "SecureView的并发测试为什么比单人演示更重要"
 image: /assets/og/site.png
+source_repo: SecureView
+source_checked: 2026-11-01
 ---
 
 SecureView在单人演示时，最容易看见的是加密上传、分享和解密。但项目做到后面，我花了更多时间在没那么显眼的地方：数据库连接、并发请求和失败后的恢复。
