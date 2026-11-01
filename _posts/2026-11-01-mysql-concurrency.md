@@ -7,6 +7,8 @@ ref: mysql-concurrency
 lang: en
 title: "What SecureView's concurrency tests caught that a demo didn't"
 image: /assets/og/site.png
+source_repo: SecureView
+source_checked: 2026-11-01
 ---
 
 In a one-person SecureView demo, the visible features were encryption, upload, sharing and decryption. Later, I spent more time on less visible work: database connections, concurrent requests and what happens after a failure.
