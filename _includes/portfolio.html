@@ -1,0 +1,76 @@
+{%- assign zh = false -%}{%- if page.lang == "zh-Hans" -%}{%- assign zh = true -%}{%- endif -%}
+<section class="portfolio-browser" id="portfolio">
+  <form class="portfolio-filters" id="portfolio-filters" role="search" action="#" onsubmit="return false">
+    <label class="portfolio-query">
+      <span>{% if zh %}搜索项目{% else %}Search projects{% endif %}</span>
+      <input id="portfolio-search" type="search" autocomplete="off" placeholder="{% if zh %}名称、技术、说明…{% else %}Name, tech or description…{% endif %}">
+    </label>
+    <label>
+      <span>{% if zh %}方向{% else %}Area{% endif %}</span>
+      <select id="portfolio-category">
+        <option value="">{% if zh %}全部方向{% else %}All areas{% endif %}</option>
+        <option value="monash">{% if zh %}Monash学生工具{% else %}Monash & student tools{% endif %}</option>
+        <option value="engineering">{% if zh %}开发与安全{% else %}Development & security{% endif %}</option>
+        <option value="homelab">{% if zh %}Homelab与Linux{% else %}Homelab & Linux{% endif %}</option>
+        <option value="algorithms">{% if zh %}算法与编程{% else %}Algorithms & programming{% endif %}</option>
+        <option value="data">{% if zh %}AI与数据{% else %}AI & data{% endif %}</option>
+        <option value="experiments">{% if zh %}工程实验{% else %}Engineering experiments{% endif %}</option>
+      </select>
+    </label>
+    <label>
+      <span>{% if zh %}创建年份{% else %}Created on GitHub{% endif %}</span>
+      <select id="portfolio-year">
+        <option value="">{% if zh %}全部年份{% else %}All years{% endif %}</option>
+        {%- assign years = site.data.portfolio | map: "year" | uniq | sort | reverse -%}
+        {%- for y in years %}<option value="{{ y }}">{{ y }}</option>{%- endfor %}
+      </select>
+    </label>
+    <label>
+      <span>{% if zh %}项目状态{% else %}Project status{% endif %}</span>
+      <select id="portfolio-status">
+        <option value="">{% if zh %}全部状态{% else %}All statuses{% endif %}</option>
+        <option value="current">{% if zh %}当前项目{% else %}Current projects{% endif %}</option>
+        <option value="portfolio">{% if zh %}作品集与实验{% else %}Portfolio & experiments{% endif %}</option>
+        <option value="historical">{% if zh %}历史部署{% else %}Historical deployments{% endif %}</option>
+      </select>
+    </label>
+    <label>
+      <span>{% if zh %}参与方式{% else %}Contribution{% endif %}</span>
+      <select id="portfolio-ownership">
+        <option value="">{% if zh %}全部项目{% else %}All projects{% endif %}</option>
+        <option value="individual">{% if zh %}个人项目／个人作品{% else %}Individual work{% endif %}</option>
+        <option value="team">{% if zh %}团队项目{% else %}Team projects{% endif %}</option>
+      </select>
+    </label>
+    <button id="portfolio-reset" type="button" class="btn btn--ghost btn--small">{% if zh %}清除筛选{% else %}Clear filters{% endif %}</button>
+  </form>
+  <p class="portfolio-count small muted" id="portfolio-count" role="status" aria-live="polite"></p>
+  <div class="portfolio-grid" id="portfolio-grid">
+    {%- for p in site.data.portfolio %}
+    <article class="card portfolio-card" data-category="{{ p.category }}" data-year="{{ p.year }}" data-status="{{ p.status }}" data-ownership="{{ p.ownership }}" data-search="{{ p.name | append: ' ' | append: p.zh | append: ' ' | append: p.description | append: ' ' | append: p.description_zh | append: ' ' | append: p.tech | downcase | escape }}">
+      <div class="portfolio-top">
+        <span class="portfolio-type">{{ p.category | replace: "engineering", "Development" | replace: "monash", "Monash" | replace: "homelab", "Homelab" | replace: "algorithms", "Algorithms" | replace: "data", "AI & Data" | replace: "experiments", "Experiments" }}</span>
+        <span class="portfolio-status">{% if p.status == "current" %}{% if zh %}当前项目{% else %}Current{% endif %}{% elsif p.status == "historical" %}{% if zh %}历史部署{% else %}Historical{% endif %}{% else %}{% if zh %}作品集{% else %}Portfolio{% endif %}{% endif %}</span>
+      </div>
+      <h2 class="portfolio-name"><a href="{{ p.repo }}" target="_blank" rel="noopener noreferrer">{% if zh %}{{ p.zh }}{% else %}{{ p.name }}{% endif %}</a></h2>
+      <p class="portfolio-desc">{% if zh %}{{ p.description_zh }}{% else %}{{ p.description }}{% endif %}</p>
+      <ul class="portfolio-tags" aria-label="{% if zh %}相关技术{% else %}Technology tags{% endif %}">
+        {%- for tag in p.tech %}<li>{{ tag }}</li>{%- endfor %}
+      </ul>
+      <p class="portfolio-meta small muted">{{ p.year }} · {% if p.ownership == "team" %}{% if zh %}团队{% else %}Team{% endif %}{% else %}{% if zh %}个人作品{% else %}Individual work{% endif %}{% endif %}</p>
+      {%- if p.post_project != "" %}
+      {%- assign posts = site.posts | where: "project", p.post_project | where: "lang", page.lang -%}
+      {%- if posts.size > 0 %}
+      <div class="portfolio-writing">
+        <span>{% if zh %}写过这些{% else %}Related writing{% endif %}</span>
+        <ul>{%- for post in posts limit: 3 %}<li><a href="{{ post.url | relative_url }}">{{ post.title }}</a></li>{%- endfor %}</ul>
+      </div>
+      {%- endif %}
+      {%- endif %}
+    </article>
+    {%- endfor %}
+  </div>
+  <p id="portfolio-empty" class="portfolio-empty" hidden>{% if zh %}没有找到符合条件的项目，试试减少筛选条件{% else %}No matching projects. Try removing a filter.{% endif %}</p>
+  <p class="portfolio-note small muted">{% if zh %}年份是GitHub公开仓库的创建年份，不一定是项目最初开发的时间。状态是作品集分类，不代表GitHub已归档或线上服务当前可用。项目的最新说明以仓库README为准{% else %}Year means GitHub repository creation, not necessarily when work first began. Status is a portfolio category, not GitHub's archived flag or a guarantee of live service. Check each README for current details.{% endif %}</p>
+</section>
+<script defer src="{{ '/assets/portfolio.js' | relative_url }}"></script>
