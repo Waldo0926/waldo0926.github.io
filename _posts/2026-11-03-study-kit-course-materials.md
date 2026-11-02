@@ -1,6 +1,6 @@
 ---
 layout: post
-date: 2026-11-03 12:00:00 +0800
+date: 2026-11-03 00:00:00 +0800
 project: Study Kit
 description: "How Study Kit 1.8–1.11.1 turns Moodle pages, Books, assignment briefs, Ed Lessons and linked Google files into a local course package, with offline PDF printing, isolated accounts and an explicit list of what is missing."
 ref: study-kit-course-materials

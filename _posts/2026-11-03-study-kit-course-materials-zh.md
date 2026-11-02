@@ -1,6 +1,6 @@
 ---
 layout: post
-date: 2026-11-03 12:00:00 +0800
+date: 2026-11-03 00:00:00 +0800
 project: Study Kit
 description: "从 Moodle Page、Book、作业说明，到 Ed 图片和 Google 文档：Study Kit 1.8–1.11.1 如何把一门课整理成本地资料包，以及 PDF 缓存、隔离账号和遗漏索引为什么要分开设计。"
 ref: study-kit-course-materials
