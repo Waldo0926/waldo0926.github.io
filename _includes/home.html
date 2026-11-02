@@ -60,7 +60,7 @@
   <div class="topic-grid">
     {%- for area in site.data.areas %}
     {%- if area.slug == "writing" %}
-    {%- assign area_url = '#writing' -%}
+    {%- if zh -%}{%- assign area_url = '/zh/notes/' -%}{%- else -%}{%- assign area_url = '/notes/' -%}{%- endif -%}
     {%- elsif zh -%}
     {%- capture area_url %}/zh/projects/?category={{ area.slug }}{% endcapture -%}
     {%- else -%}
@@ -70,6 +70,13 @@
       <span class="topic-index mono">0{{ forloop.index }}</span>
       <strong>{% if zh %}{{ area.zh }}{% else %}{{ area.title }}{% endif %}</strong>
       <span>{% if zh %}{{ area.description_zh }}{% else %}{{ area.description }}{% endif %}</span>
+      {%- if area.slug == "writing" -%}
+      {%- assign area_count = site.posts | where: "lang", lang | size -%}
+      <span class="small muted">{{ area_count }} {% if zh %}篇文章{% else %}articles{% endif %}</span>
+      {%- else -%}
+      {%- assign area_count = site.data.portfolio | where: "category", area.slug | size -%}
+      <span class="small muted">{{ area_count }} {% if zh %}个项目{% else %}projects{% endif %}</span>
+      {%- endif -%}
       <span class="topic-arrow" aria-hidden="true">→</span>
     </a>
     {%- endfor %}

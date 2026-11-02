@@ -30,3 +30,33 @@ jobs:
         with:
           source: ./
           destination: ./_site
+
+      - name: Check internal links and fragments
+        run: python3 scripts/check_links.py _site https://blog.secureview.tech
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install browser test dependency
+        run: |
+          npm install --prefix "$RUNNER_TEMP/blog-browser" --no-audit --no-fund playwright@1.64.1
+          "$RUNNER_TEMP/blog-browser/node_modules/.bin/playwright" install --with-deps chromium
+
+      - name: Check bilingual navigation and project filters
+        env:
+          NODE_PATH: ${{ runner.temp }}/blog-browser/node_modules
+        run: |
+          python3 -m http.server 8877 --bind 127.0.0.1 --directory _site > "$RUNNER_TEMP/blog-preview.log" 2>&1 &
+          for attempt in 1 2 3 4 5; do
+            curl --silent --fail http://127.0.0.1:8877/ > /dev/null && break
+            sleep 1
+          done
+          node scripts/check_browser.cjs http://127.0.0.1:8877
+
+      - name: Keep built site for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: blog-preview
+          path: _site
+          retention-days: 7

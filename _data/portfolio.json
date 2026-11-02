@@ -21,14 +21,16 @@
     "slug": "monash-study-kit",
     "name": "Monash Study Kit",
     "zh": "Monash Study Kit",
-    "description": "local-first Moodle/Ed tools for MCP clients, with optional school mail and attendance",
-    "description_zh": "本地Moodle/Ed学习工具，可选学校邮箱与考勤（使用指南）",
+    "description": "local-first Moodle/Ed search and whole-course materials export, linked Google files, PDF/Markdown and isolated profiles; optional mail and attendance",
+    "description_zh": "本地 Moodle/Ed 搜索与整课资料导出，支持 Google 文件、PDF/Markdown 和隔离账号，可选邮箱与考勤",
     "category": "monash",
     "tech": [
       "Python",
       "MCP",
       "Moodle",
-      "Ed"
+      "Ed",
+      "Google Drive",
+      "PDF"
     ],
     "year": 2026,
     "status": "current",

@@ -25,3 +25,7 @@ jekyll serve
 - `search/index.md` and `zh/search/index.md` search the generated `search-index.json` in the browser. The index only contains **published posts**; Jekyll excludes `_drafts/` from standard builds.
 - Published notes can set `source_repo` and `source_checked` in front matter to identify their code source and review date. The latter is a source-review date, **not** a live system validation or benchmark date.
 - `_drafts/` contains incomplete, bilingual article outlines that require fact-checking. Their source files are public in the repository, but they aren't included as published blog pages.
+
+## Site regression checks
+
+PR CI compiles the normal Jekyll site, checks internal links/fragments, then runs `node scripts/check_browser.cjs http://127.0.0.1:8877` with Playwright against that static build. It checks both languages, all six direction links, combined project filters, Unicode search, URL reload/reset, empty results and mobile overflow. The built site is kept as the `blog-preview` artifact for review; none of these checks deploys.

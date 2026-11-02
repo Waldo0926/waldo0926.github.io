@@ -131,3 +131,5 @@ Then I updated the repository copy too, which runs the timers and the SSH versio
 - Test fixtures should look like production data, or they will pass for the wrong reason.
 - When one repository calls into another, pin the contract in the one being called.
 - Before deploying, check what the server is actually running.
+
+Follow-up: the [whole-course exporter]({% post_url 2026-11-03-study-kit-course-materials %}) adds Moodle bodies, Google files, PDFs and isolated accounts.
