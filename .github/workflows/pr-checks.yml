@@ -30,3 +30,13 @@ jobs:
         with:
           source: ./
           destination: ./_site
+
+      - name: Check internal links and fragments
+        run: python3 scripts/check_links.py _site https://blog.secureview.tech
+
+      - name: Keep built site for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: blog-preview
+          path: _site
+          retention-days: 7
