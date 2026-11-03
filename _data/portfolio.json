@@ -141,7 +141,8 @@
     "status": "current",
     "ownership": "team",
     "post_project": "SecureView",
-    "repo": "https://github.com/Waldo0926/SecureView"
+    "repo": "https://github.com/Waldo0926/SecureView",
+    "website": "https://secureview.tech"
   },
   {
     "slug": "quotegate",

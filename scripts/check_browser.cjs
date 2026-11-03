@@ -31,6 +31,7 @@ const baseURL = process.argv[2] || 'http://127.0.0.1:8877';
       assert.equal(res.status(),200,href);
     }
     await page.goto(`${baseURL}${prefix}/projects/?keep=1#portfolio`);
+    assert.equal(await page.locator('.portfolio-name a').filter({hasText:'SecureView'}).getAttribute('href'),'https://secureview.tech');
     const values={q:'ｓｔｕｄｙ',category:'monash',tech:'Python',year:'2026',status:'current',ownership:'individual'};
     const ids={q:'search',category:'category',tech:'tech',year:'year',status:'status',ownership:'ownership'};
     for(const [key,value] of Object.entries(values)) {
