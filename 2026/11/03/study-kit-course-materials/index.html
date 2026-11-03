@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>A course is more than its PDFs: building the materials exporter | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="A course is more than its PDFs: building the materials exporter" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="How Study Kit 1.8–1.11.1 turns Moodle pages, Books, assignment briefs, Ed Lessons and linked Google files into a local course package, with offline PDF printing, isolated accounts and an explicit list of what is missing." />
+<meta property="og:description" content="How Study Kit 1.8–1.11.1 turns Moodle pages, Books, assignment briefs, Ed Lessons and linked Google files into a local course package, with offline PDF printing, isolated accounts and an explicit list of what is missing." />
+<link rel="canonical" href="https://blog.secureview.tech/2026/11/03/study-kit-course-materials/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/11/03/study-kit-course-materials/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/study-kit-course-materials.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-11-03T00:00:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/study-kit-course-materials.png" />
+<meta property="twitter:title" content="A course is more than its PDFs: building the materials exporter" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-11-03T00:00:00+08:00","datePublished":"2026-11-03T00:00:00+08:00","description":"How Study Kit 1.8–1.11.1 turns Moodle pages, Books, assignment briefs, Ed Lessons and linked Google files into a local course package, with offline PDF printing, isolated accounts and an explicit list of what is missing.","headline":"A course is more than its PDFs: building the materials exporter","image":"https://blog.secureview.tech/assets/og/study-kit-course-materials.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/11/03/study-kit-course-materials/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/11/03/study-kit-course-materials/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/11/03/study-kit-course-materials/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/11/03/study-kit-course-materials-zh/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css?v=1793681869">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/#writing">Writing</a>
+        <a href="/#projects">Projects</a>
+        <a href="/projects/">Archive</a>
+        <a href="/search/">Search</a>
+        <a href="/about/">About</a>
+      </nav>
+      <a class="lang-switch" href="/2026/11/03/study-kit-course-materials-zh/" lang="zh-Hans" hreflang="zh-Hans">中文</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/#writing">Writing</a>
+      <span aria-hidden="true">/</span>
+      <span>Study Kit</span>
+    </p>
+    <h1 class="display post-title">A course is more than its PDFs: building the materials exporter</h1><p class="lede">How Study Kit 1.8–1.11.1 turns Moodle pages, Books, assignment briefs, Ed Lessons and linked Google files into a local course package, with offline PDF printing, isolated accounts and an explicit list of what is missing.</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-11-03T00:00:00+08:00">3 Nov 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>6 min read</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/11/03/study-kit-course-materials/" class="on" aria-current="page">English</a>
+        <a href="/2026/11/03/study-kit-course-materials-zh/" lang="zh-Hans">中文</a>
+      </span>
+    </div>
+  </header>
+  <p class="post-source small muted">
+    <a href="https://github.com/Waldo0926/monash-study-kit" rel="noopener external" target="_blank">Source repository</a> · Source reviewed: 2026-11-03
+  </p>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p>The earlier <a href="/2026/11/01/study-kit-ed-export/">Ed export article</a> covered lesson folders and a download-all zip. A course has more than Ed files: a Moodle Page containing the brief, a Book with several chapters, a marking guide, pictures embedded in a lesson, and a Google document that is still only a link. Packing the PDFs already on disk leaves all of those behind.</p>
+
+<p>Study Kit 1.8 added a whole-course package. Versions 1.9 through 1.11.1 filled in these gaps and added isolated accounts and PDF output. This article follows the current <a href="https://github.com/Waldo0926/monash-study-kit/blob/main/CHANGELOG.md">source and changelog</a>. It describes the local exporter; private deployment changes and production verification are separate work.</p>
+
+<p><strong>Release update (3 November 2026):</strong> <a href="https://github.com/Waldo0926/monash-study-kit/releases/tag/v1.11.2">1.11.2 is published</a>, fixing Windows PDF browser cold-start retries. The commands below apply to the current release.</p>
+
+<p><img src="/assets/readme/course-export.png" alt="Actual 1.11.2 whole-course export and ZIP contents using synthetic course data" /></p>
+
+<p>The demo runs offline against synthetic materials, deliberately retaining a missing attachment and an unauthorized Google link to show how omissions are reported.</p>
+
+<h2 id="start-with-a-useful-command">Start with a useful command</h2>
+
+<p>After installing Study Kit and selecting your units:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>monash <span class="nb">export </span>FIT2109 <span class="nt">--sync</span> <span class="nt">--format</span> both <span class="nt">--to</span> <span class="s2">"./exports"</span>
+</code></pre></div></div>
+
+<p>The destination is a folder, not a zip filename. <code class="language-plaintext highlighter-rouge">--sync</code> refreshes this unit’s Moodle content and Ed Lessons before packaging. It leaves Ed discussions out. Without it, export only reads the local cache. <code class="language-plaintext highlighter-rouge">--dir</code> writes a directory rather than a zip, and <code class="language-plaintext highlighter-rouge">--open</code> reveals the result in the file manager.</p>
+
+<p>In 1.11.1 an interactive terminal opens a folder picker if <code class="language-plaintext highlighter-rouge">--to</code> is absent; <code class="language-plaintext highlighter-rouge">--no-ask</code> skips it. The starting location is the previous choice or the system Downloads folder, including a relocated Windows Downloads folder. The command prints the destination before work starts and progress while rendering and packing.</p>
+
+<h2 id="collect-first-package-second">Collect first, package second</h2>
+
+<p>There are three stages:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Moodle / Ed / course-linked Google files
+                 |
+         sync and normalize
+                 |
+     local files + SQLite metadata
+                 |
+  export.Plan: entries + missing + statistics
+                 |
+       optional offline PDF rendering
+                 |
+    zip or directory, including an index
+</code></pre></div></div>
+
+<p>The code is split accordingly: <code class="language-plaintext highlighter-rouge">syncer.py</code> and <code class="language-plaintext highlighter-rouge">moodle_content.py</code> collect Moodle materials, the Ed modules collect Lessons, <code class="language-plaintext highlighter-rouge">google_export.py</code> handles linked Google files, <code class="language-plaintext highlighter-rouge">export.py</code> plans the package, and <code class="language-plaintext highlighter-rouge">pdfrender.py</code> prints its Markdown pages. Packaging does not need a live session unless the CLI was explicitly asked to sync first.</p>
+
+<p>Moodle Page, Book and assignment bodies become Markdown. The Book parser uses Moodle’s print view, which does not count as viewing individual chapters. Visible rubrics and marking guides are teaching materials too; a student’s submissions, grades and private feedback are excluded. Moodle folders use a whole-folder download, retaining subdirectories and original filenames, with individual-file fallback when necessary.</p>
+
+<p>Ed lesson pages contribute text, slides, embedded Ed-hosted files and question-only quiz pages. Images from Moodle and Ed are saved under <code class="language-plaintext highlighter-rouge">assets/</code>, deduplicated by content, and linked relatively. A failed image keeps its remote link and becomes an index entry. Older extensionless Ed images saved as <code class="language-plaintext highlighter-rouge">.img</code> are renamed from their detected content during sync, rather than remaining files a viewer cannot recognize.</p>
+
+<p>The package has a unit root, <code class="language-plaintext highlighter-rouge">Moodle/</code>, <code class="language-plaintext highlighter-rouge">Ed Lessons/</code> and an index. Original PDFs, notebooks, code and archives retain their formats. Generated bodies, link lists, quizzes and the index use the chosen output format.</p>
+
+<h2 id="a-google-link-needs-its-own-permission">A Google link needs its own permission</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>uv tool <span class="nb">install</span> <span class="nt">--reinstall</span> <span class="nt">--refresh</span> <span class="s2">"monash-study-kit[gmail]"</span>
+monash google login
+monash <span class="nb">export </span>FIT2109 <span class="nt">--refresh-google</span> <span class="nt">--format</span> both <span class="nt">--to</span> <span class="s2">"./exports"</span>
+</code></pre></div></div>
+
+<p>Keep any other extras you already use in that install command. The optional dependency happens to be named <code class="language-plaintext highlighter-rouge">gmail</code>; Drive authorization is separate. <code class="language-plaintext highlighter-rouge">monash google login</code> requests only <code class="language-plaintext highlighter-rouge">drive.readonly</code> and writes <code class="language-plaintext highlighter-rouge">google-drive-token.json</code>, independently of Gmail’s token. The scope can read all Drive files accessible to the account; the exporter uses course-linked files. It cannot edit them and grants no Gmail access.</p>
+
+<p>Docs and Slides normally become PDF, Sheets XLSX, and ordinary Drive files keep their format. <code class="language-plaintext highlighter-rouge">monash config google_docs_format docx</code> changes Docs to DOCX. It does not change Slides or the exporter’s own Markdown pages. <code class="language-plaintext highlighter-rouge">--refresh-google</code> implies sync and re-exports linked Google files.</p>
+
+<p>An API export can fail because of file size, a disabled API, administrator policy or sharing permissions. Where supported, the dedicated login browser’s Google session is tried as a fallback, with cookies held in memory. It does not bypass sharing permissions. Google Forms remain links with a reason. Logout revokes the Drive authorization before deleting its local token; failed revocation keeps the token so the user can retry.</p>
+
+<h2 id="pdf-is-another-output-not-another-sync-format">PDF is another output, not another sync format</h2>
+
+<p>Since 1.11, <code class="language-plaintext highlighter-rouge">pdf</code> is the initial export default. <code class="language-plaintext highlighter-rouge">--format md</code> avoids PDF printing; <code class="language-plaintext highlighter-rouge">both</code> keeps editable Markdown alongside generated PDFs. Synced text and the MCP search index remain unchanged.</p>
+
+<p>One isolated temporary Chrome, Edge or Brave process prints the package’s pages offline. Local images are embedded, raw HTML is escaped, and remote requests are blocked. Without a supported browser, export falls back to Markdown and says why in the index and terminal. Version 1.11.1 retries Windows temporary-profile cleanup so a browser helper briefly holding a file does not invalidate an already completed export.</p>
+
+<p>The cache key covers printable HTML and embedded image contents. Replacing a local image therefore changes the key even if the Markdown is identical. Cached PDFs live under <code class="language-plaintext highlighter-rouge">data/pdf-cache/</code>; oldest entries are evicted above 500 MB. JSON output reports generated and cached PDF counts and the fallback reason. These are implementation limits, not performance measurements.</p>
+
+<h2 id="account-isolation-belongs-before-imports">Account isolation belongs before imports</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>monash <span class="nt">--profile</span> exchange setup
+monash <span class="nt">--profile</span> exchange google login
+monash <span class="nt">--profile</span> exchange <span class="nb">export </span>FIT2109 <span class="nt">--sync</span> <span class="nt">--to</span> <span class="s2">"./exports"</span>
+monash profile list
+</code></pre></div></div>
+
+<p>Paths are fixed when modules are imported. <code class="language-plaintext highlighter-rouge">entry.py</code> therefore chooses the profile before importing the CLI and service modules. Named profiles keep credentials, databases, materials and browser sessions under separate <code class="language-plaintext highlighter-rouge">profiles/NAME</code> directories. They force materials-only mode: no Gmail sync, attendance, Ed discussions or personal-calendar setup. They cannot configure remote serving, <code class="language-plaintext highlighter-rouge">monash connect</code>, or an independent data-home move.</p>
+
+<p>Cleanup is deliberately a separate command from the default account: <code class="language-plaintext highlighter-rouge">monash profile remove exchange</code>. It revokes Google tokens before removing login sessions, keeps materials and databases unless <code class="language-plaintext highlighter-rouge">--all</code> is supplied, and preserves files if revocation fails. Ed API-token deletion remains a manual step.</p>
+
+<h2 id="complete-also-means-naming-the-gaps">Complete also means naming the gaps</h2>
+
+<p>The exporter records missing local files, unsynced Ed units, failed Google exports and remaining remote images. Notebook image references that are missing or differ only by case are reported too. A successful zip does not prove that every linked resource was downloadable. Folder refreshes are normally limited to once a week; refreshing Google is not a universal force-refresh switch.</p>
+
+<p>The package excludes personal records and strips meeting-password parameters from links, but its contents are ordinary local files. They are not automatically public or safe to redistribute. Gmail is a separate optional feature: ordinary Gmail login requests <code class="language-plaintext highlighter-rouge">gmail.modify</code>, while <code class="language-plaintext highlighter-rouge">--read-only</code> requests <code class="language-plaintext highlighter-rouge">gmail.readonly</code>.</p>
+
+<p>For this update, the local Study Kit suite completed with <strong>663 passed and 10 skipped</strong>. Those tests cover synthetic export fixtures, Google errors, profiles and PDF behavior; they do not establish that every real course, Google account or Windows installation works. The <a href="https://docs.secureview.tech/study-kit/materials/">bilingual export guide</a> documents setup, options and retry steps. The practical check after exporting is still to open the index and inspect what was left out.</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">On this page</p>
+      <ol><li><a href="#start-with-a-useful-command">Start with a useful command</a></li><li><a href="#collect-first-package-second">Collect first, package second</a></li><li><a href="#a-google-link-needs-its-own-permission">A Google link needs its own permission</a></li><li><a href="#pdf-is-another-output-not-another-sync-format">PDF is another output, not another sync format</a></li><li><a href="#account-isolation-belongs-before-imports">Account isolation belongs before imports</a></li><li><a href="#complete-also-means-naming-the-gaps">Complete also means naming the gaps</a></li></ol>
+      <a class="toc-back" href="/#writing">All writing</a>
+    </aside>
+  </div>
+  <section class="post-related" aria-label="Related posts">
+    <h2>More on this subject</h2>
+    <ul><li><a href="/2026/11/01/study-kit-ed-export/">One download button, three codebases: zipping a unit's Ed materials</a></li><li><a href="/2026/10/31/study-kit-mail-attendance/">Study Kit gets school mail and attendance, and asks before it changes anything</a></li><li><a href="/2026/10/30/study-kit-remote/">Letting ChatGPT reach Study Kit, for one person only</a></li></ul>
+  </section>
+  <nav class="more" aria-label="More posts">
+    <a class="card more-link" href="/2026/11/01/study-kit-ed-export/">
+      <span class="more-label">Previous · Study Kit</span>
+      <span class="more-title">One download button, three codebases: zipping a unit's Ed materials</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Computer Science at Monash University. Backend and AI application development.</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">Status</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

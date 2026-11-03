@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Two J1900 boxes and an N1: why I don’t need more production servers | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Two J1900 boxes and an N1: why I don’t need more production servers" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Two J1900 boxes, a Debian N1 and a VPS. Before finding more services to run, I need to decide what should stay online and what should remain disposable." />
+<meta property="og:description" content="Two J1900 boxes, a Debian N1 and a VPS. Before finding more services to run, I need to decide what should stay online and what should remain disposable." />
+<link rel="canonical" href="https://blog.secureview.tech/2026/11/01/spare-machines/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/11/01/spare-machines/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/spare-machines.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-11-01T04:10:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/spare-machines.png" />
+<meta property="twitter:title" content="Two J1900 boxes and an N1: why I don’t need more production servers" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-11-01T04:10:00+08:00","datePublished":"2026-11-01T04:10:00+08:00","description":"Two J1900 boxes, a Debian N1 and a VPS. Before finding more services to run, I need to decide what should stay online and what should remain disposable.","headline":"Two J1900 boxes and an N1: why I don’t need more production servers","image":"https://blog.secureview.tech/assets/og/spare-machines.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/11/01/spare-machines/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/11/01/spare-machines/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/11/01/spare-machines/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/11/01/spare-machines-zh/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css?v=1793681869">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/#writing">Writing</a>
+        <a href="/#projects">Projects</a>
+        <a href="/projects/">Archive</a>
+        <a href="/search/">Search</a>
+        <a href="/about/">About</a>
+      </nav>
+      <a class="lang-switch" href="/2026/11/01/spare-machines-zh/" lang="zh-Hans" hreflang="zh-Hans">中文</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/#writing">Writing</a>
+      <span aria-hidden="true">/</span>
+      <span>Homelab</span>
+    </p>
+    <h1 class="display post-title">Two J1900 boxes and an N1: why I don't need more production servers</h1><p class="lede">Two J1900 boxes, a Debian N1 and a VPS. Before finding more services to run, I need to decide what should stay online and what should remain disposable.</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-11-01T04:10:00+08:00">1 Nov 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>2 min read</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/11/01/spare-machines/" class="on" aria-current="page">English</a>
+        <a href="/2026/11/01/spare-machines-zh/" lang="zh-Hans">中文</a>
+      </span>
+    </div>
+  </header>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p>I recently got two older J1900 machines working again. There’s also an N1 box running Debian, and the VPS that already hosts my public services. Having spare hardware brought back a familiar question: what else can I run on it?</p>
+
+<p>This time I want to answer a different question first: which things need to survive when one of those machines stops working?</p>
+
+<h2 id="not-every-box-needs-to-run-a-website">Not every box needs to run a website</h2>
+
+<p>My public sites already run on a VPS with HTTPS, automated deployment and monitoring. Replicating every production service at home isn’t automatically useful. A home connection has a changing public address, and power, disks and router restarts introduce failure modes I don’t control as easily.</p>
+
+<p>For now I see the larger J1900 as a backup or standby box, the other J1900 as an isolated place to experiment, and the N1 as a small Debian/Linux test node. These are roles I’m working towards, not a claim that failover or a production backup is already implemented. Some machines can simply stay off.</p>
+
+<h2 id="the-restore-matters-more-than-the-backup">The restore matters more than the backup</h2>
+
+<p>I want to write down exactly what would happen if the VPS or one of the disks failed:</p>
+
+<ul>
+  <li>What data exists in only one place?</li>
+  <li>Can I restore a database and the files that belong to it on a clean machine?</li>
+  <li>How do I still get in over SSH when the home IP changes?</li>
+  <li>Which jobs need a schedule and which should run only on demand?</li>
+  <li>Will an alert describe a new failure, or repeat the same message all day?</li>
+</ul>
+
+<p>A working Debian install doesn’t answer any of those questions.</p>
+
+<h2 id="keeping-the-useful-parts-of-older-projects">Keeping the useful parts of older projects</h2>
+
+<p>My <a href="https://github.com/Waldo0926/homelab-network-automation">homelab network automation</a> and <a href="https://github.com/Waldo0926/edge-fleet-ops-automation">edge fleet operations</a> repositories are sanitized reconstructions of earlier tooling, not claims about the current machines.</p>
+
+<p>The ideas that still seem worth carrying forward are stateful alerts, consecutive checks before acting, tight limits on automated operations, and dry-run by default. I’ll document an actual restore exercise when I’ve completed one. That’s a more useful result than a list of boxes I happen to own.</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">On this page</p>
+      <ol><li><a href="#not-every-box-needs-to-run-a-website">Not every box needs to run a website</a></li><li><a href="#the-restore-matters-more-than-the-backup">The restore matters more than the backup</a></li><li><a href="#keeping-the-useful-parts-of-older-projects">Keeping the useful parts of older projects</a></li></ol>
+      <a class="toc-back" href="/#writing">All writing</a>
+    </aside>
+  </div>
+  <section class="post-related" aria-label="Related posts">
+    <h2>More on this subject</h2>
+    <ul><li><a href="/2026/11/01/stateful-alerts/">Why I want alerts about changes, not an endless stream of pings</a></li></ul>
+  </section>
+  <nav class="more" aria-label="More posts">
+    <a class="card more-link" href="/2026/10/31/study-kit-mail-attendance/">
+      <span class="more-label">Previous · Study Kit</span>
+      <span class="more-title">Study Kit gets school mail and attendance, and asks before it changes anything</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/11/01/string-algorithms/">
+      <span class="more-label">Next · Algorithms</span>
+      <span class="more-title">The string algorithms I kept after the course ended</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Computer Science at Monash University. Backend and AI application development.</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">Status</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

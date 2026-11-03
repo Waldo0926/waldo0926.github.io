@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://blog.secureview.tech/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.secureview.tech/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-11-03T12:57:49+08:00</updated><id>https://blog.secureview.tech/feed.xml</id><title type="html">Shuoxun Wen</title><subtitle>Projects, code and engineering notes from Shuoxun Wen, Computer Science at Monash University Malaysia.</subtitle><author><name>Shuoxun Wen</name></author><entry xml:lang="zh-Hans"><title type="html">一门课不只有 PDF：完整课程资料导出怎么做</title><link href="https://blog.secureview.tech/2026/11/03/study-kit-course-materials-zh/" rel="alternate" type="text/html" title="一门课不只有 PDF：完整课程资料导出怎么做" /><published>2026-11-03T00:00:00+08:00</published><updated>2026-11-03T00:00:00+08:00</updated><id>https://blog.secureview.tech/2026/11/03/study-kit-course-materials-zh</id><content type="html" xml:base="https://blog.secureview.tech/2026/11/03/study-kit-course-materials-zh/"><![CDATA[<p><a href="/2026/11/01/study-kit-ed-export-zh/">上一篇 Ed 导出文章</a>讲的是 lesson 文件夹和一键打包。但一门课还有别的东西：Moodle Page 里的作业要求、Book 的几个章节、评分标准、lesson 正文里的图片，以及仍然只是链接的 Google 文档。把磁盘上已有的 PDF 压缩起来，这些内容还是没带走。</p>
+
+<p>Study Kit 1.8 加了整课资料包，1.9 到 1.11.1 逐步补齐正文、图片、Google 文件、隔离账号和 PDF 输出。下面按当前<a href="https://github.com/Waldo0926/monash-study-kit/blob/main/CHANGELOG.md">源码和更新日志</a>说明本地导出器的实现；私有部署改动和生产验证是另外的工作。</p>
+
+<p><strong>发布更新（2026-11-03）：</strong> <a href="https://github.com/Waldo0926/monash-study-kit/releases/tag/v1.11.2">1.11.2 已正式发布</a>，修复 Windows PDF 浏览器冷启动重试；下文命令适用于当前版本。</p>
+
+<p><img src="/assets/readme/course-export.png" alt="1.11.2 实际整课导出与 ZIP 内容，合成课程数据" /></p>
+
+<p>示例使用合成资料实际离线导出，保留一个缺失附件和未授权 Google 链接，展示索引如何报告遗漏。</p>
+
+<h2 id="先看怎么用">先看怎么用</h2>
+
+<p>装好 Study Kit、选好课程后：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>monash <span class="nb">export </span>FIT2109 <span class="nt">--sync</span> <span class="nt">--format</span> both <span class="nt">--to</span> <span class="s2">"./exports"</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">--to</code> 是目标文件夹，不是 zip 文件名。<code class="language-plaintext highlighter-rouge">--sync</code> 先刷新这门课的 Moodle 和 Ed Lessons，不同步 Ed 讨论区；不加时只读本地缓存。<code class="language-plaintext highlighter-rouge">--dir</code> 输出文件夹，<code class="language-plaintext highlighter-rouge">--open</code> 在文件管理器里显示结果。</p>
+
+<p>1.11.1 起，交互终端不写 <code class="language-plaintext highlighter-rouge">--to</code> 会先弹目录选择框，<code class="language-plaintext highlighter-rouge">--no-ask</code> 跳过弹窗。默认上次选择的位置或系统下载目录，也支持 Windows 移动过的“下载”文件夹。同步前先告诉你存在哪，生成 PDF 和打包时显示进度。</p>
+
+<h2 id="先采集再打包">先采集，再打包</h2>
+
+<p>整个过程分三层：</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Moodle / Ed / 课程链接的 Google 文件
+                  |
+              同步与规范化
+                  |
+         本地文件 + SQLite 元数据
+                  |
+    export.Plan：文件项 + 遗漏项 + 统计
+                  |
+           可选的离线 PDF 渲染
+                  |
+           zip 或目录，附带索引
+</code></pre></div></div>
+
+<p>对应源码中，<code class="language-plaintext highlighter-rouge">syncer.py</code>、<code class="language-plaintext highlighter-rouge">moodle_content.py</code> 收集 Moodle 内容，Ed 模块同步 Lessons，<code class="language-plaintext highlighter-rouge">google_export.py</code> 处理 Google 链接，<code class="language-plaintext highlighter-rouge">export.py</code> 生成打包计划，<code class="language-plaintext highlighter-rouge">pdfrender.py</code> 负责把 Markdown 页面打印成 PDF。只有 CLI 明确要求先同步时，打包前才需要在线会话。</p>
+
+<p>Moodle Page、Book 和作业正文存成 Markdown。Book 读打印视图，不计作逐章查看。学生可见的 rubric 和 marking guide 也是教学资料，但个人提交、成绩和反馈不进入资料包。文件夹优先整体下载，保留子目录和原文件名，失败再逐个获取。</p>
+
+<p>Ed Lessons 则提供正文、幻灯片、Ed 托管附件和只有题目的测验页。Moodle 与 Ed 图片存进 <code class="language-plaintext highlighter-rouge">assets/</code>，按内容去重，再改为相对引用。下载失败时保留远程地址，并写入索引。旧版本把无扩展名 Ed 图片存成 <code class="language-plaintext highlighter-rouge">.img</code> 的，同步时按实际内容修正扩展名，让图片查看器能够识别。</p>
+
+<p>包内按课号组织，下有 <code class="language-plaintext highlighter-rouge">Moodle/</code>、<code class="language-plaintext highlighter-rouge">Ed Lessons/</code> 和索引。原有 PDF、notebook、代码和压缩包保留格式；生成的正文、链接列表、测验和索引则使用选定的格式。</p>
+
+<h2 id="google-链接需要单独授权">Google 链接需要单独授权</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>uv tool <span class="nb">install</span> <span class="nt">--reinstall</span> <span class="nt">--refresh</span> <span class="s2">"monash-study-kit[gmail]"</span>
+monash google login
+monash <span class="nb">export </span>FIT2109 <span class="nt">--refresh-google</span> <span class="nt">--format</span> both <span class="nt">--to</span> <span class="s2">"./exports"</span>
+</code></pre></div></div>
+
+<p>如果已经使用其他 extras，安装命令里也要保留。可选依赖虽然叫 <code class="language-plaintext highlighter-rouge">gmail</code>，Drive 授权却是独立的：<code class="language-plaintext highlighter-rouge">monash google login</code> 只申请 <code class="language-plaintext highlighter-rouge">drive.readonly</code>，保存在 <code class="language-plaintext highlighter-rouge">google-drive-token.json</code>，与 Gmail 令牌分离。该权限允许读取账号有权访问的全部 Drive 文件，导出器实际处理课程链接；它不能改文件，也不授予 Gmail 权限。</p>
+
+<p>Docs 和 Slides 默认 PDF，Sheets 是 XLSX，普通 Drive 文件保留原格式。<code class="language-plaintext highlighter-rouge">monash config google_docs_format docx</code> 只把 Docs 改成 DOCX，不影响 Slides 或导出器自己的 Markdown 正文。<code class="language-plaintext highlighter-rouge">--refresh-google</code> 隐含同步，并重新导出链接的 Google 文件。</p>
+
+<p>文件过大、API 未启用、管理员限制、未共享给当前账号，都可能导致 API 失败。支持时会尝试专用登录浏览器的 Google 会话，Cookie 只在内存中，不能绕过共享权限。Google Forms 保留链接和原因。退出授权先吊销再删本机令牌；吊销失败保留文件，让用户能继续重试。</p>
+
+<h2 id="pdf-是输出格式不是另一套同步">PDF 是输出格式，不是另一套同步</h2>
+
+<p>1.11 起初始默认输出 <code class="language-plaintext highlighter-rouge">pdf</code>；<code class="language-plaintext highlighter-rouge">--format md</code> 不打印 PDF，<code class="language-plaintext highlighter-rouge">both</code> 同时保留可编辑 Markdown。同步保存的文本和 MCP 搜索索引不变。</p>
+
+<p>每次导出使用一个独立的临时 Chrome、Edge 或 Brave 进程离线打印，嵌入已有本地图片、转义原始 HTML，并阻止远程请求。没有支持的浏览器就回退 Markdown，在终端和索引解释。1.11.1 会重试 Windows 临时 profile 清理，避免浏览器辅助进程短暂占用文件时，把已经完成的导出判为失败。</p>
+
+<p>缓存键包含打印 HTML 和嵌入图片内容，因此只替换图片、不改 Markdown，也会生成新的键。PDF 缓存在 <code class="language-plaintext highlighter-rouge">data/pdf-cache/</code>，超过 500 MB 时淘汰最旧项；JSON 报告生成数量、缓存命中数量和回退原因。这些是实现规则，不是性能测试数据。</p>
+
+<h2 id="账号选择必须早于-import">账号选择必须早于 import</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>monash <span class="nt">--profile</span> exchange setup
+monash <span class="nt">--profile</span> exchange google login
+monash <span class="nt">--profile</span> exchange <span class="nb">export </span>FIT2109 <span class="nt">--sync</span> <span class="nt">--to</span> <span class="s2">"./exports"</span>
+monash profile list
+</code></pre></div></div>
+
+<p>模块 import 时就固定路径，所以 <code class="language-plaintext highlighter-rouge">entry.py</code> 必须先选账号，再加载 CLI 和服务模块。命名 profile 将凭据、数据库、课件和浏览器会话隔离在 <code class="language-plaintext highlighter-rouge">profiles/NAME</code> 下，强制只导课程资料：跳过 Gmail、考勤、Ed 讨论区和个人日历设置，也不能配置远程服务、<code class="language-plaintext highlighter-rouge">monash connect</code> 或独立移动资料根目录。</p>
+
+<p>清理从默认账号执行：<code class="language-plaintext highlighter-rouge">monash profile remove exchange</code>。先吊销 Google 令牌，再清登录会话；不加 <code class="language-plaintext highlighter-rouge">--all</code> 就保留课件和数据库，吊销失败则保留本机文件。Ed API 令牌仍需手动删除。</p>
+
+<h2 id="完整还包括说清楚缺了什么">完整还包括说清楚缺了什么</h2>
+
+<p>索引会列出本地文件缺失、Ed 课程未同步、Google 导出失败和剩余远程图片。notebook 引用的图片不存在、或者只是大小写不匹配，也要报告。zip 生成成功不代表每个链接都能下载；Moodle 文件夹通常最多每周刷新一次，刷新 Google 不是对所有资源强制刷新。</p>
+
+<p>资料包排除个人记录，并去掉链接里的会议密码参数，但导出后仍是普通本地文件，分享前要检查，不能因此视为可以公开转载。Gmail 是另一项可选功能：普通登录申请 <code class="language-plaintext highlighter-rouge">gmail.modify</code>，加 <code class="language-plaintext highlighter-rouge">--read-only</code> 才申请 <code class="language-plaintext highlighter-rouge">gmail.readonly</code>。</p>
+
+<p>本次本地 Study Kit 测试结果是 <strong>663 passed、10 skipped</strong>，覆盖合成资料、Google 错误、profile 和 PDF 行为，不代表每门真实课程、Google 账号和 Windows 环境都已经实测。<a href="https://docs.secureview.tech/zh-cn/study-kit/materials/">双语导出指南</a>列出了安装、参数和重试方式。真正导出后，仍应先打开索引，看清楚哪些内容没有带走。</p>]]></content><author><name>Shuoxun Wen</name></author><category term="Python" /><category term="Moodle" /><category term="Ed" /><category term="Google Drive" /><category term="PDF" /><category term="Privacy" /><summary type="html"><![CDATA[从 Moodle Page、Book、作业说明，到 Ed 图片和 Google 文档：Study Kit 1.8–1.11.1 如何把一门课整理成本地资料包，以及 PDF 缓存、隔离账号和遗漏索引为什么要分开设计。]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/study-kit-course-materials-zh.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/study-kit-course-materials-zh.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="en"><title type="html">A course is more than its PDFs: building the materials exporter</title><link href="https://blog.secureview.tech/2026/11/03/study-kit-course-materials/" rel="alternate" type="text/html" title="A course is more than its PDFs: building the materials exporter" /><published>2026-11-03T00:00:00+08:00</published><updated>2026-11-03T00:00:00+08:00</updated><id>https://blog.secureview.tech/2026/11/03/study-kit-course-materials</id><content type="html" xml:base="https://blog.secureview.tech/2026/11/03/study-kit-course-materials/"><![CDATA[<p>The earlier <a href="/2026/11/01/study-kit-ed-export/">Ed export article</a> covered lesson folders and a download-all zip. A course has more than Ed files: a Moodle Page containing the brief, a Book with several chapters, a marking guide, pictures embedded in a lesson, and a Google document that is still only a link. Packing the PDFs already on disk leaves all of those behind.</p>
+
+<p>Study Kit 1.8 added a whole-course package. Versions 1.9 through 1.11.1 filled in these gaps and added isolated accounts and PDF output. This article follows the current <a href="https://github.com/Waldo0926/monash-study-kit/blob/main/CHANGELOG.md">source and changelog</a>. It describes the local exporter; private deployment changes and production verification are separate work.</p>
+
+<p><strong>Release update (3 November 2026):</strong> <a href="https://github.com/Waldo0926/monash-study-kit/releases/tag/v1.11.2">1.11.2 is published</a>, fixing Windows PDF browser cold-start retries. The commands below apply to the current release.</p>
+
+<p><img src="/assets/readme/course-export.png" alt="Actual 1.11.2 whole-course export and ZIP contents using synthetic course data" /></p>
+
+<p>The demo runs offline against synthetic materials, deliberately retaining a missing attachment and an unauthorized Google link to show how omissions are reported.</p>
+
+<h2 id="start-with-a-useful-command">Start with a useful command</h2>
+
+<p>After installing Study Kit and selecting your units:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>monash <span class="nb">export </span>FIT2109 <span class="nt">--sync</span> <span class="nt">--format</span> both <span class="nt">--to</span> <span class="s2">"./exports"</span>
+</code></pre></div></div>
+
+<p>The destination is a folder, not a zip filename. <code class="language-plaintext highlighter-rouge">--sync</code> refreshes this unit’s Moodle content and Ed Lessons before packaging. It leaves Ed discussions out. Without it, export only reads the local cache. <code class="language-plaintext highlighter-rouge">--dir</code> writes a directory rather than a zip, and <code class="language-plaintext highlighter-rouge">--open</code> reveals the result in the file manager.</p>
+
+<p>In 1.11.1 an interactive terminal opens a folder picker if <code class="language-plaintext highlighter-rouge">--to</code> is absent; <code class="language-plaintext highlighter-rouge">--no-ask</code> skips it. The starting location is the previous choice or the system Downloads folder, including a relocated Windows Downloads folder. The command prints the destination before work starts and progress while rendering and packing.</p>
+
+<h2 id="collect-first-package-second">Collect first, package second</h2>
+
+<p>There are three stages:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Moodle / Ed / course-linked Google files
+                 |
+         sync and normalize
+                 |
+     local files + SQLite metadata
+                 |
+  export.Plan: entries + missing + statistics
+                 |
+       optional offline PDF rendering
+                 |
+    zip or directory, including an index
+</code></pre></div></div>
+
+<p>The code is split accordingly: <code class="language-plaintext highlighter-rouge">syncer.py</code> and <code class="language-plaintext highlighter-rouge">moodle_content.py</code> collect Moodle materials, the Ed modules collect Lessons, <code class="language-plaintext highlighter-rouge">google_export.py</code> handles linked Google files, <code class="language-plaintext highlighter-rouge">export.py</code> plans the package, and <code class="language-plaintext highlighter-rouge">pdfrender.py</code> prints its Markdown pages. Packaging does not need a live session unless the CLI was explicitly asked to sync first.</p>
+
+<p>Moodle Page, Book and assignment bodies become Markdown. The Book parser uses Moodle’s print view, which does not count as viewing individual chapters. Visible rubrics and marking guides are teaching materials too; a student’s submissions, grades and private feedback are excluded. Moodle folders use a whole-folder download, retaining subdirectories and original filenames, with individual-file fallback when necessary.</p>
+
+<p>Ed lesson pages contribute text, slides, embedded Ed-hosted files and question-only quiz pages. Images from Moodle and Ed are saved under <code class="language-plaintext highlighter-rouge">assets/</code>, deduplicated by content, and linked relatively. A failed image keeps its remote link and becomes an index entry. Older extensionless Ed images saved as <code class="language-plaintext highlighter-rouge">.img</code> are renamed from their detected content during sync, rather than remaining files a viewer cannot recognize.</p>
+
+<p>The package has a unit root, <code class="language-plaintext highlighter-rouge">Moodle/</code>, <code class="language-plaintext highlighter-rouge">Ed Lessons/</code> and an index. Original PDFs, notebooks, code and archives retain their formats. Generated bodies, link lists, quizzes and the index use the chosen output format.</p>
+
+<h2 id="a-google-link-needs-its-own-permission">A Google link needs its own permission</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>uv tool <span class="nb">install</span> <span class="nt">--reinstall</span> <span class="nt">--refresh</span> <span class="s2">"monash-study-kit[gmail]"</span>
+monash google login
+monash <span class="nb">export </span>FIT2109 <span class="nt">--refresh-google</span> <span class="nt">--format</span> both <span class="nt">--to</span> <span class="s2">"./exports"</span>
+</code></pre></div></div>
+
+<p>Keep any other extras you already use in that install command. The optional dependency happens to be named <code class="language-plaintext highlighter-rouge">gmail</code>; Drive authorization is separate. <code class="language-plaintext highlighter-rouge">monash google login</code> requests only <code class="language-plaintext highlighter-rouge">drive.readonly</code> and writes <code class="language-plaintext highlighter-rouge">google-drive-token.json</code>, independently of Gmail’s token. The scope can read all Drive files accessible to the account; the exporter uses course-linked files. It cannot edit them and grants no Gmail access.</p>
+
+<p>Docs and Slides normally become PDF, Sheets XLSX, and ordinary Drive files keep their format. <code class="language-plaintext highlighter-rouge">monash config google_docs_format docx</code> changes Docs to DOCX. It does not change Slides or the exporter’s own Markdown pages. <code class="language-plaintext highlighter-rouge">--refresh-google</code> implies sync and re-exports linked Google files.</p>
+
+<p>An API export can fail because of file size, a disabled API, administrator policy or sharing permissions. Where supported, the dedicated login browser’s Google session is tried as a fallback, with cookies held in memory. It does not bypass sharing permissions. Google Forms remain links with a reason. Logout revokes the Drive authorization before deleting its local token; failed revocation keeps the token so the user can retry.</p>
+
+<h2 id="pdf-is-another-output-not-another-sync-format">PDF is another output, not another sync format</h2>
+
+<p>Since 1.11, <code class="language-plaintext highlighter-rouge">pdf</code> is the initial export default. <code class="language-plaintext highlighter-rouge">--format md</code> avoids PDF printing; <code class="language-plaintext highlighter-rouge">both</code> keeps editable Markdown alongside generated PDFs. Synced text and the MCP search index remain unchanged.</p>
+
+<p>One isolated temporary Chrome, Edge or Brave process prints the package’s pages offline. Local images are embedded, raw HTML is escaped, and remote requests are blocked. Without a supported browser, export falls back to Markdown and says why in the index and terminal. Version 1.11.1 retries Windows temporary-profile cleanup so a browser helper briefly holding a file does not invalidate an already completed export.</p>
+
+<p>The cache key covers printable HTML and embedded image contents. Replacing a local image therefore changes the key even if the Markdown is identical. Cached PDFs live under <code class="language-plaintext highlighter-rouge">data/pdf-cache/</code>; oldest entries are evicted above 500 MB. JSON output reports generated and cached PDF counts and the fallback reason. These are implementation limits, not performance measurements.</p>
+
+<h2 id="account-isolation-belongs-before-imports">Account isolation belongs before imports</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>monash <span class="nt">--profile</span> exchange setup
+monash <span class="nt">--profile</span> exchange google login
+monash <span class="nt">--profile</span> exchange <span class="nb">export </span>FIT2109 <span class="nt">--sync</span> <span class="nt">--to</span> <span class="s2">"./exports"</span>
+monash profile list
+</code></pre></div></div>
+
+<p>Paths are fixed when modules are imported. <code class="language-plaintext highlighter-rouge">entry.py</code> therefore chooses the profile before importing the CLI and service modules. Named profiles keep credentials, databases, materials and browser sessions under separate <code class="language-plaintext highlighter-rouge">profiles/NAME</code> directories. They force materials-only mode: no Gmail sync, attendance, Ed discussions or personal-calendar setup. They cannot configure remote serving, <code class="language-plaintext highlighter-rouge">monash connect</code>, or an independent data-home move.</p>
+
+<p>Cleanup is deliberately a separate command from the default account: <code class="language-plaintext highlighter-rouge">monash profile remove exchange</code>. It revokes Google tokens before removing login sessions, keeps materials and databases unless <code class="language-plaintext highlighter-rouge">--all</code> is supplied, and preserves files if revocation fails. Ed API-token deletion remains a manual step.</p>
+
+<h2 id="complete-also-means-naming-the-gaps">Complete also means naming the gaps</h2>
+
+<p>The exporter records missing local files, unsynced Ed units, failed Google exports and remaining remote images. Notebook image references that are missing or differ only by case are reported too. A successful zip does not prove that every linked resource was downloadable. Folder refreshes are normally limited to once a week; refreshing Google is not a universal force-refresh switch.</p>
+
+<p>The package excludes personal records and strips meeting-password parameters from links, but its contents are ordinary local files. They are not automatically public or safe to redistribute. Gmail is a separate optional feature: ordinary Gmail login requests <code class="language-plaintext highlighter-rouge">gmail.modify</code>, while <code class="language-plaintext highlighter-rouge">--read-only</code> requests <code class="language-plaintext highlighter-rouge">gmail.readonly</code>.</p>
+
+<p>For this update, the local Study Kit suite completed with <strong>663 passed and 10 skipped</strong>. Those tests cover synthetic export fixtures, Google errors, profiles and PDF behavior; they do not establish that every real course, Google account or Windows installation works. The <a href="https://docs.secureview.tech/study-kit/materials/">bilingual export guide</a> documents setup, options and retry steps. The practical check after exporting is still to open the index and inspect what was left out.</p>]]></content><author><name>Shuoxun Wen</name></author><category term="Python" /><category term="Moodle" /><category term="Ed" /><category term="Google Drive" /><category term="PDF" /><category term="Privacy" /><summary type="html"><![CDATA[How Study Kit 1.8–1.11.1 turns Moodle pages, Books, assignment briefs, Ed Lessons and linked Google files into a local course package, with offline PDF printing, isolated accounts and an explicit list of what is missing.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/study-kit-course-materials.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/study-kit-course-materials.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="zh-Hans"><title type="html">一个下载按钮，三个代码库：把整门课的 Ed 课件打包</title><link href="https://blog.secureview.tech/2026/11/01/study-kit-ed-export-zh/" rel="alternate" type="text/html" title="一个下载按钮，三个代码库：把整门课的 Ed 课件打包" /><published>2026-11-01T18:30:00+08:00</published><updated>2026-11-01T18:30:00+08:00</updated><id>https://blog.secureview.tech/2026/11/01/study-kit-ed-export-zh</id><content type="html" xml:base="https://blog.secureview.tech/2026/11/01/study-kit-ed-export-zh/"><![CDATA[<p>问题很简单，本该我自己先想到。<a href="https://monashed.secureview.tech/app/">Ed Web</a> 有个按钮，能把一门课的 Ed Lessons 按周打成一个 zip 下载。<a href="https://github.com/Waldo0926/monash-study-kit">Study Kit</a> 明明已经把这些文件同步到你电脑上了，为什么没有？</p>
+
+<p>文件确实同步了，只是放在按 Ed 数字 id 命名的文件夹里，比如 <code class="language-plaintext highlighter-rouge">39026/116285/201_Workshop 3 Slides.pdf</code>；Ed 正文页里附的文件不会下载；也没有办法把整门课一次交给你。我服务器上的私人版本缺的是另一头：网站上有 zip，但 Claude 在对话里给不了你。</p>
+
+<p>这篇讲怎么在三个地方把它补上：Study Kit、ed-digest（我服务器上的 Ed 同步），以及把它们接到 claude.ai 的远程 MCP 服务器。</p>
+
+<h2 id="现在是什么样">现在是什么样</h2>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">$</span><span class="w"> </span>monash ed <span class="nb">export </span>FIT2109 <span class="nt">--module</span> <span class="s2">"Week 3"</span>
+<span class="go">已打包 FIT2109：3 节 lesson、5 个文件（0.0 MB）
+  ~/Downloads/FIT2109 Ed Lessons (Week 3) 2026-11-01.zip
+</span></code></pre></div></div>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FIT2109 Ed Lessons/README.md
+FIT2109 Ed Lessons/03 Week 3 - Editor-Modern IDE/07 W3 Pre-Class/Links.md
+FIT2109 Ed Lessons/03 Week 3 - Editor-Modern IDE/07 W3 Pre-Class/02 Before class.md
+FIT2109 Ed Lessons/03 Week 3 - Editor-Modern IDE/08 W3 Workshop/01 Workshop 3 Slides.pdf
+FIT2109 Ed Lessons/03 Week 3 - Editor-Modern IDE/08 W3 Workshop/02 Workshop 3 Handout.pdf
+FIT2109 Ed Lessons/03 Week 3 - Editor-Modern IDE/09 W3 Applied Session/01 applied3-starter.zip
+FIT2109 Ed Lessons/03 Week 3 - Editor-Modern IDE/09 W3 Applied Session/01 Lab brief.md
+</code></pre></div></div>
+
+<p>这是用编造的课程数据真实跑出来的结果。同样的 zip，在本机课件页上点一下就有，在 AI 软件里说一句也行。</p>
+
+<figure class="shot">
+  <div class="shot-frame">
+    <div class="shot-bar" aria-hidden="true"><i></i><i></i><i></i><span>127.0.0.1:8766 · monash library</span></div>
+    <picture>
+      <source srcset="/assets/posts/study-kit-ed-export/library.webp" type="image/webp" />
+      <img src="/assets/posts/study-kit-ed-export/library.png" width="1600" height="1135" loading="lazy" alt="Study Kit 的本机课件页：课号旁边有一键打包 Ed 课件按钮，下面同一组里列着 Moodle 和 Ed 的文件。" />
+    </picture>
+  </div>
+  <figcaption>加了按钮的本机课件页。同一门课的 Moodle 和 Ed 文件现在放在同一组。真实页面的 2 倍截图，课程数据是编的。</figcaption>
+</figure>
+
+<h2 id="改名但不重新下载">改名，但不重新下载</h2>
+
+<p>文件夹名好读，是最容易想要、也最麻烦落地的部分。每个升级的人手里都已经有一堆按旧名字存的 PDF。全部重新下载又慢，又给 Ed 的文件服务器添负担。所以同步时先查这一页上次存在哪，直接挪过去：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">_move_old</span><span class="p">(</span><span class="n">old</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="bp">None</span><span class="p">,</span> <span class="n">new</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">old</span> <span class="ow">or</span> <span class="n">old</span> <span class="o">==</span> <span class="n">new</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">src</span><span class="p">,</span> <span class="n">dest</span> <span class="o">=</span> <span class="n">FILES_DIR</span> <span class="o">/</span> <span class="n">old</span><span class="p">,</span> <span class="n">FILES_DIR</span> <span class="o">/</span> <span class="n">new</span>
+    <span class="k">if</span> <span class="n">src</span><span class="p">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">dest</span><span class="p">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="n">dest</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">os</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>新路径是 <code class="language-plaintext highlighter-rouge">课号/NN 模块/NN lesson/NN 标题</code>。前面的编号比看上去重要：不加的话，访达会把 Week 10 排在 Week 2 前面；模块按数据库 id 排，也不一定是 Ed 上的顺序。所以模块编号取它第一节 lesson 在 Ed 上的位置。课号也要处理：<code class="language-plaintext highlighter-rouge">FIT3162/FIT3164</code> 在 Ed 上是一门课，但斜杠是路径分隔符，所以变成 <code class="language-plaintext highlighter-rouge">FIT3162+FIT3164</code>。</p>
+
+<p>Ed 上给 lesson 改了名，也走同一套挪动。页删了，本地文件跟着删，删空的文件夹也一起清掉。</p>
+
+<h2 id="附件以及给没有-id-的东西一个稳定的-id">附件，以及给没有 id 的东西一个稳定的 id</h2>
+
+<p>starter code 通常不是一页 PDF，而是文字页里的一个 <code class="language-plaintext highlighter-rouge">&lt;file&gt;</code>。现在这些也会下载，但只限 Ed 自己的文件服务器上的链接，单个不超过 200 MB。毕竟一个指向数据集的链接，终归只是个链接。</p>
+
+<p><code class="language-plaintext highlighter-rouge">lesson_files</code> 每一行都以 Ed 的 slide id 为键，附件没有这个 id。我想沿用这张表，这样课件页、全文搜索、lesson 阅读器这些读它的地方就都自动认得附件。所以 id 由 URL 算出来：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">attachment_id</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">return</span> <span class="o">-</span><span class="nb">int</span><span class="p">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">hashlib</span><span class="p">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">url</span><span class="p">.</span><span class="n">encode</span><span class="p">()).</span><span class="n">digest</span><span class="p">()[:</span><span class="mi">7</span><span class="p">],</span> <span class="s">"big"</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+</code></pre></div></div>
+
+<p>负数，永远不会和真的 slide 撞；固定，下次同步能找到上次存的文件；和 URL 绑在一起，老师换了文件，Ed 会给一个新 URL，id 随之改变，新文件被下载，旧的被清掉。PDF 页也用同样的规则：<code class="language-plaintext highlighter-rouge">file_url</code> 变了就重新下载，不再留着旧版本。</p>
+
+<h2 id="zip-从数据库生成不从磁盘">zip 从数据库生成，不从磁盘</h2>
+
+<p>打包不去遍历文件夹，而是从 SQLite 读模块、lesson 和文件，重新算出好读的路径，再写一个 <code class="language-plaintext highlighter-rouge">README.md</code>（每节的进度和 Ed 链接、没下载到的文件），阅读网页写进 <code class="language-plaintext highlighter-rouge">Links.md</code>。这样有两个好处：升级后还没同步就导出，zip 里的名字也是对的；文件缺了会写出来，而不是悄悄不见。</p>
+
+<h2 id="一个被测试掩盖的-bug">一个被测试掩盖的 bug</h2>
+
+<p>把按钮接进课件页时，我发现这个页面其实从来没列出过 Study Kit 自己同步的 Ed 文件。代码判断路径是否在 Ed 文件夹里，可数据库存的是相对路径，所以永远判断失败。原来的测试能过，是因为它插进去的是绝对路径。修起来只要一行；教训是测试数据要按生产环境写数据的方式来造。现在多了一个用相对路径的测试。</p>
+
+<h2 id="加一个工具但不让每次对话都变长">加一个工具，但不让每次对话都变长</h2>
+
+<p>每个 MCP 工具的名字、说明和参数，每次对话都会整份发给模型，用不用都算。所以项目里有预算：工具清单超过一定大小测试就失败，原有工具的契约还用哈希钉住。<code class="language-plaintext highlighter-rouge">export_ed_lessons</code> 大约 360 个字符，老工具一个字没改。</p>
+
+<p>它也是第一个会写东西的 Ed 工具（往你的“下载”文件夹写一个 zip），所以没有标成只读。这带来一个好处：远程模式只提供只读工具，所以连到别人自建 Study Kit 的 ChatGPT，永远不会往对方服务器上写 zip。</p>
+
+<h2 id="服务器那边">服务器那边</h2>
+
+<p>我自己的部署不一样。ed-digest 在 VPS 上同步 Ed，本来就会给网站的每门课打一个 zip。与其再写一个打包器，远程 MCP 服务器直接加载 ed-digest 的 <code class="language-plaintext highlighter-rouge">site.py</code>，调用同样的两个函数，这样 Claude 给的 zip 和网站上的 zip 不可能对不上。它必须按文件路径加载，因为 <code class="language-plaintext highlighter-rouge">import site</code> 会悄悄拿到 Python 标准库里的 <code class="language-plaintext highlighter-rouge">site</code>。</p>
+
+<p>Claude 拿不到我服务器上的文件，所以工具返回一个链接：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">download_sig</span><span class="p">(</span><span class="n">rel</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">exp</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">hmac</span><span class="p">.</span><span class="n">new</span><span class="p">(</span><span class="n">_download_key</span><span class="p">(),</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">exp</span><span class="si">}</span><span class="s">:</span><span class="si">{</span><span class="n">rel</span><span class="si">}</span><span class="s">"</span><span class="p">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">hashlib</span><span class="p">.</span><span class="n">sha256</span><span class="p">).</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">32</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>签名同时覆盖路径和过期时间，改哪个都是 403；<code class="language-plaintext highlighter-rouge">ed-export/</code> 前缀只能解析到导出文件夹里直接放着的 zip。现在一个仓库依赖另一个仓库的两个函数，所以 ed-digest 加了契约测试，钉住它们的名字和参数。谁改了名字，失败的是 ed-digest 自己的 CI，而不是某个同学周日晚上的一次请求。</p>
+
+<p>ed-digest 也顺带吃到了 Study Kit 的改进：周文件夹按 Ed 上的顺序编号，zip 里有附件。</p>
+
+<h2 id="服务器跑的不是我以为的那份">服务器跑的不是我以为的那份</h2>
+
+<p>原计划是拉代码、重启。动手前我看了一眼服务配置，线上的连接器根本不是从仓库跑的：一个 systemd drop-in 把它指向了一个发布快照 <code class="language-plaintext highlighter-rouge">releases/student-20261031-r2</code>，用的是另一个 virtualenv。磁盘上的仓库落后了四个 PR。</p>
+
+<p>所以部署改成按快照的方式来：</p>
+
+<ol>
+  <li>把线上快照里每个文件算哈希，和 git 对比。运行中的代码和我改动之前的 <code class="language-plaintext highlighter-rouge">main</code> 完全一致，所以新版本和线上的差别只有这次的工作。</li>
+  <li>记下旧的软链接目标、drop-in 和 <code class="language-plaintext highlighter-rouge">pip freeze</code>，用来回滚。</li>
+  <li>把合并后的提交解到新的 release 目录，在服务器上用一个临时 virtualenv 装新的核心包，跑完整测试：150 个通过。</li>
+  <li>升级线上环境，切换软链接，更新构建 SHA，重启。</li>
+  <li>用服务自己的环境调用一次工具，再从外网下载签名链接：正常的拿到 zip（200），伪造签名的返回 403。</li>
+</ol>
+
+<p>之后我也更新了仓库那一份，它跑定时任务和 SSH 版的服务器。这个环境里唯一变化的包是核心包，我用前后两次 <code class="language-plaintext highlighter-rouge">pip freeze</code> 的差异确认过。</p>
+
+<h2 id="几点体会">几点体会</h2>
+
+<ul>
+  <li>改用户文件的名字时，挪已有的。重新下载既耽误用户，也消耗上游服务器的带宽。</li>
+  <li>没有 id 的东西也需要稳定的 id。从“内容变了它就变”的东西里推出来。</li>
+  <li>导出要从唯一可信的数据源生成，而不是磁盘上碰巧有什么。</li>
+  <li>测试数据要像生产数据，不然测试会因为错误的理由通过。</li>
+  <li>一个仓库调用另一个仓库时，在被调用的那边钉住契约。</li>
+  <li>部署之前，先确认服务器实际在跑什么。</li>
+</ul>
+
+<p>后续：<a href="/2026/11/03/study-kit-course-materials-zh/">整课导出系统</a>补上了 Moodle 正文、Google 文件、PDF 与隔离账号。</p>]]></content><author><name>Shuoxun Wen</name></author><summary type="html"><![CDATA[Ed Web 能把整门课的 Ed 课件打成一个 zip，Study Kit 明明已经把这些文件下载下来了，却做不到。补上它要做几件事：改文件名但不重新下载、把正文里附的文件也抓下来、修一个被测试掩盖的 bug，还有部署到一台跑的不是我以为的那份代码的服务器。]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/study-kit-ed-export-zh.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/study-kit-ed-export-zh.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="en"><title type="html">One download button, three codebases: zipping a unit’s Ed materials</title><link href="https://blog.secureview.tech/2026/11/01/study-kit-ed-export/" rel="alternate" type="text/html" title="One download button, three codebases: zipping a unit’s Ed materials" /><published>2026-11-01T18:30:00+08:00</published><updated>2026-11-01T18:30:00+08:00</updated><id>https://blog.secureview.tech/2026/11/01/study-kit-ed-export</id><content type="html" xml:base="https://blog.secureview.tech/2026/11/01/study-kit-ed-export/"><![CDATA[<p>The question was simple, and I should have asked it myself. <a href="https://monashed.secureview.tech/app/">Ed Web</a> has a button that downloads a whole unit’s Ed Lessons as one zip, sorted by week. Why doesn’t <a href="https://github.com/Waldo0926/monash-study-kit">Study Kit</a> have one, when it already syncs those files to your computer?</p>
+
+<p>It did sync them. It just kept them in folders named after Ed’s numeric ids, like <code class="language-plaintext highlighter-rouge">39026/116285/201_Workshop 3 Slides.pdf</code>, skipped files attached inside Ed pages, and had no way to hand you the lot. My private server version had the same gap, from the other side: the zip existed on its website, but Claude could not give it to you in a conversation.</p>
+
+<p>This post is about closing that gap in three places: Study Kit, ed-digest (my server’s Ed sync), and the remote MCP server that connects them to claude.ai.</p>
+
+<h2 id="what-it-looks-like-now">What it looks like now</h2>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">$</span><span class="w"> </span>monash ed <span class="nb">export </span>FIT2109 <span class="nt">--module</span> <span class="s2">"Week 3"</span>
+<span class="go">已打包 FIT2109：3 节 lesson、5 个文件（0.0 MB）
+  ~/Downloads/FIT2109 Ed Lessons (Week 3) 2026-11-01.zip
+</span></code></pre></div></div>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FIT2109 Ed Lessons/README.md
+FIT2109 Ed Lessons/03 Week 3 - Editor-Modern IDE/07 W3 Pre-Class/Links.md
+FIT2109 Ed Lessons/03 Week 3 - Editor-Modern IDE/07 W3 Pre-Class/02 Before class.md
+FIT2109 Ed Lessons/03 Week 3 - Editor-Modern IDE/08 W3 Workshop/01 Workshop 3 Slides.pdf
+FIT2109 Ed Lessons/03 Week 3 - Editor-Modern IDE/08 W3 Workshop/02 Workshop 3 Handout.pdf
+FIT2109 Ed Lessons/03 Week 3 - Editor-Modern IDE/09 W3 Applied Session/01 applied3-starter.zip
+FIT2109 Ed Lessons/03 Week 3 - Editor-Modern IDE/09 W3 Applied Session/01 Lab brief.md
+</code></pre></div></div>
+
+<p>That is a real run against synthetic course data; the CLI prints in Chinese because most of the people using it read Chinese. The same zip is one click on the local library page, and one sentence in an AI app.</p>
+
+<figure class="shot">
+  <div class="shot-frame">
+    <div class="shot-bar" aria-hidden="true"><i></i><i></i><i></i><span>127.0.0.1:8766 · monash library</span></div>
+    <picture>
+      <source srcset="/assets/posts/study-kit-ed-export/library.webp" type="image/webp" />
+      <img src="/assets/posts/study-kit-ed-export/library.png" width="1600" height="1135" loading="lazy" alt="The Study Kit library page: a unit heading with a Download all Ed files button, followed by Moodle files and Ed lesson files in the same list." />
+    </picture>
+  </div>
+  <figcaption>The local library page with the new button. Moodle and Ed files for a unit now sit in one group. Screenshot of the real page, captured at 2x, with made-up course data.</figcaption>
+</figure>
+
+<h2 id="renaming-files-without-downloading-them-again">Renaming files without downloading them again</h2>
+
+<p>Readable folders were the easy part to want and the fiddly part to ship. Everyone who upgrades already has a folder of PDFs under the old names. Downloading them all again would be slow and rude to Ed’s file server, so the sync looks up where each slide was stored last time and moves it:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">_move_old</span><span class="p">(</span><span class="n">old</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="bp">None</span><span class="p">,</span> <span class="n">new</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">old</span> <span class="ow">or</span> <span class="n">old</span> <span class="o">==</span> <span class="n">new</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">src</span><span class="p">,</span> <span class="n">dest</span> <span class="o">=</span> <span class="n">FILES_DIR</span> <span class="o">/</span> <span class="n">old</span><span class="p">,</span> <span class="n">FILES_DIR</span> <span class="o">/</span> <span class="n">new</span>
+    <span class="k">if</span> <span class="n">src</span><span class="p">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">dest</span><span class="p">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="n">dest</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">os</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The new path is <code class="language-plaintext highlighter-rouge">&lt;unit&gt;/&lt;NN module&gt;/&lt;NN lesson&gt;/&lt;NN title&gt;</code>. The numbers matter more than they look. Without them, Finder sorts “Week 10” before “Week 2”, and modules come out in the order of their database ids rather than the order on Ed, so the module number comes from the position of its first lesson. Unit codes need care too: <code class="language-plaintext highlighter-rouge">FIT3162/FIT3164</code> is one unit on Ed, and a slash is a folder separator, so it becomes <code class="language-plaintext highlighter-rouge">FIT3162+FIT3164</code>.</p>
+
+<p>The same move also covers a lesson that gets renamed on Ed, and files of slides that disappear are deleted along with any folder they leave empty.</p>
+
+<h2 id="attachments-and-a-stable-id-for-something-that-has-none">Attachments, and a stable id for something that has none</h2>
+
+<p>Starter code usually is not a PDF slide. It is a <code class="language-plaintext highlighter-rouge">&lt;file&gt;</code> element inside a text page. Those are now downloaded too, but only when the link points at Ed’s own file host, and only up to 200 MB, because a link to a dataset is still a link.</p>
+
+<p>Every row in <code class="language-plaintext highlighter-rouge">lesson_files</code> is keyed by Ed’s slide id, and an attachment does not have one. I wanted to reuse the table, so every reader of it (the library, search, the lesson reader) would pick attachments up for free. The id is derived from the URL:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">attachment_id</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">return</span> <span class="o">-</span><span class="nb">int</span><span class="p">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">hashlib</span><span class="p">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">url</span><span class="p">.</span><span class="n">encode</span><span class="p">()).</span><span class="n">digest</span><span class="p">()[:</span><span class="mi">7</span><span class="p">],</span> <span class="s">"big"</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+</code></pre></div></div>
+
+<p>Negative, so it can never collide with a real slide; stable, so the next sync finds the file it saved last time; and tied to the URL, so when a teacher replaces the file, Ed issues a new URL, the id changes, the new file is downloaded and the old one is cleaned up. PDF slides follow the same rule: a changed <code class="language-plaintext highlighter-rouge">file_url</code> forces a fresh download instead of keeping the stale copy.</p>
+
+<h2 id="the-zip-is-built-from-the-database-not-the-disk">The zip is built from the database, not the disk</h2>
+
+<p>The export does not walk the folder. It reads modules, lessons and files from SQLite, works out the readable path again, and adds a <code class="language-plaintext highlighter-rouge">README.md</code> with each lesson’s progress and Ed link, a <code class="language-plaintext highlighter-rouge">Links.md</code> for reading pages, and a list of anything that failed to download. Two things fall out of that: a student who exports before their first sync on the new version still gets a properly named zip, and a missing file is reported instead of silently absent.</p>
+
+<h2 id="a-bug-the-tests-had-hidden">A bug the tests had hidden</h2>
+
+<p>While wiring the button into the library page I found that the page had never listed Ed files synced by Study Kit itself. The code checked whether a path sat under the Ed folder, but the database stores relative paths, so the check always failed. The existing test passed because it inserted an absolute path. The fix is one line; the lesson is to write fixtures the way production writes data. There is now a test with a relative path.</p>
+
+<h2 id="adding-a-tool-without-growing-every-conversation">Adding a tool without growing every conversation</h2>
+
+<p>Every MCP tool’s name, description and schema is sent to the model in every conversation, used or not, so the project keeps a budget: a test fails if the catalog grows past a size, and another pins the original tools’ contract with a hash. <code class="language-plaintext highlighter-rouge">export_ed_lessons</code> fits in about 360 characters, and none of the old tools changed.</p>
+
+<p>It is also the first Ed tool that writes something, a zip in your Downloads folder, so it is not marked read-only. That had a useful side effect: remote mode only exposes read-only tools, so a ChatGPT connected to someone’s self-hosted Study Kit never writes zips onto their server.</p>
+
+<h2 id="the-server-side">The server side</h2>
+
+<p>My own setup is different. ed-digest syncs Ed on a VPS and already builds a per-unit zip for its website. Rather than write a second packer, the remote MCP server loads ed-digest’s <code class="language-plaintext highlighter-rouge">site.py</code> and calls the same two functions, so the zip from Claude and the zip from the website cannot drift apart. It has to load it by path, because <code class="language-plaintext highlighter-rouge">import site</code> would quietly give you Python’s standard library module.</p>
+
+<p>Claude cannot reach a file on my server, so the tool returns a link:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">download_sig</span><span class="p">(</span><span class="n">rel</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">exp</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">hmac</span><span class="p">.</span><span class="n">new</span><span class="p">(</span><span class="n">_download_key</span><span class="p">(),</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">exp</span><span class="si">}</span><span class="s">:</span><span class="si">{</span><span class="n">rel</span><span class="si">}</span><span class="s">"</span><span class="p">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">hashlib</span><span class="p">.</span><span class="n">sha256</span><span class="p">).</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">32</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>The signature covers the path and the expiry, so changing either gives a 403, and the <code class="language-plaintext highlighter-rouge">ed-export/</code> prefix only resolves to zips sitting directly in the export folder. Because one repository now depends on two functions in another, ed-digest has a contract test that pins their names and parameters. If someone renames them, ed-digest’s own CI fails, not a student’s request on a Sunday night.</p>
+
+<p>ed-digest also picked up the improvements from Study Kit: numbered weeks in Ed’s order and attachments in the zip.</p>
+
+<h2 id="the-server-was-not-running-what-i-thought">The server was not running what I thought</h2>
+
+<p>The plan was “pull and restart”. Before that I checked the service, and the live connector was not running from the repository at all. A systemd drop-in pointed it at a release snapshot, <code class="language-plaintext highlighter-rouge">releases/student-20261031-r2</code>, with its own virtualenv. The repository on disk was four pull requests behind.</p>
+
+<p>So the deploy followed the snapshot pattern instead:</p>
+
+<ol>
+  <li>Hash every file in the live snapshot and compare with git. The running code matched <code class="language-plaintext highlighter-rouge">main</code> before my change exactly, so the release would differ from production by this work only.</li>
+  <li>Record the old symlink target, the drop-in and <code class="language-plaintext highlighter-rouge">pip freeze</code> for rollback.</li>
+  <li>Unpack the merged commit into a new release, install the new core into a throwaway virtualenv on the server and run the whole suite there: 150 passed.</li>
+  <li>Upgrade the live environment, switch the symlink, update the build SHA, restart.</li>
+  <li>Call the tool with the service’s own environment, then download the signed link from outside: 200 with the zip, and 403 with a forged signature.</li>
+</ol>
+
+<p>Then I updated the repository copy too, which runs the timers and the SSH version of the server. The only package that changed in that environment was the core, which I confirmed by diffing <code class="language-plaintext highlighter-rouge">pip freeze</code> before and after.</p>
+
+<h2 id="takeaways">Takeaways</h2>
+
+<ul>
+  <li>When renaming user files, move what is there. Downloading it again costs users time and costs the upstream server bandwidth.</li>
+  <li>Something without an id still needs a stable one. Derive it from what changes when the content changes.</li>
+  <li>Build exports from the source of truth, not from whatever happens to be on disk.</li>
+  <li>Test fixtures should look like production data, or they will pass for the wrong reason.</li>
+  <li>When one repository calls into another, pin the contract in the one being called.</li>
+  <li>Before deploying, check what the server is actually running.</li>
+</ul>
+
+<p>Follow-up: the <a href="/2026/11/03/study-kit-course-materials/">whole-course exporter</a> adds Moodle bodies, Google files, PDFs and isolated accounts.</p>]]></content><author><name>Shuoxun Wen</name></author><summary type="html"><![CDATA[Ed Web could zip a whole unit's Ed materials and Study Kit could not, even though it already downloaded them. Closing that gap meant renaming files without downloading them again, catching attachments, a bug the tests had hidden, and deploying to a server that was not running what I thought it was.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/study-kit-ed-export.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/study-kit-ed-export.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="zh-Hans"><title type="html">服务器告警最怕什么都说，最后什么都没告诉我</title><link href="https://blog.secureview.tech/2026/11/01/stateful-alerts-zh/" rel="alternate" type="text/html" title="服务器告警最怕什么都说，最后什么都没告诉我" /><published>2026-11-01T07:40:00+08:00</published><updated>2026-11-01T07:40:00+08:00</updated><id>https://blog.secureview.tech/2026/11/01/stateful-alerts-zh</id><content type="html" xml:base="https://blog.secureview.tech/2026/11/01/stateful-alerts-zh/"><![CDATA[<p>几台Linux机器分开运行时，最容易想到的监控办法是每隔几分钟SSH进去检查一下磁盘和进程，再把不正常的结果发到手机。</p>
+
+<p>这个方案初期很好写，实际用久了会遇到另一个问题：同一个故障，每次检查都发一次。到了后来，通知越多，我反而越容易漏掉真正值得处理的变化。</p>
+
+<h2 id="把状态记下来">把状态记下来</h2>
+
+<p>我以前做的<a href="https://github.com/Waldo0926/edge-fleet-ops-automation">Edge Fleet Ops Automation</a>是从一套真实用过的节点巡检工具整理出来的脱敏版本。里面的重点不是某个SSH命令，而是节点发现、健康检查、持续状态和去重告警。</p>
+
+<p>如果一块盘第一次超过阈值，值得提醒；继续超标十次不需要十条完全相同的信息。恢复正常时反而应该有一条明确的恢复通知。临时网络抖动也可以通过连续失败次数判断，不要一次超时就启动修复。</p>
+
+<h2 id="自动处理应该保守">自动处理应该保守</h2>
+
+<p>清理缓存、重启服务或回收空间看起来可以自动化，但每一步都可能删错东西或放大故障。我倾向先dry-run、限制操作范围，再决定哪些动作真的可以无人值守。</p>
+
+<p>仓库中的公开代码不是我现在所有设备上的实时部署。它保留的是处理这类问题的思路，也方便我以后给J1900和N1重新搭建监控时作参考。</p>]]></content><author><name>Shuoxun Wen</name></author><summary type="html"><![CDATA[Linux巡检不只是定时执行命令：需要区分新故障、持续故障和恢复，并为自动修复设置边界。]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/stateful-alerts-zh.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/stateful-alerts-zh.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="en"><title type="html">Why I want alerts about changes, not an endless stream of pings</title><link href="https://blog.secureview.tech/2026/11/01/stateful-alerts/" rel="alternate" type="text/html" title="Why I want alerts about changes, not an endless stream of pings" /><published>2026-11-01T07:40:00+08:00</published><updated>2026-11-01T07:40:00+08:00</updated><id>https://blog.secureview.tech/2026/11/01/stateful-alerts</id><content type="html" xml:base="https://blog.secureview.tech/2026/11/01/stateful-alerts/"><![CDATA[<p>With several Linux machines running separately, the obvious first monitor is a scheduled SSH check: inspect disks and containers and send a message if something looks wrong.</p>
+
+<p>That is straightforward to write. After a while, though, a single persistent failure can send dozens of identical notifications. More alerts can make it easier to miss the one that matters.</p>
+
+<h2 id="store-state-not-just-snapshots">Store state, not just snapshots</h2>
+
+<p><a href="https://github.com/Waldo0926/edge-fleet-ops-automation">Edge Fleet Ops Automation</a> is a sanitized reconstruction of tools I used for Linux edge nodes. Its useful ideas are node discovery, health checks, persistent state and deduplicated alerts—not one particular SSH command.</p>
+
+<p>The first disk-space threshold crossing should be visible. Ten subsequent checks shouldn’t repeat the same message. Recovery is also an event worth reporting. Consecutive failures can reduce noisy actions during brief network drops.</p>
+
+<h2 id="automatic-repair-needs-limits">Automatic repair needs limits</h2>
+
+<p>Removing files, restarting services or reclaiming disk space can be automated, but an incorrect action may make an incident worse. I’d rather use dry-run first, scope operations narrowly and decide which changes really can be unattended.</p>
+
+<p>The public repository doesn’t imply that every tool is deployed on my current J1900 or N1 boxes. It’s a record of the engineering patterns I want to reuse as I rebuild their monitoring.</p>]]></content><author><name>Shuoxun Wen</name></author><summary type="html"><![CDATA[Monitoring Linux nodes isn't just about running checks on a schedule. State, recovery and safe limits make alerts useful.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/stateful-alerts.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/stateful-alerts.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="zh-Hans"><title type="html">SecureView的并发测试为什么比单人演示更重要</title><link href="https://blog.secureview.tech/2026/11/01/mysql-concurrency-zh/" rel="alternate" type="text/html" title="SecureView的并发测试为什么比单人演示更重要" /><published>2026-11-01T07:30:00+08:00</published><updated>2026-11-01T07:30:00+08:00</updated><id>https://blog.secureview.tech/2026/11/01/mysql-concurrency-zh</id><content type="html" xml:base="https://blog.secureview.tech/2026/11/01/mysql-concurrency-zh/"><![CDATA[<p>SecureView在单人演示时，最容易看见的是加密上传、分享和解密。但项目做到后面，我花了更多时间在没那么显眼的地方：数据库连接、并发请求和失败后的恢复。</p>
+
+<p>这是我们四人的毕业设计。我负责的部分包括测试、CI、部署和一些安全功能。加密文件分享不仅要保证算法正确，还要保证请求多的时候不会把数据库卡死。</p>
+
+<h2 id="上传失败不一定是加密出错">上传失败不一定是加密出错</h2>
+
+<p>我们做过多人并发的容量测试，发现100用户场景下数据库连接池的问题。上传失败率一度很高，排查后修复了连接池故障；项目README里保留了对应的测试记录。这里不重新给出没有运行过的新基准。</p>
+
+<p>同一类问题还包括MySQL并发死锁。错误不一定出现在最复杂的业务逻辑里，有时是多个请求以不同顺序争抢行锁。只测试一次上传成功，完全看不出这些路径。</p>
+
+<h2 id="我后来更依赖回归测试">我后来更依赖回归测试</h2>
+
+<p>修复以后，应该留下能够复现故障的测试，而不是只在本地重试几次就算解决。MySQL相关测试、真实浏览器流程和故障注入，都是为了让今后的改动不要把同类问题带回来。</p>
+
+<p>数据库问题不宜只凭一个错误码下结论。要看具体事务、锁顺序、超时和重试边界，尤其不能对结果未知的写操作无限重试。</p>
+
+<p>项目的具体环境、历史测试数字与限制，都放在<a href="https://github.com/Waldo0926/SecureView">SecureView仓库</a>。这篇文章只是整理为什么需要并发测试，不等于对当前线上环境重新做过性能验收。</p>]]></content><author><name>Shuoxun Wen</name></author><summary type="html"><![CDATA[连接池耗尽和数据库死锁，是加密文件分享系统在多用户情况下必须认真检查的问题。]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/mysql-concurrency-zh.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/mysql-concurrency-zh.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="en"><title type="html">What SecureView’s concurrency tests caught that a demo didn’t</title><link href="https://blog.secureview.tech/2026/11/01/mysql-concurrency/" rel="alternate" type="text/html" title="What SecureView’s concurrency tests caught that a demo didn’t" /><published>2026-11-01T07:30:00+08:00</published><updated>2026-11-01T07:30:00+08:00</updated><id>https://blog.secureview.tech/2026/11/01/mysql-concurrency</id><content type="html" xml:base="https://blog.secureview.tech/2026/11/01/mysql-concurrency/"><![CDATA[<p>In a one-person SecureView demo, the visible features were encryption, upload, sharing and decryption. Later, I spent more time on less visible work: database connections, concurrent requests and what happens after a failure.</p>
+
+<p>SecureView was our four-person final-year project. My work included testing, CI, deployment and security features. Correct encryption alone doesn’t make a file-sharing service usable under load.</p>
+
+<h2 id="upload-failures-arent-always-crypto-failures">Upload failures aren’t always crypto failures</h2>
+
+<p>A capacity test with 100 users exposed a connection-pool problem. Upload failures were substantial before the issue was diagnosed and fixed; the project’s README records the test results. I’m not presenting a fresh benchmark in this post.</p>
+
+<p>We also encountered MySQL concurrency deadlocks. These bugs often involve transaction boundaries and lock ordering rather than the most complicated business function. A successful single upload exercises none of that contention.</p>
+
+<h2 id="leave-a-regression-test-behind">Leave a regression test behind</h2>
+
+<p>After fixing a concurrency bug, I want a test that recreates the failure. A few successful manual retries aren’t enough. The MySQL suite, browser tests and fault-injection cases help protect against regressions.</p>
+
+<p>A deadlock error by itself isn’t a complete diagnosis. It matters which statements lock which rows, how retries work, and whether a write’s outcome is known.</p>
+
+<p>See the <a href="https://github.com/Waldo0926/SecureView">SecureView repository</a> for historical measurements and environment notes. This is a retrospective on testing, not a new performance claim about the current deployment.</p>]]></content><author><name>Shuoxun Wen</name></author><summary type="html"><![CDATA[Connection-pool exhaustion and deadlocks became real questions only when the encrypted file-sharing app handled concurrent use.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/mysql-concurrency.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/mysql-concurrency.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="zh-Hans"><title type="html">我为什么做了Monash选课规划工具</title><link href="https://blog.secureview.tech/2026/11/01/monash-planner-reason-zh/" rel="alternate" type="text/html" title="我为什么做了Monash选课规划工具" /><published>2026-11-01T07:20:00+08:00</published><updated>2026-11-01T07:20:00+08:00</updated><id>https://blog.secureview.tech/2026/11/01/monash-planner-reason-zh</id><content type="html" xml:base="https://blog.secureview.tech/2026/11/01/monash-planner-reason-zh/"><![CDATA[<p>选课时最烦的并不是填几个课程代码，而是反复确认：这门课在马来西亚开吗？有没有先修？明年这个学期会不会不开？</p>
+
+<p>手动做Excel表当然可以，但一旦要考虑先修顺序、不同学期的开课情况和学位结构，一个格子填错就可能影响后面的计划。这也是我开始做<a href="https://github.com/Waldo0926/monash-hub">Monash Hub</a>的原因之一。</p>
+
+<h2 id="计划可以在本地规则不能随口猜">计划可以在本地，规则不能随口猜</h2>
+
+<p>目前的计划表可以在浏览器里编辑、移动课程和撤销操作。检查时，会把需要核对的课程安排发送给API，对照已经收录的Handbook数据。服务端不需要替学生保存整张个人学位计划。</p>
+
+<p>我特别在意“没有资料”和“不符合要求”的区别。如果某个年份没有收录某门课，不能直接当作这门课不开；如果某个课程与学位要求有冲突，也不应该只显示一个红色图标却不给出处。</p>
+
+<h2 id="学位规划不是正式选课审核">学位规划不是正式选课审核</h2>
+
+<p>学校最终如何批准先修豁免、交换学分和毕业资格，仍以学校流程为准。工具能做的是提早暴露可能的问题，并且让人可以打开原始Handbook核对。</p>
+
+<p>最有用的一次检查，可能不是告诉你“全部通过”，而是指出某门必修课只在某个学期开课，接下来应该去确认什么。</p>
+
+<p><a href="https://github.com/Waldo0926/monash-hub">项目源码</a>有当前的计划数据结构与检查逻辑。我还在补不同Handbook年份之间的差异对比，这项功能不能只拿最新一年替代全部历史规则。</p>]]></content><author><name>Shuoxun Wen</name></author><summary type="html"><![CDATA[把课程摆进学期表不难，难的是检查先修要求、校区和开课学期，且每条结论都要有Handbook来源。]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/monash-planner-reason-zh.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/monash-planner-reason-zh.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="en"><title type="html">Why I built a degree planner for Monash students</title><link href="https://blog.secureview.tech/2026/11/01/monash-planner-reason/" rel="alternate" type="text/html" title="Why I built a degree planner for Monash students" /><published>2026-11-01T07:20:00+08:00</published><updated>2026-11-01T07:20:00+08:00</updated><id>https://blog.secureview.tech/2026/11/01/monash-planner-reason</id><content type="html" xml:base="https://blog.secureview.tech/2026/11/01/monash-planner-reason/"><![CDATA[<p>The annoying part of planning a Monash degree isn’t entering unit codes. It’s checking whether each unit is available at your campus, whether it runs in the semester you chose and whether its prerequisites can be completed beforehand.</p>
+
+<p>A spreadsheet can hold a plan. It doesn’t automatically verify those constraints. That gap is one reason I built <a href="https://github.com/Waldo0926/monash-hub">Monash Hub</a>.</p>
+
+<h2 id="keep-the-plan-local-verify-against-the-source">Keep the plan local; verify against the source</h2>
+
+<p>Students can drag units between terms, undo changes and export their plans. When they ask the app to check a plan, the relevant entries go to an API backed by the Handbook data. The server doesn’t need to keep a permanent copy of the personal plan.</p>
+
+<p>The distinction between “not found” and “not allowed” matters. Missing a unit for a year in the local dataset doesn’t prove the unit was cancelled. A prerequisite warning also needs a reason and a way back to the official source.</p>
+
+<h2 id="a-warning-is-not-a-university-ruling">A warning is not a university ruling</h2>
+
+<p>The tool cannot approve a prerequisite exemption, overseas credit transfer or graduation. It can identify possible conflicts early and point the student to the relevant Handbook entry.</p>
+
+<p>Sometimes its most useful answer is not a green check, but a specific question the student knows to take to the faculty.</p>
+
+<p>The <a href="https://github.com/Waldo0926/monash-hub">source</a> shows the current plan model and rule checks. Comparing different Handbook years properly is still an area for improvement; I don’t want newer rules silently replacing what applied to an older study plan.</p>]]></content><author><name>Shuoxun Wen</name></author><summary type="html"><![CDATA[Putting units into semesters is easy. Checking prerequisites, campus and offering periods against the Handbook is the harder part.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/monash-planner-reason.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/monash-planner-reason.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>

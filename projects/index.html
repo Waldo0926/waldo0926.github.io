@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Projects | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Projects" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Browse public projects by technology, status, year and how I contributed." />
+<meta property="og:description" content="Browse public projects by technology, status, year and how I contributed." />
+<link rel="canonical" href="https://blog.secureview.tech/projects/" />
+<meta property="og:url" content="https://blog.secureview.tech/projects/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/site.png" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/site.png" />
+<meta property="twitter:title" content="Projects" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","author":{"@type":"Person","name":"Shuoxun Wen"},"description":"Browse public projects by technology, status, year and how I contributed.","headline":"Projects","image":"https://blog.secureview.tech/assets/og/site.png","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/projects/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/projects/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/zh/projects/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css?v=1793681869">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/#writing">Writing</a>
+        <a href="/#projects">Projects</a>
+        <a href="/projects/">Archive</a>
+        <a href="/search/">Search</a>
+        <a href="/about/">About</a>
+      </nav>
+      <a class="lang-switch" href="/zh/projects/" lang="zh-Hans" hreflang="zh-Hans">中文</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <h1 class="display post-title">Projects</h1>
+  </header>
+  <article class="card prose page-card page-card--wide">
+    <p>The home page only shows a few projects. This archive includes student tools, Linux work, algorithms, machine learning and earlier coursework. Some are still being maintained; other repos preserve past experiments.</p>
+
+<p>Use the filters to find something specific. Each card links to its source and, where available, related blog posts. A README is more useful for setup and limitations than a short portfolio summary.</p>
+
+<section class="portfolio-browser" id="portfolio">
+  <form class="portfolio-filters" id="portfolio-filters" role="search" action="#" onsubmit="return false">
+    <label class="portfolio-query">
+      <span>Search projects</span>
+      <input id="portfolio-search" type="search" autocomplete="off" placeholder="Name, tech or description…" />
+    </label>
+    <label>
+      <span>Area</span>
+      <select id="portfolio-category">
+        <option value="">All areas</option>
+        <option value="monash">Monash &amp; student tools</option>
+        <option value="engineering">Development &amp; security</option>
+        <option value="homelab">Homelab &amp; Linux</option>
+        <option value="algorithms">Algorithms &amp; programming</option>
+        <option value="data">AI &amp; data</option>
+        <option value="experiments">Engineering experiments</option>
+      </select>
+    </label>
+    <label>
+      <span>Technology</span>
+      <select id="portfolio-tech">
+        <option value="">All technologies</option><option value="Algorithms">Algorithms</option><option value="Assembly">Assembly</option><option value="Astro">Astro</option><option value="Bash">Bash</option><option value="C">C</option><option value="C++">C++</option><option value="CNN">CNN</option><option value="Chrome Extension">Chrome Extension</option><option value="Cryptography">Cryptography</option><option value="DSP">DSP</option><option value="Data">Data</option><option value="Data Structures">Data Structures</option><option value="Databases">Databases</option><option value="Ed">Ed</option><option value="Exchange">Exchange</option><option value="Expert Systems">Expert Systems</option><option value="FastAPI">FastAPI</option><option value="GitHub Actions">GitHub Actions</option><option value="GitHub Pages">GitHub Pages</option><option value="Google Drive">Google Drive</option><option value="HTML">HTML</option><option value="JavaScript">JavaScript</option><option value="Jekyll">Jekyll</option><option value="Linux">Linux</option><option value="MARIE">MARIE</option><option value="MATLAB">MATLAB</option><option value="MCP">MCP</option><option value="MDX">MDX</option><option value="ML">ML</option><option value="Machine Learning">Machine Learning</option><option value="Monitoring">Monitoring</option><option value="Moodle">Moodle</option><option value="Networking">Networking</option><option value="NumPy">NumPy</option><option value="Nuxt">Nuxt</option><option value="PDF">PDF</option><option value="PostgreSQL">PostgreSQL</option><option value="Python">Python</option><option value="Q&amp;A">Q&amp;A</option><option value="R">R</option><option value="RAG">RAG</option><option value="Robotics">Robotics</option><option value="Rules">Rules</option><option value="RxJS">RxJS</option><option value="SQL Server">SQL Server</option><option value="SSH">SSH</option><option value="Security">Security</option><option value="Starlight">Starlight</option><option value="TensorFlow">TensorFlow</option><option value="Trees">Trees</option><option value="TypeScript">TypeScript</option><option value="VPS">VPS</option><option value="Visualization">Visualization</option><option value="WeChat">WeChat</option><option value="Wi-Fi">Wi-Fi</option><option value="iKuai">iKuai</option>
+      </select>
+    </label>
+    <label>
+      <span>Created on GitHub</span>
+      <select id="portfolio-year">
+        <option value="">All years</option><option value="2026">2026</option>
+      </select>
+    </label>
+    <label>
+      <span>Project status</span>
+      <select id="portfolio-status">
+        <option value="">All statuses</option>
+        <option value="current">Current projects</option>
+        <option value="portfolio">Portfolio &amp; experiments</option>
+        <option value="historical">Historical deployments</option>
+      </select>
+    </label>
+    <label>
+      <span>Contribution</span>
+      <select id="portfolio-ownership">
+        <option value="">All projects</option>
+        <option value="individual">Individual work</option>
+        <option value="team">Team projects</option>
+      </select>
+    </label>
+    <button id="portfolio-reset" type="button" class="btn btn--ghost btn--small">Clear filters</button>
+  </form>
+  <p class="portfolio-count small muted" id="portfolio-count" role="status" aria-live="polite"></p>
+  <div class="portfolio-grid" id="portfolio-grid"><article class="card portfolio-card" data-tech="[&quot;Nuxt&quot;,&quot;FastAPI&quot;,&quot;PostgreSQL&quot;]" data-category="monash" data-year="2026" data-status="current" data-ownership="individual" data-search="monash hub monash hub unit and degree search, course planning, wam/gpa and official student guides 查课程与学位、排选课计划、算wam/gpa、找官方资料（网站） nuxt fastapi postgresql">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Monash
+        </span>
+        <span class="portfolio-status">Current</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/monash-hub" target="_blank" rel="noopener noreferrer">Monash Hub</a></h2>
+      
+      <p class="portfolio-desc">unit and degree search, course planning, WAM/GPA and official student guides</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>Nuxt</li><li>FastAPI</li><li>PostgreSQL</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+      <div class="portfolio-writing">
+        <span>Related writing</span>
+        <ul><li><a href="/2026/11/01/monash-planner-reason/">Why I built a degree planner for Monash students</a></li><li><a href="/2026/10/26/official-coverage/">From 662 official pages to 3,100, without losing any when a crawl fails</a></li><li><a href="/2026/10/26/two-campuses/">One question, two campuses</a></li></ul>
+      </div>
+    </article><article class="card portfolio-card" data-tech="[&quot;Python&quot;,&quot;MCP&quot;,&quot;Moodle&quot;,&quot;Ed&quot;,&quot;Google Drive&quot;,&quot;PDF&quot;]" data-category="monash" data-year="2026" data-status="current" data-ownership="individual" data-search="monash study kit monash study kit local-first moodle/ed search and whole-course materials export, linked google files, pdf/markdown and isolated profiles; optional mail and attendance 本地 moodle/ed 搜索与整课资料导出，支持 google 文件、pdf/markdown 和隔离账号，可选邮箱与考勤 python mcp moodle ed google drive pdf">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Monash
+        </span>
+        <span class="portfolio-status">Current</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/monash-study-kit" target="_blank" rel="noopener noreferrer">Monash Study Kit</a></h2>
+      
+      <p class="portfolio-desc">local-first Moodle/Ed search and whole-course materials export, linked Google files, PDF/Markdown and isolated profiles; optional mail and attendance</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>Python</li><li>MCP</li><li>Moodle</li><li>Ed</li><li>Google Drive</li><li>PDF</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+      <div class="portfolio-writing">
+        <span>Related writing</span>
+        <ul><li><a href="/2026/11/03/study-kit-course-materials/">A course is more than its PDFs: building the materials exporter</a></li><li><a href="/2026/11/01/study-kit-ed-export/">One download button, three codebases: zipping a unit's Ed materials</a></li><li><a href="/2026/10/31/study-kit-mail-attendance/">Study Kit gets school mail and attendance, and asks before it changes anything</a></li></ul>
+      </div>
+    </article><article class="card portfolio-card" data-tech="[&quot;JavaScript&quot;,&quot;Ed&quot;]" data-category="monash" data-year="2026" data-status="current" data-ownership="individual" data-search="ed web ed web reading and searching ed discussions in the browser 在浏览器里整理、搜索ed讨论区 javascript ed">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Monash
+        </span>
+        <span class="portfolio-status">Current</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/ed-web" target="_blank" rel="noopener noreferrer">Ed Web</a></h2>
+      
+      <p class="portfolio-desc">reading and searching Ed discussions in the browser</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>JavaScript</li><li>Ed</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+      <div class="portfolio-writing">
+        <span>Related writing</span>
+        <ul><li><a href="/2026/10/26/ed-web-redesign/">Refreshing an Ed forum in the browser without fetching it all again</a></li></ul>
+      </div>
+    </article><article class="card portfolio-card" data-tech="[&quot;Chrome Extension&quot;,&quot;JavaScript&quot;]" data-category="monash" data-year="2026" data-status="current" data-ownership="individual" data-search="monash attendance helper monash attendance helper chrome extension that looks up attendance codes; the student confirms each submission 找签到码的chrome扩展，学生自行确认提交 chrome extension javascript">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Monash
+        </span>
+        <span class="portfolio-status">Current</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/monash-attendance-reminder" target="_blank" rel="noopener noreferrer">Monash Attendance Helper</a></h2>
+      
+      <p class="portfolio-desc">Chrome extension that looks up attendance codes; the student confirms each submission</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>Chrome Extension</li><li>JavaScript</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+      <div class="portfolio-writing">
+        <span>Related writing</span>
+        <ul><li><a href="/2026/10/26/chrome-store/">Getting a Chrome extension ready for the Web Store</a></li></ul>
+      </div>
+    </article><article class="card portfolio-card" data-tech="[&quot;Python&quot;,&quot;WeChat&quot;,&quot;Q&amp;A&quot;]" data-category="monash" data-year="2026" data-status="current" data-ownership="individual" data-search="mumguide wechat bot 马莫百科问答机器人 source-linked student q&amp;a for the 马莫百科 account 在公众号里给同学答疑，附原始来源 python wechat q&amp;a">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Monash
+        </span>
+        <span class="portfolio-status">Current</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/mumguide-wechat-bot" target="_blank" rel="noopener noreferrer">MUMGuide WeChat Bot</a></h2>
+      
+      <p class="portfolio-desc">source-linked student Q&amp;A for the 马莫百科 account</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>Python</li><li>WeChat</li><li>Q&amp;A</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+      <div class="portfolio-writing">
+        <span>Related writing</span>
+        <ul><li><a href="/2026/10/25/quote-only-rag/">A Q&amp;A bot where the model is only allowed to quote</a></li></ul>
+      </div>
+    </article><article class="card portfolio-card" data-tech="[&quot;HTML&quot;,&quot;Exchange&quot;]" data-category="monash" data-year="2026" data-status="portfolio" data-ownership="individual" data-search="monash exchange tracker demo monash exchange tracker演示 a public demonstration using synthetic data, not private exchange records 使用模拟数据的公开演示，不包含私人的交换记录 html exchange">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Monash
+        </span>
+        <span class="portfolio-status">Portfolio</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/monash-abroad-tracker-demo" target="_blank" rel="noopener noreferrer">Monash Exchange Tracker Demo</a></h2>
+      
+      <p class="portfolio-desc">a public demonstration using synthetic data, not private exchange records</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>HTML</li><li>Exchange</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+    </article><article class="card portfolio-card" data-tech="[&quot;Astro&quot;,&quot;Starlight&quot;,&quot;MDX&quot;]" data-category="monash" data-year="2026" data-status="current" data-ownership="individual" data-search="student tools documentation 学生工具文档 the english and chinese guides, installers and agent setup notes 中英文教程、安装脚本和ai安装说明 astro starlight mdx">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Monash
+        </span>
+        <span class="portfolio-status">Current</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/monash-tools-docs" target="_blank" rel="noopener noreferrer">Student Tools Documentation</a></h2>
+      
+      <p class="portfolio-desc">the English and Chinese guides, installers and agent setup notes</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>Astro</li><li>Starlight</li><li>MDX</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+    </article><article class="card portfolio-card" data-tech="[&quot;Python&quot;,&quot;Cryptography&quot;,&quot;Security&quot;]" data-category="engineering" data-year="2026" data-status="current" data-ownership="team" data-search="secureview secureview a team final-year project for encrypted file sharing, key management, integrity checks and audit records 四人毕业设计，涉及文件加密分享、密钥管理、完整性校验和审计 python cryptography security">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Development
+        </span>
+        <span class="portfolio-status">Current</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://secureview.tech" target="_blank" rel="noopener noreferrer">SecureView</a></h2>
+      <a class="small" href="https://github.com/Waldo0926/SecureView">Source code ↗</a>
+      <p class="portfolio-desc">a team final-year project for encrypted file sharing, key management, integrity checks and audit records</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>Python</li><li>Cryptography</li><li>Security</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Team</p>
+      <div class="portfolio-writing">
+        <span>Related writing</span>
+        <ul><li><a href="/2026/11/01/mysql-concurrency/">What SecureView's concurrency tests caught that a demo didn't</a></li><li><a href="/2026/10/24/secureview-pool/">100 users, 3% CPU, and most uploads failing</a></li><li><a href="/2026/10/24/secureview-keys/">Sharing files the server cannot read</a></li></ul>
+      </div>
+    </article><article class="card portfolio-card" data-tech="[&quot;Python&quot;,&quot;RAG&quot;]" data-category="engineering" data-year="2026" data-status="current" data-ownership="individual" data-search="quotegate quotegate verifies whether a model&#39;s quotations actually appear in their cited source 检查ai摘录的文字是否真的出自来源 python rag">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Development
+        </span>
+        <span class="portfolio-status">Current</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/quotegate" target="_blank" rel="noopener noreferrer">quotegate</a></h2>
+      
+      <p class="portfolio-desc">verifies whether a model's quotations actually appear in their cited source</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>Python</li><li>RAG</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+      <div class="portfolio-writing">
+        <span>Related writing</span>
+        <ul><li><a href="/2026/10/26/quotegate/">Turning a bot's quote check into a package</a></li></ul>
+      </div>
+    </article><article class="card portfolio-card" data-tech="[&quot;TypeScript&quot;,&quot;RxJS&quot;]" data-category="engineering" data-year="2026" data-status="portfolio" data-ownership="individual" data-search="streamswitch streamswitch typescript/rxjs project exploring deterministic state and reactive event streams typescript和rxjs的事件流、状态管理实验 typescript rxjs">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Development
+        </span>
+        <span class="portfolio-status">Portfolio</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/streamswitch" target="_blank" rel="noopener noreferrer">StreamSwitch</a></h2>
+      
+      <p class="portfolio-desc">TypeScript/RxJS project exploring deterministic state and reactive event streams</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>TypeScript</li><li>RxJS</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+    </article><article class="card portfolio-card" data-tech="[&quot;Python&quot;,&quot;Linux&quot;,&quot;SSH&quot;]" data-category="homelab" data-year="2026" data-status="historical" data-ownership="individual" data-search="edge fleet ops automation edge fleet ops automation sanitized linux fleet monitoring, storage health and alerts; original deployment is not published linux节点巡检、磁盘健康和告警；公开版已脱敏 python linux ssh">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Homelab
+        </span>
+        <span class="portfolio-status">Historical</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/edge-fleet-ops-automation" target="_blank" rel="noopener noreferrer">Edge Fleet Ops Automation</a></h2>
+      
+      <p class="portfolio-desc">sanitized Linux fleet monitoring, storage health and alerts; original deployment is not published</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>Python</li><li>Linux</li><li>SSH</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+      <div class="portfolio-writing">
+        <span>Related writing</span>
+        <ul><li><a href="/2026/11/01/stateful-alerts/">Why I want alerts about changes, not an endless stream of pings</a></li><li><a href="/2026/11/01/spare-machines/">Two J1900 boxes and an N1: why I don't need more production servers</a></li></ul>
+      </div>
+    </article><article class="card portfolio-card" data-tech="[&quot;Python&quot;,&quot;Linux&quot;,&quot;iKuai&quot;]" data-category="homelab" data-year="2026" data-status="historical" data-ownership="individual" data-search="homelab network automation homelab network automation reconstructed ikuai monitoring and guarded network operations; original deployment retired ikuai网络监控、连接管理和告警；原部署已停用 python linux ikuai">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Homelab
+        </span>
+        <span class="portfolio-status">Historical</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/homelab-network-automation" target="_blank" rel="noopener noreferrer">Homelab Network Automation</a></h2>
+      
+      <p class="portfolio-desc">reconstructed iKuai monitoring and guarded network operations; original deployment retired</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>Python</li><li>Linux</li><li>iKuai</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+      <div class="portfolio-writing">
+        <span>Related writing</span>
+        <ul><li><a href="/2026/11/01/stateful-alerts/">Why I want alerts about changes, not an endless stream of pings</a></li><li><a href="/2026/11/01/spare-machines/">Two J1900 boxes and an N1: why I don't need more production servers</a></li></ul>
+      </div>
+    </article><article class="card portfolio-card" data-tech="[&quot;Monitoring&quot;,&quot;GitHub Actions&quot;]" data-category="homelab" data-year="2026" data-status="current" data-ownership="individual" data-search="uptime uptime checks for services i operate 自己维护的网站状态监控（状态页） monitoring github actions">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Homelab
+        </span>
+        <span class="portfolio-status">Current</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/uptime" target="_blank" rel="noopener noreferrer">Uptime</a></h2>
+      
+      <p class="portfolio-desc">checks for services I operate</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>Monitoring</li><li>GitHub Actions</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+    </article><article class="card portfolio-card" data-tech="[&quot;Jekyll&quot;,&quot;VPS&quot;,&quot;GitHub Pages&quot;]" data-category="homelab" data-year="2026" data-status="current" data-ownership="individual" data-search="this blog 这个博客 jekyll, github pages and vps deployment jekyll、github pages和vps部署 jekyll vps github pages">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Homelab
+        </span>
+        <span class="portfolio-status">Current</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/waldo0926.github.io" target="_blank" rel="noopener noreferrer">This blog</a></h2>
+      
+      <p class="portfolio-desc">Jekyll, GitHub Pages and VPS deployment</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>Jekyll</li><li>VPS</li><li>GitHub Pages</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+      <div class="portfolio-writing">
+        <span>Related writing</span>
+        <ul><li><a href="/2026/11/01/blog-build-rollback/">Why I use Jekyll but serve the blog from my own VPS</a></li></ul>
+      </div>
+    </article><article class="card portfolio-card" data-tech="[&quot;Python&quot;,&quot;Algorithms&quot;]" data-category="algorithms" data-year="2026" data-status="portfolio" data-ownership="individual" data-search="advanced string algorithms 高级字符串算法 z-based matching, bwt search, suffix trees and rabin–karp z算法、bwt、后缀树和rabin–karp python algorithms">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Algorithms
+        </span>
+        <span class="portfolio-status">Portfolio</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/advanced-string-algorithms" target="_blank" rel="noopener noreferrer">Advanced String Algorithms</a></h2>
+      
+      <p class="portfolio-desc">Z-based matching, BWT search, suffix trees and Rabin–Karp</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>Python</li><li>Algorithms</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+      <div class="portfolio-writing">
+        <span>Related writing</span>
+        <ul><li><a href="/2026/11/01/string-algorithms/">The string algorithms I kept after the course ended</a></li></ul>
+      </div>
+    </article><article class="card portfolio-card" data-tech="[&quot;C++&quot;,&quot;Algorithms&quot;]" data-category="algorithms" data-year="2026" data-status="portfolio" data-ownership="individual" data-search="classical algorithms in c++ c++经典算法 algorithm design and comparisons 算法设计、实现和比较 c++ algorithms">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Algorithms
+        </span>
+        <span class="portfolio-status">Portfolio</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/classical-algorithms-cpp" target="_blank" rel="noopener noreferrer">Classical Algorithms in C++</a></h2>
+      
+      <p class="portfolio-desc">algorithm design and comparisons</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>C++</li><li>Algorithms</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+    </article><article class="card portfolio-card" data-tech="[&quot;Algorithms&quot;,&quot;Visualization&quot;]" data-category="algorithms" data-year="2026" data-status="portfolio" data-ownership="individual" data-search="n-queens algorithm visualizer n皇后算法可视化 backtracking, pruning and local search 回溯、剪枝和局部搜索 algorithms visualization">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Algorithms
+        </span>
+        <span class="portfolio-status">Portfolio</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/n-queens-algorithm-visualizer" target="_blank" rel="noopener noreferrer">N-Queens Algorithm Visualizer</a></h2>
+      
+      <p class="portfolio-desc">backtracking, pruning and local search</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>Algorithms</li><li>Visualization</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+    </article><article class="card portfolio-card" data-tech="[&quot;C++&quot;,&quot;Data Structures&quot;]" data-category="algorithms" data-year="2026" data-status="portfolio" data-ownership="individual" data-search="data structures labs in c++ c++数据结构实验 reconstructed data-structure exercises 整理后的数据结构练习 c++ data structures">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Algorithms
+        </span>
+        <span class="portfolio-status">Portfolio</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/data-structures-labs-cpp" target="_blank" rel="noopener noreferrer">Data Structures Labs in C++</a></h2>
+      
+      <p class="portfolio-desc">reconstructed data-structure exercises</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>C++</li><li>Data Structures</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+    </article><article class="card portfolio-card" data-tech="[&quot;C++&quot;,&quot;Trees&quot;]" data-category="algorithms" data-year="2026" data-status="portfolio" data-ownership="individual" data-search="bst record management 二叉搜索树记录管理 a modernized binary-search-tree record manager 用现代c++重写的记录管理程序 c++ trees">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Algorithms
+        </span>
+        <span class="portfolio-status">Portfolio</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/bst-record-management-cpp" target="_blank" rel="noopener noreferrer">BST Record Management</a></h2>
+      
+      <p class="portfolio-desc">a modernized binary-search-tree record manager</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>C++</li><li>Trees</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+    </article><article class="card portfolio-card" data-tech="[&quot;Assembly&quot;,&quot;MARIE&quot;]" data-category="algorithms" data-year="2026" data-status="portfolio" data-ownership="individual" data-search="marie bitmap text renderer marie位图文字显示 low-level bitmap text rendering in marie 简单计算机上的底层图形实验 assembly marie">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Algorithms
+        </span>
+        <span class="portfolio-status">Portfolio</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/MARIE-Bitmap-Text-Renderer" target="_blank" rel="noopener noreferrer">MARIE Bitmap Text Renderer</a></h2>
+      
+      <p class="portfolio-desc">low-level bitmap text rendering in MARIE</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>Assembly</li><li>MARIE</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+    </article><article class="card portfolio-card" data-tech="[&quot;C&quot;,&quot;C++&quot;]" data-category="algorithms" data-year="2026" data-status="portfolio" data-ownership="individual" data-search="c/c++ programming foundations c/c++编程基础 early programming exercises and ccf csp practice 早期编程练习和ccf csp题目 c c++">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Algorithms
+        </span>
+        <span class="portfolio-status">Portfolio</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/c-cpp-programming-foundations" target="_blank" rel="noopener noreferrer">C/C++ Programming Foundations</a></h2>
+      
+      <p class="portfolio-desc">early programming exercises and CCF CSP practice</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>C</li><li>C++</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+    </article><article class="card portfolio-card" data-tech="[&quot;TensorFlow&quot;,&quot;CNN&quot;,&quot;Machine Learning&quot;]" data-category="data" data-year="2026" data-status="portfolio" data-ownership="individual" data-search="tensorflow cnn image classification tensorflow cnn图像分类 cifar-10/mnist experiments and comparisons cifar-10、mnist和模型比较 tensorflow cnn machine learning">
+      <div class="portfolio-top">
+        <span class="portfolio-type">AI &amp; Data
+        </span>
+        <span class="portfolio-status">Portfolio</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/tensorflow-cnn-image-classification" target="_blank" rel="noopener noreferrer">TensorFlow CNN Image Classification</a></h2>
+      
+      <p class="portfolio-desc">CIFAR-10/MNIST experiments and comparisons</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>TensorFlow</li><li>CNN</li><li>Machine Learning</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+    </article><article class="card portfolio-card" data-tech="[&quot;Python&quot;,&quot;NumPy&quot;,&quot;ML&quot;]" data-category="data" data-year="2026" data-status="portfolio" data-ownership="individual" data-search="pattern recognition from scratch 从零实现模式识别算法 numpy implementations of classical methods 用numpy实现经典算法 python numpy ml">
+      <div class="portfolio-top">
+        <span class="portfolio-type">AI &amp; Data
+        </span>
+        <span class="portfolio-status">Portfolio</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/pattern-recognition-from-scratch" target="_blank" rel="noopener noreferrer">Pattern Recognition from Scratch</a></h2>
+      
+      <p class="portfolio-desc">NumPy implementations of classical methods</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>Python</li><li>NumPy</li><li>ML</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+    </article><article class="card portfolio-card" data-tech="[&quot;Expert Systems&quot;,&quot;Rules&quot;]" data-category="data" data-year="2026" data-status="portfolio" data-ownership="individual" data-search="animal expert system 动物识别专家系统 symbolic rules and forward chaining 规则推理和正向链推理 expert systems rules">
+      <div class="portfolio-top">
+        <span class="portfolio-type">AI &amp; Data
+        </span>
+        <span class="portfolio-status">Portfolio</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/animal-expert-system" target="_blank" rel="noopener noreferrer">Animal Expert System</a></h2>
+      
+      <p class="portfolio-desc">symbolic rules and forward chaining</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>Expert Systems</li><li>Rules</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+    </article><article class="card portfolio-card" data-tech="[&quot;Machine Learning&quot;,&quot;Data&quot;]" data-category="data" data-year="2026" data-status="portfolio" data-ownership="individual" data-search="student performance ml pipeline 学生成绩机器学习流程 leakage-aware, reproducible evaluation 数据泄漏检查和可复现实验 machine learning data">
+      <div class="portfolio-top">
+        <span class="portfolio-type">AI &amp; Data
+        </span>
+        <span class="portfolio-status">Portfolio</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/student-performance-ml-pipeline" target="_blank" rel="noopener noreferrer">Student Performance ML Pipeline</a></h2>
+      
+      <p class="portfolio-desc">leakage-aware, reproducible evaluation</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>Machine Learning</li><li>Data</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+    </article><article class="card portfolio-card" data-tech="[&quot;Bash&quot;,&quot;R&quot;,&quot;Data&quot;]" data-category="data" data-year="2026" data-status="portfolio" data-ownership="individual" data-search="million-row tweet analysis 百万行推文分析 streaming text analysis in bash, python and r bash、python和r的数据处理 bash r data">
+      <div class="portfolio-top">
+        <span class="portfolio-type">AI &amp; Data
+        </span>
+        <span class="portfolio-status">Portfolio</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/million-row-tweet-analysis-bash-r" target="_blank" rel="noopener noreferrer">Million-Row Tweet Analysis</a></h2>
+      
+      <p class="portfolio-desc">streaming text analysis in Bash, Python and R</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>Bash</li><li>R</li><li>Data</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+    </article><article class="card portfolio-card" data-tech="[&quot;SQL Server&quot;,&quot;Databases&quot;]" data-category="data" data-year="2026" data-status="portfolio" data-ownership="individual" data-search="database systems sql labs sql数据库实验 sql server schemas, queries and verification sql server查询、表结构和验证 sql server databases">
+      <div class="portfolio-top">
+        <span class="portfolio-type">AI &amp; Data
+        </span>
+        <span class="portfolio-status">Portfolio</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/database-systems-sql-labs" target="_blank" rel="noopener noreferrer">Database Systems SQL Labs</a></h2>
+      
+      <p class="portfolio-desc">SQL Server schemas, queries and verification</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>SQL Server</li><li>Databases</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+    </article><article class="card portfolio-card" data-tech="[&quot;C++&quot;,&quot;Visualization&quot;]" data-category="experiments" data-year="2026" data-status="portfolio" data-ownership="individual" data-search="bike-share visualizer 共享单车可视化 c++ station data and map rendering c++站点数据处理和地图绘制 c++ visualization">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Experiments
+        </span>
+        <span class="portfolio-status">Portfolio</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/bike-share-visualizer-cpp" target="_blank" rel="noopener noreferrer">Bike-Share Visualizer</a></h2>
+      
+      <p class="portfolio-desc">C++ station data and map rendering</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>C++</li><li>Visualization</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+    </article><article class="card portfolio-card" data-tech="[&quot;MATLAB&quot;,&quot;Robotics&quot;]" data-category="experiments" data-year="2026" data-status="portfolio" data-ownership="individual" data-search="puma 560 robot trajectory planning puma 560机器人轨迹规划 matlab robotics and kinematics matlab机器人运动学 matlab robotics">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Experiments
+        </span>
+        <span class="portfolio-status">Portfolio</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/puma560-robot-trajectory-planning" target="_blank" rel="noopener noreferrer">PUMA 560 Robot Trajectory Planning</a></h2>
+      
+      <p class="portfolio-desc">MATLAB robotics and kinematics</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>MATLAB</li><li>Robotics</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+    </article><article class="card portfolio-card" data-tech="[&quot;MATLAB&quot;,&quot;DSP&quot;]" data-category="experiments" data-year="2026" data-status="portfolio" data-ownership="individual" data-search="digital signal processing in matlab matlab数字信号处理 sampling, fft, windows and filtering fft、采样与滤波 matlab dsp">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Experiments
+        </span>
+        <span class="portfolio-status">Portfolio</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/digital-signal-processing-matlab" target="_blank" rel="noopener noreferrer">Digital Signal Processing in MATLAB</a></h2>
+      
+      <p class="portfolio-desc">sampling, FFT, windows and filtering</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>MATLAB</li><li>DSP</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+    </article><article class="card portfolio-card" data-tech="[&quot;Wi-Fi&quot;,&quot;Networking&quot;]" data-category="experiments" data-year="2026" data-status="portfolio" data-ownership="individual" data-search="wi-fi site survey analysis wi-fi现场勘测分析 indoor wlan measurements and analysis 室内无线网络测量 wi-fi networking">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Experiments
+        </span>
+        <span class="portfolio-status">Portfolio</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/wifi-site-survey-analysis" target="_blank" rel="noopener noreferrer">Wi-Fi Site Survey Analysis</a></h2>
+      
+      <p class="portfolio-desc">indoor WLAN measurements and analysis</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>Wi-Fi</li><li>Networking</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+    </article><article class="card portfolio-card" data-tech="[&quot;Networking&quot;,&quot;Security&quot;]" data-category="experiments" data-year="2026" data-status="portfolio" data-ownership="individual" data-search="enterprise network security architecture 企业网络安全架构 a fictional network architecture and validation 虚构企业场景中的网络设计 networking security">
+      <div class="portfolio-top">
+        <span class="portfolio-type">Experiments
+        </span>
+        <span class="portfolio-status">Portfolio</span>
+      </div>
+      <h2 class="portfolio-name"><a href="https://github.com/Waldo0926/enterprise-network-security-architecture" target="_blank" rel="noopener noreferrer">Enterprise Network Security Architecture</a></h2>
+      
+      <p class="portfolio-desc">a fictional network architecture and validation</p>
+      <ul class="portfolio-tags" aria-label="Technology tags"><li>Networking</li><li>Security</li>
+      </ul>
+      <p class="portfolio-meta small muted">2026 · Individual work</p>
+    </article>
+  </div>
+  <p id="portfolio-empty" class="portfolio-empty" hidden="">No matching projects. Try removing a filter.</p>
+  <p class="portfolio-note small muted">Year means GitHub repository creation, not necessarily when work first began. Status is a portfolio category, not GitHub's archived flag or a guarantee of live service. Check each README for current details.</p>
+</section>
+<script defer="" src="/assets/portfolio.js?v=1793681869"></script>
+
+
+  </article>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Computer Science at Monash University. Backend and AI application development.</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">Status</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

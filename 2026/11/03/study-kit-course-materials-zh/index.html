@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>一门课不只有 PDF：完整课程资料导出怎么做 | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="一门课不只有 PDF：完整课程资料导出怎么做" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="zh_Hans" />
+<meta name="description" content="从 Moodle Page、Book、作业说明，到 Ed 图片和 Google 文档：Study Kit 1.8–1.11.1 如何把一门课整理成本地资料包，以及 PDF 缓存、隔离账号和遗漏索引为什么要分开设计。" />
+<meta property="og:description" content="从 Moodle Page、Book、作业说明，到 Ed 图片和 Google 文档：Study Kit 1.8–1.11.1 如何把一门课整理成本地资料包，以及 PDF 缓存、隔离账号和遗漏索引为什么要分开设计。" />
+<link rel="canonical" href="https://blog.secureview.tech/2026/11/03/study-kit-course-materials-zh/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/11/03/study-kit-course-materials-zh/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/study-kit-course-materials-zh.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-11-03T00:00:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/study-kit-course-materials-zh.png" />
+<meta property="twitter:title" content="一门课不只有 PDF：完整课程资料导出怎么做" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-11-03T00:00:00+08:00","datePublished":"2026-11-03T00:00:00+08:00","description":"从 Moodle Page、Book、作业说明，到 Ed 图片和 Google 文档：Study Kit 1.8–1.11.1 如何把一门课整理成本地资料包，以及 PDF 缓存、隔离账号和遗漏索引为什么要分开设计。","headline":"一门课不只有 PDF：完整课程资料导出怎么做","image":"https://blog.secureview.tech/assets/og/study-kit-course-materials-zh.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/11/03/study-kit-course-materials-zh/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/11/03/study-kit-course-materials-zh/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/11/03/study-kit-course-materials-zh/">
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/11/03/study-kit-course-materials/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css?v=1793681869">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/zh/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/zh/#writing">文章</a>
+        <a href="/zh/#projects">项目</a>
+        <a href="/zh/projects/">归档</a>
+        <a href="/zh/search/">搜索</a>
+        <a href="/zh/about/">关于</a>
+      </nav>
+      <a class="lang-switch" href="/2026/11/03/study-kit-course-materials/" lang="en" hreflang="en">English</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/zh/#writing">文章</a>
+      <span aria-hidden="true">/</span>
+      <span>Study Kit</span>
+    </p>
+    <h1 class="display post-title">一门课不只有 PDF：完整课程资料导出怎么做</h1><p class="lede">从 Moodle Page、Book、作业说明，到 Ed 图片和 Google 文档：Study Kit 1.8–1.11.1 如何把一门课整理成本地资料包，以及 PDF 缓存、隔离账号和遗漏索引为什么要分开设计。</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-11-03T00:00:00+08:00">3 Nov 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>约 8 分钟</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/11/03/study-kit-course-materials/">English</a>
+        <a href="/2026/11/03/study-kit-course-materials-zh/" lang="zh-Hans" class="on" aria-current="page">中文</a>
+      </span>
+    </div>
+  </header>
+  <p class="post-source small muted">
+    <a href="https://github.com/Waldo0926/monash-study-kit" rel="noopener external" target="_blank">对应源码</a> · 资料核对：2026-11-03
+  </p>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p><a href="/2026/11/01/study-kit-ed-export-zh/">上一篇 Ed 导出文章</a>讲的是 lesson 文件夹和一键打包。但一门课还有别的东西：Moodle Page 里的作业要求、Book 的几个章节、评分标准、lesson 正文里的图片，以及仍然只是链接的 Google 文档。把磁盘上已有的 PDF 压缩起来，这些内容还是没带走。</p>
+
+<p>Study Kit 1.8 加了整课资料包，1.9 到 1.11.1 逐步补齐正文、图片、Google 文件、隔离账号和 PDF 输出。下面按当前<a href="https://github.com/Waldo0926/monash-study-kit/blob/main/CHANGELOG.md">源码和更新日志</a>说明本地导出器的实现；私有部署改动和生产验证是另外的工作。</p>
+
+<p><strong>发布更新（2026-11-03）：</strong> <a href="https://github.com/Waldo0926/monash-study-kit/releases/tag/v1.11.2">1.11.2 已正式发布</a>，修复 Windows PDF 浏览器冷启动重试；下文命令适用于当前版本。</p>
+
+<p><img src="/assets/readme/course-export.png" alt="1.11.2 实际整课导出与 ZIP 内容，合成课程数据" /></p>
+
+<p>示例使用合成资料实际离线导出，保留一个缺失附件和未授权 Google 链接，展示索引如何报告遗漏。</p>
+
+<h2 id="先看怎么用">先看怎么用</h2>
+
+<p>装好 Study Kit、选好课程后：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>monash <span class="nb">export </span>FIT2109 <span class="nt">--sync</span> <span class="nt">--format</span> both <span class="nt">--to</span> <span class="s2">"./exports"</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">--to</code> 是目标文件夹，不是 zip 文件名。<code class="language-plaintext highlighter-rouge">--sync</code> 先刷新这门课的 Moodle 和 Ed Lessons，不同步 Ed 讨论区；不加时只读本地缓存。<code class="language-plaintext highlighter-rouge">--dir</code> 输出文件夹，<code class="language-plaintext highlighter-rouge">--open</code> 在文件管理器里显示结果。</p>
+
+<p>1.11.1 起，交互终端不写 <code class="language-plaintext highlighter-rouge">--to</code> 会先弹目录选择框，<code class="language-plaintext highlighter-rouge">--no-ask</code> 跳过弹窗。默认上次选择的位置或系统下载目录，也支持 Windows 移动过的“下载”文件夹。同步前先告诉你存在哪，生成 PDF 和打包时显示进度。</p>
+
+<h2 id="先采集再打包">先采集，再打包</h2>
+
+<p>整个过程分三层：</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Moodle / Ed / 课程链接的 Google 文件
+                  |
+              同步与规范化
+                  |
+         本地文件 + SQLite 元数据
+                  |
+    export.Plan：文件项 + 遗漏项 + 统计
+                  |
+           可选的离线 PDF 渲染
+                  |
+           zip 或目录，附带索引
+</code></pre></div></div>
+
+<p>对应源码中，<code class="language-plaintext highlighter-rouge">syncer.py</code>、<code class="language-plaintext highlighter-rouge">moodle_content.py</code> 收集 Moodle 内容，Ed 模块同步 Lessons，<code class="language-plaintext highlighter-rouge">google_export.py</code> 处理 Google 链接，<code class="language-plaintext highlighter-rouge">export.py</code> 生成打包计划，<code class="language-plaintext highlighter-rouge">pdfrender.py</code> 负责把 Markdown 页面打印成 PDF。只有 CLI 明确要求先同步时，打包前才需要在线会话。</p>
+
+<p>Moodle Page、Book 和作业正文存成 Markdown。Book 读打印视图，不计作逐章查看。学生可见的 rubric 和 marking guide 也是教学资料，但个人提交、成绩和反馈不进入资料包。文件夹优先整体下载，保留子目录和原文件名，失败再逐个获取。</p>
+
+<p>Ed Lessons 则提供正文、幻灯片、Ed 托管附件和只有题目的测验页。Moodle 与 Ed 图片存进 <code class="language-plaintext highlighter-rouge">assets/</code>，按内容去重，再改为相对引用。下载失败时保留远程地址，并写入索引。旧版本把无扩展名 Ed 图片存成 <code class="language-plaintext highlighter-rouge">.img</code> 的，同步时按实际内容修正扩展名，让图片查看器能够识别。</p>
+
+<p>包内按课号组织，下有 <code class="language-plaintext highlighter-rouge">Moodle/</code>、<code class="language-plaintext highlighter-rouge">Ed Lessons/</code> 和索引。原有 PDF、notebook、代码和压缩包保留格式；生成的正文、链接列表、测验和索引则使用选定的格式。</p>
+
+<h2 id="google-链接需要单独授权">Google 链接需要单独授权</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>uv tool <span class="nb">install</span> <span class="nt">--reinstall</span> <span class="nt">--refresh</span> <span class="s2">"monash-study-kit[gmail]"</span>
+monash google login
+monash <span class="nb">export </span>FIT2109 <span class="nt">--refresh-google</span> <span class="nt">--format</span> both <span class="nt">--to</span> <span class="s2">"./exports"</span>
+</code></pre></div></div>
+
+<p>如果已经使用其他 extras，安装命令里也要保留。可选依赖虽然叫 <code class="language-plaintext highlighter-rouge">gmail</code>，Drive 授权却是独立的：<code class="language-plaintext highlighter-rouge">monash google login</code> 只申请 <code class="language-plaintext highlighter-rouge">drive.readonly</code>，保存在 <code class="language-plaintext highlighter-rouge">google-drive-token.json</code>，与 Gmail 令牌分离。该权限允许读取账号有权访问的全部 Drive 文件，导出器实际处理课程链接；它不能改文件，也不授予 Gmail 权限。</p>
+
+<p>Docs 和 Slides 默认 PDF，Sheets 是 XLSX，普通 Drive 文件保留原格式。<code class="language-plaintext highlighter-rouge">monash config google_docs_format docx</code> 只把 Docs 改成 DOCX，不影响 Slides 或导出器自己的 Markdown 正文。<code class="language-plaintext highlighter-rouge">--refresh-google</code> 隐含同步，并重新导出链接的 Google 文件。</p>
+
+<p>文件过大、API 未启用、管理员限制、未共享给当前账号，都可能导致 API 失败。支持时会尝试专用登录浏览器的 Google 会话，Cookie 只在内存中，不能绕过共享权限。Google Forms 保留链接和原因。退出授权先吊销再删本机令牌；吊销失败保留文件，让用户能继续重试。</p>
+
+<h2 id="pdf-是输出格式不是另一套同步">PDF 是输出格式，不是另一套同步</h2>
+
+<p>1.11 起初始默认输出 <code class="language-plaintext highlighter-rouge">pdf</code>；<code class="language-plaintext highlighter-rouge">--format md</code> 不打印 PDF，<code class="language-plaintext highlighter-rouge">both</code> 同时保留可编辑 Markdown。同步保存的文本和 MCP 搜索索引不变。</p>
+
+<p>每次导出使用一个独立的临时 Chrome、Edge 或 Brave 进程离线打印，嵌入已有本地图片、转义原始 HTML，并阻止远程请求。没有支持的浏览器就回退 Markdown，在终端和索引解释。1.11.1 会重试 Windows 临时 profile 清理，避免浏览器辅助进程短暂占用文件时，把已经完成的导出判为失败。</p>
+
+<p>缓存键包含打印 HTML 和嵌入图片内容，因此只替换图片、不改 Markdown，也会生成新的键。PDF 缓存在 <code class="language-plaintext highlighter-rouge">data/pdf-cache/</code>，超过 500 MB 时淘汰最旧项；JSON 报告生成数量、缓存命中数量和回退原因。这些是实现规则，不是性能测试数据。</p>
+
+<h2 id="账号选择必须早于-import">账号选择必须早于 import</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>monash <span class="nt">--profile</span> exchange setup
+monash <span class="nt">--profile</span> exchange google login
+monash <span class="nt">--profile</span> exchange <span class="nb">export </span>FIT2109 <span class="nt">--sync</span> <span class="nt">--to</span> <span class="s2">"./exports"</span>
+monash profile list
+</code></pre></div></div>
+
+<p>模块 import 时就固定路径，所以 <code class="language-plaintext highlighter-rouge">entry.py</code> 必须先选账号，再加载 CLI 和服务模块。命名 profile 将凭据、数据库、课件和浏览器会话隔离在 <code class="language-plaintext highlighter-rouge">profiles/NAME</code> 下，强制只导课程资料：跳过 Gmail、考勤、Ed 讨论区和个人日历设置，也不能配置远程服务、<code class="language-plaintext highlighter-rouge">monash connect</code> 或独立移动资料根目录。</p>
+
+<p>清理从默认账号执行：<code class="language-plaintext highlighter-rouge">monash profile remove exchange</code>。先吊销 Google 令牌，再清登录会话；不加 <code class="language-plaintext highlighter-rouge">--all</code> 就保留课件和数据库，吊销失败则保留本机文件。Ed API 令牌仍需手动删除。</p>
+
+<h2 id="完整还包括说清楚缺了什么">完整还包括说清楚缺了什么</h2>
+
+<p>索引会列出本地文件缺失、Ed 课程未同步、Google 导出失败和剩余远程图片。notebook 引用的图片不存在、或者只是大小写不匹配，也要报告。zip 生成成功不代表每个链接都能下载；Moodle 文件夹通常最多每周刷新一次，刷新 Google 不是对所有资源强制刷新。</p>
+
+<p>资料包排除个人记录，并去掉链接里的会议密码参数，但导出后仍是普通本地文件，分享前要检查，不能因此视为可以公开转载。Gmail 是另一项可选功能：普通登录申请 <code class="language-plaintext highlighter-rouge">gmail.modify</code>，加 <code class="language-plaintext highlighter-rouge">--read-only</code> 才申请 <code class="language-plaintext highlighter-rouge">gmail.readonly</code>。</p>
+
+<p>本次本地 Study Kit 测试结果是 <strong>663 passed、10 skipped</strong>，覆盖合成资料、Google 错误、profile 和 PDF 行为，不代表每门真实课程、Google 账号和 Windows 环境都已经实测。<a href="https://docs.secureview.tech/zh-cn/study-kit/materials/">双语导出指南</a>列出了安装、参数和重试方式。真正导出后，仍应先打开索引，看清楚哪些内容没有带走。</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">本文目录</p>
+      <ol><li><a href="#先看怎么用">先看怎么用</a></li><li><a href="#先采集再打包">先采集，再打包</a></li><li><a href="#google-链接需要单独授权">Google 链接需要单独授权</a></li><li><a href="#pdf-是输出格式不是另一套同步">PDF 是输出格式，不是另一套同步</a></li><li><a href="#账号选择必须早于-import">账号选择必须早于 import</a></li><li><a href="#完整还包括说清楚缺了什么">完整还包括说清楚缺了什么</a></li></ol>
+      <a class="toc-back" href="/zh/#writing">全部文章</a>
+    </aside>
+  </div>
+  <section class="post-related" aria-label="相关文章">
+    <h2>同一方向的其他文章</h2>
+    <ul><li><a href="/2026/11/01/study-kit-ed-export-zh/">一个下载按钮，三个代码库：把整门课的 Ed 课件打包</a></li><li><a href="/2026/10/31/study-kit-mail-attendance-zh/">Study Kit 接上学校邮箱和考勤：会改东西的都先给你看</a></li><li><a href="/2026/10/30/study-kit-remote-zh/">让 ChatGPT 也能用 Study Kit，但只给自己用</a></li></ul>
+  </section>
+  <nav class="more" aria-label="更多文章">
+    <a class="card more-link" href="/2026/11/01/study-kit-ed-export-zh/">
+      <span class="more-label">上一篇 · Study Kit</span>
+      <span class="more-title">一个下载按钮，三个代码库：把整门课的 Ed 课件打包</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Monash University Malaysia计算机科学，记录开发与学习</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">运行状态</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
