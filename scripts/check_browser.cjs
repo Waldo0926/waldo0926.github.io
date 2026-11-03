@@ -63,6 +63,6 @@ const baseURL = process.argv[2] || 'http://127.0.0.1:8877';
     await page.setViewportSize({width:1440,height:1000});
   }
   assert.deepEqual(errors,[]);
-  console.log('Passed: bilingual six-direction links, technology/combined filters, NFKC search, URL persistence/reload/reset, article archive, mobile overflow and browser errors');
+  console.log('Passed: bilingual six-direction links, technology/combined filters, NFKC search, URL persistence/reload/reset, article archive, consistent bilingual page widths at 390/1440/1920, live SecureView links, mobile overflow and browser errors');
   await browser.close();
 })().catch(e=>{console.error(e);process.exitCode=1});
