@@ -69,7 +69,8 @@
         {% endcase %}</span>
         <span class="portfolio-status">{% if p.status == "current" %}{% if zh %}当前项目{% else %}Current{% endif %}{% elsif p.status == "historical" %}{% if zh %}历史部署{% else %}Historical{% endif %}{% else %}{% if zh %}作品集{% else %}Portfolio{% endif %}{% endif %}</span>
       </div>
-      <h2 class="portfolio-name"><a href="{{ p.repo }}" target="_blank" rel="noopener noreferrer">{% if zh %}{{ p.zh }}{% else %}{{ p.name }}{% endif %}</a></h2>
+      <h2 class="portfolio-name"><a href="{{ p.website | default: p.repo }}" target="_blank" rel="noopener noreferrer">{% if zh %}{{ p.zh }}{% else %}{{ p.name }}{% endif %}</a></h2>
+      {% if p.website %}<a class="small" href="{{ p.repo }}">{% if zh %}源代码{% else %}Source code{% endif %} ↗</a>{% endif %}
       <p class="portfolio-desc">{% if zh %}{{ p.description_zh }}{% else %}{{ p.description }}{% endif %}</p>
       <ul class="portfolio-tags" aria-label="{% if zh %}相关技术{% else %}Technology tags{% endif %}">
         {%- for tag in p.tech %}<li>{{ tag }}</li>{%- endfor %}

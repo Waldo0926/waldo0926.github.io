@@ -39,6 +39,7 @@
             <span class="project-desc">{% if zh %}{{ p.desc_zh }}{% else %}{{ p.desc }}{% endif %}</span>
           </span>
         </a>
+        {% if p.source %}<a class="project-source small" href="{{ p.source }}">{% if zh %}源代码{% else %}Source code{% endif %} ↗</a>{% endif %}
       </li>
       {%- endif %}{% endfor %}
     </ul>

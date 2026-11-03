@@ -16,6 +16,12 @@ The earlier [Ed export article]({% post_url 2026-11-01-study-kit-ed-export %}) c
 
 Study Kit 1.8 added a whole-course package. Versions 1.9 through 1.11.1 filled in these gaps and added isolated accounts and PDF output. This article follows the current [source and changelog](https://github.com/Waldo0926/monash-study-kit/blob/main/CHANGELOG.md). It describes the local exporter; private deployment changes and production verification are separate work.
 
+**Release update (3 November 2026):** [1.11.2 is published](https://github.com/Waldo0926/monash-study-kit/releases/tag/v1.11.2), fixing Windows PDF browser cold-start retries. The commands below apply to the current release.
+
+![Actual 1.11.2 whole-course export and ZIP contents using synthetic course data](/assets/readme/course-export.png)
+
+The demo runs offline against synthetic materials, deliberately retaining a missing attachment and an unauthorized Google link to show how omissions are reported.
+
 ## Start with a useful command
 
 After installing Study Kit and selecting your units:

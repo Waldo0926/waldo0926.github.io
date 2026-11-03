@@ -16,6 +16,12 @@ image: /assets/og/study-kit-course-materials-zh.png
 
 Study Kit 1.8 加了整课资料包，1.9 到 1.11.1 逐步补齐正文、图片、Google 文件、隔离账号和 PDF 输出。下面按当前[源码和更新日志](https://github.com/Waldo0926/monash-study-kit/blob/main/CHANGELOG.md)说明本地导出器的实现；私有部署改动和生产验证是另外的工作。
 
+**发布更新（2026-11-03）：** [1.11.2 已正式发布](https://github.com/Waldo0926/monash-study-kit/releases/tag/v1.11.2)，修复 Windows PDF 浏览器冷启动重试；下文命令适用于当前版本。
+
+![1.11.2 实际整课导出与 ZIP 内容，合成课程数据](/assets/readme/course-export.png)
+
+示例使用合成资料实际离线导出，保留一个缺失附件和未授权 Google 链接，展示索引如何报告遗漏。
+
 ## 先看怎么用
 
 装好 Study Kit、选好课程后：

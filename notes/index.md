@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: Development notes
 description: Technical articles grouped by project, with technology tags and Chinese translations.
 alt: /zh/notes/

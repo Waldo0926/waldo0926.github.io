@@ -10,7 +10,8 @@
   desc_zh: 课程信息、选课规划、WAM、马来西亚学费和重要日期，中英双语
 - name: SecureView
   zh: SecureView
-  url: https://github.com/Waldo0926/SecureView
+  url: https://secureview.tech
+  source: https://github.com/jsonrar/fyp-secure-file-platform
   pill: live
   main: true
   icon: '<path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/>'
