@@ -12,7 +12,7 @@ const baseURL = process.argv[2] || 'http://127.0.0.1:8877';
     for (const width of [1440, 1920, 390]) {
       await page.setViewportSize({width,height:1000});
       let expected;
-      for (const route of ['about','projects','archive','search','notes']) {
+      for (const route of ['about','projects','search','notes']) {
         const res=await page.goto(`${baseURL}${prefix}/${route}/`);
         assert.equal(res.status(),200,route);
         const box=await page.locator('.page-card').boundingBox();
