@@ -8,6 +8,22 @@ const baseURL = process.argv[2] || 'http://127.0.0.1:8877';
   page.on('pageerror', e=>errors.push(String(e)));
   for(const prefix of ['', '/zh']) {
     await page.goto(`${baseURL}${prefix}/`);
+    assert.equal(await page.locator('a.project').filter({hasText:'SecureView'}).getAttribute('href'),'https://secureview.tech');
+    for (const width of [1440, 1920, 390]) {
+      await page.setViewportSize({width,height:1000});
+      let expected;
+      for (const route of ['about','projects','archive','search','notes']) {
+        const res=await page.goto(`${baseURL}${prefix}/${route}/`);
+        assert.equal(res.status(),200,route);
+        const box=await page.locator('.page-card').boundingBox();
+        assert(box,route);
+        if(expected) { assert(Math.abs(box.width-expected.width)<1,`width ${route}`); assert(Math.abs(box.x-expected.x)<1,`alignment ${route}`); }
+        expected=box;
+        assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`overflow ${route}`);
+      }
+    }
+    await page.setViewportSize({width:1440,height:1000});
+    await page.goto(`${baseURL}${prefix}/`);
     const links=await page.locator('.topic-card').evaluateAll(xs=>xs.map(x=>x.getAttribute('href')));
     assert.equal(links.length,6);
     for(const href of links) {

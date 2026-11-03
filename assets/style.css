@@ -445,7 +445,8 @@ p { margin: 0; }
 
 .prose blockquote { margin: 0 0 1.2em; padding: 4px 0 4px 18px; border-left: 3px solid var(--brand); color: var(--muted); }
 
-.page-card { max-width: 760px; margin-top: 32px; }
+.page-card { width: 100%; margin-top: 32px; }
+.project-source { display: inline-block; margin: 0 0 16px 56px; color: var(--muted); }
 .page-card--wide { max-width: none; }
 .page-card--wide > p { max-width: 70ch; }
 
