@@ -14,7 +14,9 @@ Choosing a free elective comes down to three questions that I get asked every se
 
 ## What the page does
 
-Each shortcut opens the unit list with the filters already applied, and shows how many units are behind it, so nobody opens an empty list. The shortcuts are no exam listed, no prerequisite listed, both together, and level 1 units with no prerequisite listed. A campus switch at the top (Malaysia or Australia) follows the same cookie as the home page. There is also a list of units with no exam listed, grouped by faculty.
+There are four conditions at the top: no exam listed, no prerequisite listed, both together, and level 1 units with no prerequisite listed. Each shows how many units fit. Pick one and the page lists 12 undergraduate units that fit, with a button to the full unit list with the filters already set. A campus switch (Malaysia or Australia) follows the same cookie as the home page.
+
+The 12 units take turns between faculties. In code order the first dozen were all accounting units starting with ACB or ACM, so the API got a `sort=mixed` option: the lowest-level unit of each faculty first, then the next of each. The first version also had a list grouped by faculty. I removed it, because the Handbook's faculty field mixes faculties with departments and the list looked messy.
 
 The page never says a unit is easy and never recommends one. Whether a unit counts as a free elective depends on the course, so the page says to check the course page or the progression map, and ask the faculty when unsure.
 
