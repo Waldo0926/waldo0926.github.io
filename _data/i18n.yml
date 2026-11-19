@@ -17,6 +17,10 @@ en:
   lede: I study Computer Science at Monash University Malaysia. Here I write about the student tools I build, the algorithms and backend behind them, the servers I run them on, and what went wrong on the way.
   latest: Read the latest post
   about_me: About me
+  stack: What I work with
+  fact_posts: posts, in English and Chinese
+  fact_repos: public projects, coursework included
+  fact_live: of them running live
   projects: Projects
   all_repos: Browse all projects
   also: Also
@@ -46,6 +50,10 @@ zh-Hans:
   lede: 我在 Monash University Malaysia 读计算机科学，平时做给同学用的工具，写算法和后端，自己搭服务器让它们跑起来，这里记的是这些东西怎么做出来的，也记出问题时我怎么查
   latest: 读最新一篇
   about_me: 关于我
+  stack: 平时在用
+  fact_posts: 篇文章，中英文各一份
+  fact_repos: 个公开项目，含课程作业
+  fact_live: 个一直开着给人用
   projects: 项目
   all_repos: 查看全部项目
   also: 其他

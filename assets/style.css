@@ -180,9 +180,13 @@ html:lang(zh-Hans) .section-head h2 {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
   gap: 64px;
-  align-items: start;
+  align-items: stretch;
   padding-top: 88px;
 }
+/* The project panel next to it is about twice as tall as the intro, so the
+   column is a flex box and the block below hangs from the bottom, which lines
+   the two columns up instead of leaving the left half empty. */
+.hero-text { display: flex; flex-direction: column; }
 /* A faint wash of the brand blue behind the hero, so the top of the page has
    some depth without a picture. */
 .hero::before {
@@ -219,6 +223,28 @@ html:lang(zh-Hans) .section-head h2 {
 
 .lede { margin-top: 22px; max-width: 36em; color: var(--muted); font-size: 1.12rem; line-height: 1.7; }
 .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+
+.hero-foot { margin-top: auto; padding-top: 34px; }
+.hero-stack-title { color: var(--muted-2); font-size: 0.8rem; letter-spacing: 0.02em; }
+.hero-stack { display: flex; flex-wrap: wrap; gap: 7px; margin: 12px 0 0; padding: 0; list-style: none; }
+.hero-stack li {
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--ink-700);
+  font-size: 0.8rem;
+}
+.hero-facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 30px;
+  padding-top: 26px;
+  border-top: 1px solid var(--border);
+}
+.hero-facts .fact-num { font-size: 1.55rem; }
+.hero-facts .fact-text { margin-top: 2px; font-size: 0.85rem; }
 
 /* --- home: projects panel ------------------------------------------------- */
 
@@ -520,6 +546,7 @@ html:lang(zh-Hans) .section-head h2 {
 
 @media (max-width: 900px) {
   .hero { grid-template-columns: 1fr; gap: 48px; padding-top: 48px; }
+  .hero-foot { padding-top: 26px; }
   .post-body { grid-template-columns: minmax(0, 1fr); }
   .toc { display: none; }
   .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -535,6 +562,9 @@ html:lang(zh-Hans) .section-head h2 {
   .header-cta { display: none; }
   .brand span:last-child { display: none; }
   .lede { font-size: 1.02rem; }
+  .hero-facts { gap: 16px; margin-top: 24px; }
+  .hero-facts .fact-num { font-size: 1.35rem; }
+  .hero-facts .fact-text { font-size: 0.8rem; }
   .panel { padding: 20px 18px 8px; }
   .section { padding-top: 72px; }
   .section-head { flex-direction: column; gap: 8px; }

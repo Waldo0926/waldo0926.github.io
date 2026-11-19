@@ -21,6 +21,36 @@
       {%- if latest %}<a class="btn" href="{{ latest.url | relative_url }}">{{ t.latest }}</a>{% endif %}
       <a class="btn btn--ghost" href="{{ t.about | relative_url }}">{{ t.about_me }}</a>
     </div>
+
+    {%- comment -%}
+      Sits at the bottom of the column so it lines up with the project panel
+      next to it. Every number is counted from the site's own data.
+    {%- endcomment -%}
+    {%- assign posts_here = site.posts | where: "lang", lang | size -%}
+    {%- assign repo_count = site.data.portfolio | size -%}
+    {%- assign live_projects = site.data.projects | where: "pill", "live" | size -%}
+    <div class="hero-foot">
+      <p class="hero-stack-title">{{ t.stack }}</p>
+      <ul class="hero-stack">
+        {%- for item in site.data.stack %}
+        <li>{{ item }}</li>
+        {%- endfor %}
+      </ul>
+      <div class="hero-facts">
+        <div>
+          <p class="fact-num">{{ posts_here }}</p>
+          <p class="fact-text">{{ t.fact_posts }}</p>
+        </div>
+        <div>
+          <p class="fact-num">{{ repo_count }}</p>
+          <p class="fact-text">{{ t.fact_repos }}</p>
+        </div>
+        <div>
+          <p class="fact-num">{{ live_projects }}</p>
+          <p class="fact-text">{{ t.fact_live }}</p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <aside id="projects" class="card panel">
