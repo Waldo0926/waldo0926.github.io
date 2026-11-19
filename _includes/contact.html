@@ -1,0 +1,87 @@
+{%- comment -%}
+  The contact block on the About page, in both languages. Each row is a QR
+  code with the name next to it, so a reader can either scan or copy the id.
+  A personal WeChat QR code expires after a while; the id underneath does not,
+  which is why both are here.
+{%- endcomment -%}
+{%- assign zh = false -%}
+{%- if page.lang == "zh-Hans" -%}{%- assign zh = true -%}{%- endif -%}
+<div class="contacts">
+  <div class="contact">
+    <img class="contact-qr" src="{{ '/assets/contact/whatsapp.webp' | relative_url }}" alt="{% if zh %}WhatsApp 二维码{% else %}WhatsApp QR code{% endif %}" width="112" height="112" loading="lazy">
+    <div class="contact-text">
+      <p class="contact-name">WhatsApp</p>
+      <p class="contact-hint">{% if zh %}扫码加我，也可以直接点号码开对话{% else %}Scan it, or tap the number to open a chat{% endif %}</p>
+      <p class="contact-id">
+        <span class="contact-label">{% if zh %}号码{% else %}Number{% endif %}</span>
+        <a class="contact-value mono" href="https://wa.me/60172560436" rel="noopener external" target="_blank">+60 17-256 0436</a>
+        <button type="button" class="contact-copy" data-copy="+60172560436">{% if zh %}复制{% else %}Copy{% endif %}</button>
+      </p>
+    </div>
+  </div>
+
+  <div class="contact">
+    <img class="contact-qr" src="{{ '/assets/contact/wechat.webp' | relative_url }}" alt="{% if zh %}我的微信二维码{% else %}My WeChat QR code{% endif %}" width="112" height="112" loading="lazy">
+    <div class="contact-text">
+      <p class="contact-name">{% if zh %}微信{% else %}WeChat{% endif %}</p>
+      <p class="contact-hint">{% if zh %}码会过期，过期了就搜下面这个微信号{% else %}The code expires after a while; the id below does not{% endif %}</p>
+      <p class="contact-id">
+        <span class="contact-label">{% if zh %}微信号{% else %}ID{% endif %}</span>
+        <span class="contact-value mono">WenSX0926</span>
+        <button type="button" class="contact-copy" data-copy="WenSX0926">{% if zh %}复制{% else %}Copy{% endif %}</button>
+      </p>
+    </div>
+  </div>
+
+  <div class="contact">
+    <img class="contact-qr" src="{{ '/assets/contact/mamo-wechat.webp' | relative_url }}" alt="{% if zh %}马莫百科微信二维码{% else %}马莫百科 WeChat QR code{% endif %}" width="112" height="112" loading="lazy">
+    <div class="contact-text">
+      <p class="contact-name">{% if zh %}马莫百科微信{% else %}马莫百科 on WeChat{% endif %}</p>
+      <p class="contact-hint">{% if zh %}问 Monash 的事情走这个号，也可以拉你进交流群{% else %}Where Monash questions go, and the way into the student group{% endif %}</p>
+      <p class="contact-id">
+        <span class="contact-label">{% if zh %}微信号{% else %}ID{% endif %}</span>
+        <span class="contact-value mono">MonashGuide</span>
+        <button type="button" class="contact-copy" data-copy="MonashGuide">{% if zh %}复制{% else %}Copy{% endif %}</button>
+      </p>
+    </div>
+  </div>
+
+  <div class="contact">
+    <img class="contact-qr" src="{{ '/assets/contact/mamo-official.webp' | relative_url }}" alt="{% if zh %}马莫百科公众号二维码{% else %}马莫百科 official account QR code{% endif %}" width="112" height="112" loading="lazy">
+    <div class="contact-text">
+      <p class="contact-name">{% if zh %}公众号 马莫百科{% else %}马莫百科, my WeChat channel{% endif %}</p>
+      <p class="contact-hint">{% if zh %}新生指南和校园资讯发在这里{% else %}Guides for new students and campus news, written in Chinese{% endif %}</p>
+      <p class="contact-id">
+        <span class="contact-label">{% if zh %}公众号{% else %}Account{% endif %}</span>
+        <span class="contact-value">马莫百科</span>
+        <button type="button" class="contact-copy" data-copy="马莫百科">{% if zh %}复制{% else %}Copy{% endif %}</button>
+      </p>
+    </div>
+  </div>
+</div>
+
+<p class="contact-note small muted">{% if zh %}马莫百科是学生自办的账号，不是 Monash 官方发布{% else %}马莫百科 is a student-run account and is not affiliated with Monash.{% endif %}</p>
+
+<script>
+  (() => {
+    const labels = { copy: '{% if zh %}复制{% else %}Copy{% endif %}', copied: '{% if zh %}已复制{% else %}Copied{% endif %}' };
+    document.querySelectorAll('.contact-copy').forEach((button) => {
+      button.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(button.dataset.copy);
+          button.textContent = labels.copied;
+          button.classList.add('on');
+          setTimeout(() => { button.textContent = labels.copy; button.classList.remove('on'); }, 1600);
+        } catch {
+          // A browser that blocks the clipboard still leaves the text selectable.
+          const value = button.previousElementSibling;
+          const range = document.createRange();
+          range.selectNodeContents(value);
+          const selection = getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+      });
+    });
+  })();
+</script>

@@ -14,7 +14,7 @@ en:
   footer_status: Status
   eyebrow: Computer Science · Monash University
   headline: I build useful software, write code, and keep servers <em>running</em>.
-  lede: I study Computer Science at Monash University Malaysia. Here I write about student tools, algorithms, backend systems, the servers I look after, and the things that went wrong along the way.
+  lede: I study Computer Science at Monash University Malaysia. Here I write about the student tools I build, the algorithms and backend behind them, the servers I run them on, and what went wrong on the way.
   latest: Read the latest post
   about_me: About me
   projects: Projects
@@ -43,7 +43,7 @@ zh-Hans:
   footer_status: 运行状态
   eyebrow: Monash University 计算机科学
   headline: 写代码、做学生工具，也折腾<em>服务器</em>
-  lede: 我在 Monash University Malaysia 读计算机科学。这里记录自己做的学生工具、算法、后端和服务器，也写项目出问题时我是怎么处理的。
+  lede: 我在 Monash University Malaysia 读计算机科学，平时做给同学用的工具，写算法和后端，自己搭服务器让它们跑起来，这里记的是这些东西怎么做出来的，也记出问题时我怎么查
   latest: 读最新一篇
   about_me: 关于我
   projects: 项目
