@@ -14,8 +14,8 @@
         <p class="eyebrow">{{ t.eyebrow }}</p>
       </div>
     </div>
-    <h1 class="display">{{ t.headline }}</h1>
-    <p class="lede">{{ t.lede }}</p>
+    <h1 class="display">{% include zh-wrap.html text=t.headline %}</h1>
+    <p class="lede">{% include zh-wrap.html text=t.lede %}</p>
     <div class="actions">
       {%- assign latest = site.posts | where: "lang", lang | first -%}
       {%- if latest %}<a class="btn" href="{{ latest.url | relative_url }}">{{ t.latest }}</a>{% endif %}
@@ -110,8 +110,8 @@
     <article class="card post-card{% if forloop.first %} post-card--featured{% unless card.preview %} post-card--solo{% endunless %}{% endif %}" data-project="{{ post.project }}">
       <div class="post-main">
         <p class="post-tag">{% if forloop.first %}<span class="new">{{ t.latest_tag }}</span>{% endif %}{{ post.project }}</p>
-        <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
-        <p class="post-excerpt">{{ post.description }}</p>
+        <h3><a href="{{ post.url | relative_url }}">{% include zh-wrap.html text=post.title %}</a></h3>
+        <p class="post-excerpt">{% include zh-wrap.html text=post.description %}</p>
         <p class="post-foot">
           <time class="mono" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: t.date_format }}</time>
           <span class="langs">

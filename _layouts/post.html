@@ -18,8 +18,8 @@ layout: default
       <span aria-hidden="true">/</span>
       <span>{{ page.project }}</span>
     </p>
-    <h1 class="display post-title">{{ page.title }}</h1>
-    {%- if page.description %}<p class="lede">{{ page.description }}</p>{% endif %}
+    <h1 class="display post-title">{% include zh-wrap.html text=page.title %}</h1>
+    {%- if page.description %}<p class="lede">{% include zh-wrap.html text=page.description %}</p>{% endif %}
     <div class="post-meta">
       <time class="mono" datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%-d %b %Y" }}</time>
       <span class="sep" aria-hidden="true"></span>

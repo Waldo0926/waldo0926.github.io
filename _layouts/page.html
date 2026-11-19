@@ -3,7 +3,7 @@ layout: default
 ---
 <div class="container post-wrap">
   <header class="post-hero">
-    <h1 class="display post-title">{{ page.title }}</h1>
+    <h1 class="display post-title">{% include zh-wrap.html text=page.title %}</h1>
   </header>
   <article class="card prose page-card{% if page.wide %} page-card--wide{% endif %}">
     {{ content }}

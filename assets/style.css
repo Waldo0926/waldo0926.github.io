@@ -161,6 +161,20 @@ p { margin: 0; }
   text-wrap: balance;
 }
 
+/* Chinese has no spaces, so a browser may break a line between any two
+   characters and split a word such as 工具 across two lines. keep-all turns
+   that off and leaves only the breakpoints _includes/zh-wrap.html puts after
+   punctuation; a title with no punctuation that still does not fit falls back
+   to overflow-wrap, which breaks by character the way it did before. */
+html:lang(zh-Hans) .display,
+html:lang(zh-Hans) .lede,
+html:lang(zh-Hans) .post-card h3,
+html:lang(zh-Hans) .post-excerpt,
+html:lang(zh-Hans) .section-head h2 {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
 .hero {
   position: relative;
   display: grid;
@@ -364,11 +378,14 @@ p { margin: 0; }
 /* --- post ------------------------------------------------------------------ */
 
 .post-wrap { padding-top: 64px; }
-.post-hero { max-width: 760px; }
+/* The title block used to stop at 760px, so it ended before the table of
+   contents below it and left the right side of the page empty; the narrow
+   column also pushed more titles onto a second line. It now runs the full
+   width of the container and only the summary keeps a reading width. */
 .crumbs { display: flex; gap: 8px; color: var(--muted-2); font-size: 0.9rem; }
 .crumbs a { color: var(--muted); }
 .post-title { margin-top: 14px; font-size: clamp(2rem, 1.5rem + 2vw, 2.9rem); line-height: 1.18; }
-.post-hero .lede { font-size: 1.1rem; }
+.post-hero .lede { max-width: 46em; font-size: 1.1rem; }
 
 .post-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 24px; color: var(--muted); font-size: 0.9rem; }
 .sep { width: 3px; height: 3px; border-radius: 50%; background: var(--border-strong); }
