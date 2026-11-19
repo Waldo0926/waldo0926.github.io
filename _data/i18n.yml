@@ -39,11 +39,11 @@ zh-Hans:
   nav_about: 关于
   switch_label: English
   switch_lang: en
-  footer_note: Monash University Malaysia计算机科学，记录开发与学习
+  footer_note: Monash University Malaysia 计算机科学，记录开发与学习
   footer_status: 运行状态
   eyebrow: Monash University 计算机科学
   headline: 写代码、做学生工具，也折腾<em>服务器</em>
-  lede: 我在Monash University Malaysia读计算机科学。这里记录自己做的学生工具、算法、后端和服务器，也写项目出问题时我是怎么处理的。
+  lede: 我在 Monash University Malaysia 读计算机科学。这里记录自己做的学生工具、算法、后端和服务器，也写项目出问题时我是怎么处理的。
   latest: 读最新一篇
   about_me: 关于我
   projects: 项目

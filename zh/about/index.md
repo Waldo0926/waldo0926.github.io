@@ -8,7 +8,7 @@ alt: /about/
 
 我是温硕勋（Shuoxun Wen），在 Monash University 读计算机科学（Algorithms and Software 方向）。
 
-除了给Monash同学做工具，我还写过算法、机器学习和网络程序，也经常折腾Linux服务器。公开的网站跑在自己的VPS上，有Docker、自动部署和[运行状态监控](https://waldo0926.github.io/uptime/)。这里写开发过程，也写遇到问题以后怎么解决。
+除了给 Monash 同学做工具，我还写过算法、机器学习和网络程序，也经常折腾 Linux 服务器。公开的网站跑在自己的 VPS 上，有 Docker、自动部署和[运行状态监控](https://waldo0926.github.io/uptime/)。这里写开发过程，也写遇到问题以后怎么解决。
 
 ## 项目
 

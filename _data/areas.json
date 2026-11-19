@@ -11,19 +11,19 @@
     "title": "Algorithms & computer science",
     "zh": "算法与计算机科学",
     "description": "String matching, C++ and data structures",
-    "description_zh": "字符串匹配、C++与数据结构"
+    "description_zh": "字符串匹配、C++ 与数据结构"
   },
   {
     "slug": "data",
     "title": "AI & data",
-    "zh": "AI与数据",
+    "zh": "AI 与数据",
     "description": "Machine learning, experiments and information retrieval",
     "description_zh": "机器学习、实验与资料检索"
   },
   {
     "slug": "monash",
     "title": "Monash & study",
-    "zh": "Monash与学习",
+    "zh": "Monash 与学习",
     "description": "Course planning, exchange and student tools",
     "description_zh": "课程规划、交换与学生工具"
   },
@@ -32,7 +32,7 @@
     "title": "Homelab",
     "zh": "Homelab",
     "description": "J1900, Debian, Linux and networking",
-    "description_zh": "J1900、Debian、Linux与网络"
+    "description_zh": "J1900、Debian、Linux 与网络"
   },
   {
     "slug": "writing",
