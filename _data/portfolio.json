@@ -4,7 +4,7 @@
     "name": "Monash Hub",
     "zh": "Monash Hub",
     "description": "unit and degree search, course planning, WAM/GPA and official student guides",
-    "description_zh": "查课程与学位、排选课计划、算WAM/GPA、找官方资料（网站）",
+    "description_zh": "查课程与学位、排选课计划、算 WAM/GPA、找官方资料（网站）",
     "category": "monash",
     "tech": [
       "Nuxt",
@@ -43,7 +43,7 @@
     "name": "Ed Web",
     "zh": "Ed Web",
     "description": "reading and searching Ed discussions in the browser",
-    "description_zh": "在浏览器里整理、搜索Ed讨论区",
+    "description_zh": "在浏览器里整理、搜索 Ed 讨论区",
     "category": "monash",
     "tech": [
       "JavaScript",
@@ -60,7 +60,7 @@
     "name": "Monash Attendance Helper",
     "zh": "Monash Attendance Helper",
     "description": "Chrome extension that looks up attendance codes; the student confirms each submission",
-    "description_zh": "找签到码的Chrome扩展，学生自行确认提交",
+    "description_zh": "找签到码的 Chrome 扩展，学生自行确认提交",
     "category": "monash",
     "tech": [
       "Chrome Extension",
@@ -93,7 +93,7 @@
   {
     "slug": "monash-abroad-tracker-demo",
     "name": "Monash Exchange Tracker Demo",
-    "zh": "Monash Exchange Tracker演示",
+    "zh": "Monash Exchange Tracker 演示",
     "description": "a public demonstration using synthetic data, not private exchange records",
     "description_zh": "使用模拟数据的公开演示，不包含私人的交换记录",
     "category": "monash",
@@ -112,7 +112,7 @@
     "name": "Student Tools Documentation",
     "zh": "学生工具文档",
     "description": "the English and Chinese guides, installers and agent setup notes",
-    "description_zh": "中英文教程、安装脚本和AI安装说明",
+    "description_zh": "中英文教程、安装脚本和 AI 安装说明",
     "category": "monash",
     "tech": [
       "Astro",
@@ -149,7 +149,7 @@
     "name": "quotegate",
     "zh": "quotegate",
     "description": "verifies whether a model's quotations actually appear in their cited source",
-    "description_zh": "检查AI摘录的文字是否真的出自来源",
+    "description_zh": "检查 AI 摘录的文字是否真的出自来源",
     "category": "engineering",
     "tech": [
       "Python",
@@ -166,7 +166,7 @@
     "name": "StreamSwitch",
     "zh": "StreamSwitch",
     "description": "TypeScript/RxJS project exploring deterministic state and reactive event streams",
-    "description_zh": "TypeScript和RxJS的事件流、状态管理实验",
+    "description_zh": "TypeScript 和 RxJS 的事件流、状态管理实验",
     "category": "engineering",
     "tech": [
       "TypeScript",
@@ -183,7 +183,7 @@
     "name": "Edge Fleet Ops Automation",
     "zh": "Edge Fleet Ops Automation",
     "description": "sanitized Linux fleet monitoring, storage health and alerts; original deployment is not published",
-    "description_zh": "Linux节点巡检、磁盘健康和告警；公开版已脱敏",
+    "description_zh": "Linux 节点巡检、磁盘健康和告警；公开版已脱敏",
     "category": "homelab",
     "tech": [
       "Python",
@@ -201,7 +201,7 @@
     "name": "Homelab Network Automation",
     "zh": "Homelab Network Automation",
     "description": "reconstructed iKuai monitoring and guarded network operations; original deployment retired",
-    "description_zh": "iKuai网络监控、连接管理和告警；原部署已停用",
+    "description_zh": "iKuai 网络监控、连接管理和告警；原部署已停用",
     "category": "homelab",
     "tech": [
       "Python",
@@ -236,7 +236,7 @@
     "name": "This blog",
     "zh": "这个博客",
     "description": "Jekyll, GitHub Pages and VPS deployment",
-    "description_zh": "Jekyll、GitHub Pages和VPS部署",
+    "description_zh": "Jekyll、GitHub Pages 和 VPS 部署",
     "category": "homelab",
     "tech": [
       "Jekyll",
@@ -254,7 +254,7 @@
     "name": "Advanced String Algorithms",
     "zh": "高级字符串算法",
     "description": "Z-based matching, BWT search, suffix trees and Rabin–Karp",
-    "description_zh": "Z算法、BWT、后缀树和Rabin–Karp",
+    "description_zh": "Z 算法、BWT、后缀树和 Rabin–Karp",
     "category": "algorithms",
     "tech": [
       "Python",
@@ -269,7 +269,7 @@
   {
     "slug": "classical-algorithms-cpp",
     "name": "Classical Algorithms in C++",
-    "zh": "C++经典算法",
+    "zh": "C++ 经典算法",
     "description": "algorithm design and comparisons",
     "description_zh": "算法设计、实现和比较",
     "category": "algorithms",
@@ -286,7 +286,7 @@
   {
     "slug": "n-queens-algorithm-visualizer",
     "name": "N-Queens Algorithm Visualizer",
-    "zh": "N皇后算法可视化",
+    "zh": "N 皇后算法可视化",
     "description": "backtracking, pruning and local search",
     "description_zh": "回溯、剪枝和局部搜索",
     "category": "algorithms",
@@ -303,7 +303,7 @@
   {
     "slug": "data-structures-labs-cpp",
     "name": "Data Structures Labs in C++",
-    "zh": "C++数据结构实验",
+    "zh": "C++ 数据结构实验",
     "description": "reconstructed data-structure exercises",
     "description_zh": "整理后的数据结构练习",
     "category": "algorithms",
@@ -322,7 +322,7 @@
     "name": "BST Record Management",
     "zh": "二叉搜索树记录管理",
     "description": "a modernized binary-search-tree record manager",
-    "description_zh": "用现代C++重写的记录管理程序",
+    "description_zh": "用现代 C++ 重写的记录管理程序",
     "category": "algorithms",
     "tech": [
       "C++",
@@ -337,7 +337,7 @@
   {
     "slug": "MARIE-Bitmap-Text-Renderer",
     "name": "MARIE Bitmap Text Renderer",
-    "zh": "MARIE位图文字显示",
+    "zh": "MARIE 位图文字显示",
     "description": "low-level bitmap text rendering in MARIE",
     "description_zh": "简单计算机上的底层图形实验",
     "category": "algorithms",
@@ -354,9 +354,9 @@
   {
     "slug": "c-cpp-programming-foundations",
     "name": "C/C++ Programming Foundations",
-    "zh": "C/C++编程基础",
+    "zh": "C/C++ 编程基础",
     "description": "early programming exercises and CCF CSP practice",
-    "description_zh": "早期编程练习和CCF CSP题目",
+    "description_zh": "早期编程练习和 CCF CSP 题目",
     "category": "algorithms",
     "tech": [
       "C",
@@ -371,9 +371,9 @@
   {
     "slug": "tensorflow-cnn-image-classification",
     "name": "TensorFlow CNN Image Classification",
-    "zh": "TensorFlow CNN图像分类",
+    "zh": "TensorFlow CNN 图像分类",
     "description": "CIFAR-10/MNIST experiments and comparisons",
-    "description_zh": "CIFAR-10、MNIST和模型比较",
+    "description_zh": "CIFAR-10、MNIST 和模型比较",
     "category": "data",
     "tech": [
       "TensorFlow",
@@ -391,7 +391,7 @@
     "name": "Pattern Recognition from Scratch",
     "zh": "从零实现模式识别算法",
     "description": "NumPy implementations of classical methods",
-    "description_zh": "用NumPy实现经典算法",
+    "description_zh": "用 NumPy 实现经典算法",
     "category": "data",
     "tech": [
       "Python",
@@ -443,7 +443,7 @@
     "name": "Million-Row Tweet Analysis",
     "zh": "百万行推文分析",
     "description": "streaming text analysis in Bash, Python and R",
-    "description_zh": "Bash、Python和R的数据处理",
+    "description_zh": "Bash、Python 和 R 的数据处理",
     "category": "data",
     "tech": [
       "Bash",
@@ -459,9 +459,9 @@
   {
     "slug": "database-systems-sql-labs",
     "name": "Database Systems SQL Labs",
-    "zh": "SQL数据库实验",
+    "zh": "SQL 数据库实验",
     "description": "SQL Server schemas, queries and verification",
-    "description_zh": "SQL Server查询、表结构和验证",
+    "description_zh": "SQL Server 查询、表结构和验证",
     "category": "data",
     "tech": [
       "SQL Server",
@@ -478,7 +478,7 @@
     "name": "Bike-Share Visualizer",
     "zh": "共享单车可视化",
     "description": "C++ station data and map rendering",
-    "description_zh": "C++站点数据处理和地图绘制",
+    "description_zh": "C++ 站点数据处理和地图绘制",
     "category": "experiments",
     "tech": [
       "C++",
@@ -493,9 +493,9 @@
   {
     "slug": "puma560-robot-trajectory-planning",
     "name": "PUMA 560 Robot Trajectory Planning",
-    "zh": "PUMA 560机器人轨迹规划",
+    "zh": "PUMA 560 机器人轨迹规划",
     "description": "MATLAB robotics and kinematics",
-    "description_zh": "MATLAB机器人运动学",
+    "description_zh": "MATLAB 机器人运动学",
     "category": "experiments",
     "tech": [
       "MATLAB",
@@ -510,7 +510,7 @@
   {
     "slug": "digital-signal-processing-matlab",
     "name": "Digital Signal Processing in MATLAB",
-    "zh": "MATLAB数字信号处理",
+    "zh": "MATLAB 数字信号处理",
     "description": "sampling, FFT, windows and filtering",
     "description_zh": "FFT、采样与滤波",
     "category": "experiments",
@@ -527,7 +527,7 @@
   {
     "slug": "wifi-site-survey-analysis",
     "name": "Wi-Fi Site Survey Analysis",
-    "zh": "Wi-Fi现场勘测分析",
+    "zh": "Wi-Fi 现场勘测分析",
     "description": "indoor WLAN measurements and analysis",
     "description_zh": "室内无线网络测量",
     "category": "experiments",

@@ -1,0 +1,29 @@
+{%- comment -%}
+  Puts a <wbr> around Chinese punctuation so a long title breaks there instead
+  of in the middle of a word. Chinese has no spaces, so by default a browser may
+  break between any two characters, which splits 工具 across two lines. CSS has
+  no portable fix: word-break: auto-phrase only works for Japanese in Chrome and
+  is in neither Firefox nor Safari.
+
+  Closing marks get the breakpoint after them, opening marks before them, so a
+  line never ends on an opening bracket or quote.
+
+  Used together with the word-break: keep-all rule in assets/style.css, which
+  makes these the only breakpoints. A stretch of text with no punctuation that
+  still does not fit falls back to overflow-wrap and breaks by character, which
+  is what the browser did before.
+
+  Usage: {% include zh-wrap.html text=page.title %}
+{%- endcomment -%}
+{%- assign out = include.text -%}
+{%- assign after = "，|、|：|；|。|？|！|）|》|」|』|”|’|…" | split: "|" -%}
+{%- for mark in after -%}
+  {%- capture broken -%}{{ mark }}<wbr>{%- endcapture -%}
+  {%- assign out = out | replace: mark, broken -%}
+{%- endfor -%}
+{%- assign before = "（|《|「|『|“|‘" | split: "|" -%}
+{%- for mark in before -%}
+  {%- capture broken -%}<wbr>{{ mark }}{%- endcapture -%}
+  {%- assign out = out | replace: mark, broken -%}
+{%- endfor -%}
+{{- out -}}

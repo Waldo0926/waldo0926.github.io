@@ -25,6 +25,9 @@ jobs:
           done
           exit "$missing"
 
+      - name: Check spacing between Chinese and Latin text
+        run: python3 scripts/spacing.py
+
       - name: Compile Jekyll site without deploying
         uses: actions/jekyll-build-pages@v1
         with:

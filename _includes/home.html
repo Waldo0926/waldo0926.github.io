@@ -14,12 +14,42 @@
         <p class="eyebrow">{{ t.eyebrow }}</p>
       </div>
     </div>
-    <h1 class="display">{{ t.headline }}</h1>
-    <p class="lede">{{ t.lede }}</p>
+    <h1 class="display">{% include zh-wrap.html text=t.headline %}</h1>
+    <p class="lede">{% include zh-wrap.html text=t.lede %}</p>
     <div class="actions">
       {%- assign latest = site.posts | where: "lang", lang | first -%}
       {%- if latest %}<a class="btn" href="{{ latest.url | relative_url }}">{{ t.latest }}</a>{% endif %}
       <a class="btn btn--ghost" href="{{ t.about | relative_url }}">{{ t.about_me }}</a>
+    </div>
+
+    {%- comment -%}
+      Sits at the bottom of the column so it lines up with the project panel
+      next to it. Every number is counted from the site's own data.
+    {%- endcomment -%}
+    {%- assign posts_here = site.posts | where: "lang", lang | size -%}
+    {%- assign repo_count = site.data.portfolio | size -%}
+    {%- assign live_projects = site.data.projects | where: "pill", "live" | size -%}
+    <div class="hero-foot">
+      <p class="hero-stack-title">{{ t.stack }}</p>
+      <ul class="hero-stack">
+        {%- for item in site.data.stack %}
+        <li>{{ item }}</li>
+        {%- endfor %}
+      </ul>
+      <div class="hero-facts">
+        <div>
+          <p class="fact-num">{{ posts_here }}</p>
+          <p class="fact-text">{{ t.fact_posts }}</p>
+        </div>
+        <div>
+          <p class="fact-num">{{ repo_count }}</p>
+          <p class="fact-text">{{ t.fact_repos }}</p>
+        </div>
+        <div>
+          <p class="fact-num">{{ live_projects }}</p>
+          <p class="fact-text">{{ t.fact_live }}</p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -56,7 +86,7 @@
 <section class="container topic-section section" id="topics">
   <div class="section-head">
     <h2>{% if zh %}我平时在做什么{% else %}What I work on{% endif %}</h2>
-    <p class="muted">{% if zh %}按方向看看项目和文章，不必从头翻GitHub{% else %}Find the projects and notes behind each subject{% endif %}</p>
+    <p class="muted">{% if zh %}按方向看看项目和文章，不必从头翻 GitHub{% else %}Find the projects and notes behind each subject{% endif %}</p>
   </div>
   <div class="topic-grid">
     {%- for area in site.data.areas %}
@@ -110,8 +140,8 @@
     <article class="card post-card{% if forloop.first %} post-card--featured{% unless card.preview %} post-card--solo{% endunless %}{% endif %}" data-project="{{ post.project }}">
       <div class="post-main">
         <p class="post-tag">{% if forloop.first %}<span class="new">{{ t.latest_tag }}</span>{% endif %}{{ post.project }}</p>
-        <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
-        <p class="post-excerpt">{{ post.description }}</p>
+        <h3><a href="{{ post.url | relative_url }}">{% include zh-wrap.html text=post.title %}</a></h3>
+        <p class="post-excerpt">{% include zh-wrap.html text=post.description %}</p>
         <p class="post-foot">
           <time class="mono" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: t.date_format }}</time>
           <span class="langs">

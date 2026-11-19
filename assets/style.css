@@ -161,14 +161,32 @@ p { margin: 0; }
   text-wrap: balance;
 }
 
+/* Chinese has no spaces, so a browser may break a line between any two
+   characters and split a word such as 工具 across two lines. keep-all turns
+   that off and leaves only the breakpoints _includes/zh-wrap.html puts after
+   punctuation; a title with no punctuation that still does not fit falls back
+   to overflow-wrap, which breaks by character the way it did before. */
+html:lang(zh-Hans) .display,
+html:lang(zh-Hans) .lede,
+html:lang(zh-Hans) .post-card h3,
+html:lang(zh-Hans) .post-excerpt,
+html:lang(zh-Hans) .section-head h2 {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
 .hero {
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
   gap: 64px;
-  align-items: start;
+  align-items: stretch;
   padding-top: 88px;
 }
+/* The project panel next to it is about twice as tall as the intro, so the
+   column is a flex box and the block below hangs from the bottom, which lines
+   the two columns up instead of leaving the left half empty. */
+.hero-text { display: flex; flex-direction: column; }
 /* A faint wash of the brand blue behind the hero, so the top of the page has
    some depth without a picture. */
 .hero::before {
@@ -205,6 +223,28 @@ p { margin: 0; }
 
 .lede { margin-top: 22px; max-width: 36em; color: var(--muted); font-size: 1.12rem; line-height: 1.7; }
 .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+
+.hero-foot { margin-top: auto; padding-top: 34px; }
+.hero-stack-title { color: var(--muted-2); font-size: 0.8rem; letter-spacing: 0.02em; }
+.hero-stack { display: flex; flex-wrap: wrap; gap: 7px; margin: 12px 0 0; padding: 0; list-style: none; }
+.hero-stack li {
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--ink-700);
+  font-size: 0.8rem;
+}
+.hero-facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 30px;
+  padding-top: 26px;
+  border-top: 1px solid var(--border);
+}
+.hero-facts .fact-num { font-size: 1.55rem; }
+.hero-facts .fact-text { margin-top: 2px; font-size: 0.85rem; }
 
 /* --- home: projects panel ------------------------------------------------- */
 
@@ -364,11 +404,14 @@ p { margin: 0; }
 /* --- post ------------------------------------------------------------------ */
 
 .post-wrap { padding-top: 64px; }
-.post-hero { max-width: 760px; }
+/* The title block used to stop at 760px, so it ended before the table of
+   contents below it and left the right side of the page empty; the narrow
+   column also pushed more titles onto a second line. It now runs the full
+   width of the container and only the summary keeps a reading width. */
 .crumbs { display: flex; gap: 8px; color: var(--muted-2); font-size: 0.9rem; }
 .crumbs a { color: var(--muted); }
 .post-title { margin-top: 14px; font-size: clamp(2rem, 1.5rem + 2vw, 2.9rem); line-height: 1.18; }
-.post-hero .lede { font-size: 1.1rem; }
+.post-hero .lede { max-width: 46em; font-size: 1.1rem; }
 
 .post-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 24px; color: var(--muted); font-size: 0.9rem; }
 .sep { width: 3px; height: 3px; border-radius: 50%; background: var(--border-strong); }
@@ -451,6 +494,47 @@ p { margin: 0; }
 .page-card--wide { max-width: none; }
 .page-card--wide > p { max-width: 70ch; }
 
+/* --- contact block on the About page --------------------------------------- */
+
+.contacts { display: grid; gap: 14px; margin: 0 0 1.2em; }
+@media (min-width: 760px) { .contacts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; } }
+
+.contact {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+.contact p { margin: 0; }
+.contact-qr { width: 112px; height: 112px; flex: none; border-radius: 8px; background: #fff; }
+.contact-text { min-width: 0; }
+.contact-name { font-weight: 600; line-height: 1.4; }
+.contact-hint { margin-top: 3px; color: var(--muted); font-size: 0.85rem; line-height: 1.5; }
+.contact-id { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; font-size: 0.9rem; line-height: 1.6; }
+.contact-label { color: var(--muted-2); font-size: 0.78rem; }
+.contact a.contact-value { color: var(--text); text-decoration: none; }
+.contact a.contact-value:hover { color: var(--brand); }
+.contact-copy {
+  padding: 2px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  font: 0.78rem/1.7 var(--font);
+  cursor: pointer;
+}
+.contact-copy:hover { border-color: var(--brand); color: var(--brand); }
+.contact-copy.on { border-color: var(--live); background: var(--live-bg); color: var(--live); }
+.contact-note { margin-top: -0.4em; }
+
+@media (max-width: 420px) {
+  .contact { gap: 14px; padding: 14px; }
+  .contact-qr { width: 92px; height: 92px; }
+}
+
 /* Rouge's token colours, for the dark code blocks. */
 .highlight .c, .highlight .c1, .highlight .cm { color: #7f93a8; font-style: italic; }
 .highlight .k, .highlight .kd, .highlight .kn, .highlight .nb { color: #7cc4ff; }
@@ -462,6 +546,7 @@ p { margin: 0; }
 
 @media (max-width: 900px) {
   .hero { grid-template-columns: 1fr; gap: 48px; padding-top: 48px; }
+  .hero-foot { padding-top: 26px; }
   .post-body { grid-template-columns: minmax(0, 1fr); }
   .toc { display: none; }
   .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -477,6 +562,9 @@ p { margin: 0; }
   .header-cta { display: none; }
   .brand span:last-child { display: none; }
   .lede { font-size: 1.02rem; }
+  .hero-facts { gap: 16px; margin-top: 24px; }
+  .hero-facts .fact-num { font-size: 1.35rem; }
+  .hero-facts .fact-text { font-size: 0.8rem; }
   .panel { padding: 20px 18px 8px; }
   .section { padding-top: 72px; }
   .section-head { flex-direction: column; gap: 8px; }

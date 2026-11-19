@@ -1,0 +1,12 @@
+# Shown under the home page intro. Keep it to the things the public repositories
+# and the running sites actually use.
+- Python
+- TypeScript
+- FastAPI
+- Nuxt
+- PostgreSQL
+- Docker
+- Nginx
+- Linux
+- MCP
+- GitHub Actions
