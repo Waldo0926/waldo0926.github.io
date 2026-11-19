@@ -295,6 +295,7 @@ p { margin: 0; }
 .post-card--featured.post-card--solo { grid-template-columns: minmax(0, 1fr); }
 .post-card--solo .post-main { max-width: 68ch; }
 .post-card--featured h3 { font-size: 1.9rem; line-height: 1.22; }
+.posts-more { margin-top: 28px; text-align: center; }
 .post-card--featured .post-excerpt { font-size: 1.02rem; line-height: 1.7; }
 .new {
   margin-right: 10px;

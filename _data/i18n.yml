@@ -27,6 +27,7 @@ en:
   filter_label: Filter by project
   all: All
   latest_tag: Latest
+  show_all: Show all N posts
   date_format: "%-d %b %Y"
 zh-Hans:
   home: /zh/
@@ -55,4 +56,5 @@ zh-Hans:
   filter_label: 按项目筛选
   all: 全部
   latest_tag: 最新
+  show_all: 显示全部 N 篇
   date_format: "%Y-%m-%d"

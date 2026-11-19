@@ -131,10 +131,27 @@
     </article>
     {%- endfor -%}
   </div>
+  {%- assign shown = 13 -%}
+  {%- if posts.size > shown %}
+  <p class="posts-more" hidden><button type="button" class="btn btn--ghost">{{ t.show_all | replace: "N", posts.size }}</button></p>
+  {%- endif %}
   <script>
     (() => {
       const bar = document.querySelector('.filters');
       const cards = document.querySelectorAll('.posts [data-project]');
+      const more = document.querySelector('.posts-more');
+      const shown = 13;
+      let folded = Boolean(more);
+      const show = (want) => {
+        let n = 0;
+        cards.forEach((card) => {
+          const match = !want || card.dataset.project === want;
+          card.hidden = !match || (folded && !want && n++ >= shown);
+        });
+        if (more) more.hidden = !folded || Boolean(want);
+      };
+      if (more) more.querySelector('button').addEventListener('click', () => { folded = false; show(''); });
+      show('');
       bar.hidden = false;
       bar.addEventListener('click', (event) => {
         const chip = event.target.closest('.chip');
@@ -144,7 +161,7 @@
           c.classList.toggle('on', c === chip);
           c.setAttribute('aria-pressed', c === chip);
         });
-        cards.forEach((card) => { card.hidden = want && card.dataset.project !== want; });
+        show(want);
       });
     })();
   </script>
