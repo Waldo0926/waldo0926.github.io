@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>家里 IP 会变时怎么 SSH 回服务器 | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="家里 IP 会变时怎么 SSH 回服务器" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="zh_Hans" />
+<meta name="description" content="从端口转发加 DDNS 换成 Tailscale 加 ProxyJump，每台机器两个名字，以及 HostKeyAlias 的用法" />
+<meta property="og:description" content="从端口转发加 DDNS 换成 Tailscale 加 ProxyJump，每台机器两个名字，以及 HostKeyAlias 的用法" />
+<link rel="canonical" href="https://blog.secureview.tech/2026/11/19/ssh-home-servers-zh/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/11/19/ssh-home-servers-zh/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/ssh-home-servers-zh.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-11-19T12:15:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/ssh-home-servers-zh.png" />
+<meta property="twitter:title" content="家里 IP 会变时怎么 SSH 回服务器" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-11-19T12:15:00+08:00","datePublished":"2026-11-19T12:15:00+08:00","description":"从端口转发加 DDNS 换成 Tailscale 加 ProxyJump，每台机器两个名字，以及 HostKeyAlias 的用法","headline":"家里 IP 会变时怎么 SSH 回服务器","image":"https://blog.secureview.tech/assets/og/ssh-home-servers-zh.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/11/19/ssh-home-servers-zh/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/11/19/ssh-home-servers-zh/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/11/19/ssh-home-servers-zh/">
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/11/19/ssh-home-servers/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css?v=1795234673">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/zh/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/zh/#writing">文章</a>
+        <a href="/zh/#projects">项目</a>
+        <a href="/zh/projects/">归档</a>
+        <a href="/zh/search/">搜索</a>
+        <a href="/zh/about/">关于</a>
+      </nav>
+      <a class="lang-switch" href="/2026/11/19/ssh-home-servers/" lang="en" hreflang="en">English</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/zh/#writing">文章</a>
+      <span aria-hidden="true">/</span>
+      <span>Homelab</span>
+    </p>
+    <h1 class="display post-title">家里 IP 会变时怎么 SSH 回服务器</h1><p class="lede">从端口转发加 DDNS 换成 Tailscale 加 ProxyJump，<wbr>每台机器两个名字，<wbr>以及 HostKeyAlias 的用法</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-11-19T12:15:00+08:00">19 Nov 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>约 5 分钟</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/11/19/ssh-home-servers/">English</a>
+        <a href="/2026/11/19/ssh-home-servers-zh/" lang="zh-Hans" class="on" aria-current="page">中文</a>
+      </span>
+    </div>
+  </header>
+  <p class="post-source small muted"> · 资料核对：2026-11-19
+  </p>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p>在讲<a href="/2026/11/01/spare-machines-zh/">闲置机器</a>那篇里，我留了一个问题：家里公网 IP 变了以后，怎么还能 SSH 进去？现在这个问题解决了，下面是现在实际在跑的做法，地址、端口、域名和密钥名都故意没写</p>
+
+<p>机器有这些：家里两台 J1900（其中一台每天晚上跑<a href="/2026/11/19/exchange-tracker-zh/">交换 tracker</a>），一台跑 Armbian 的 ARM 小盒子，同一个网络里还有一台 N1，以及放我公开网站的 VPS，我的笔记本通常在完全不同的地方</p>
+
+<h2 id="一开始的做法">一开始的做法</h2>
+
+<p>最开始是路由器把一个非标准端口转发到其中一台 J1900，<code class="language-plaintext highlighter-rouge">~/.ssh/config</code> 里写的是家里的公网 IP，运营商一换地址，配置里的地址就错了</p>
+
+<p>常见的解决办法是动态 DNS，这台机器上现在也还跑着几个脚本，每隔几分钟把当前公网 IP 写进 Cloudflare 的 A 记录</p>
+
+<p>其中一个会同时问两个查 IP 的服务，两边不一致就不更新，地址看起来像运营商 NAT（<code class="language-plaintext highlighter-rouge">100.64.0.0/10</code>）也不更新，因为那种情况下外面本来就连不进来</p>
+
+<p>但 DNS 只回答“机器在哪”，不决定“谁能登录”，一个转发出去的 SSH 端口，不管叫什么名字，都是对整个互联网开放的</p>
+
+<h2 id="现在的做法">现在的做法</h2>
+
+<p>十月我在主力那台 J1900 上装了 Tailscale，SSH 改成连它的 Tailscale 地址，Tailscale 能穿过两边的 NAT，所以家里 IP 怎么换都没关系</p>
+
+<pre><code class="language-sshconfig">Host j1900-main
+    HostName &lt;tailscale 地址&gt;
+    HostKeyAlias &lt;旧地址&gt;
+    IdentitiesOnly yes
+    StrictHostKeyChecking yes
+    ServerAliveInterval 30
+    ServerAliveCountMax 3
+</code></pre>
+
+<p>第二台 J1900 和我的笔记本不在同一个 tailnet 里，所以通过第一台在家里局域网跳过去：</p>
+
+<pre><code class="language-sshconfig">Host j1900
+    HostName &lt;局域网地址&gt;
+    ProxyJump j1900-main
+
+Host j1900-lan
+    HostName &lt;局域网地址&gt;
+    ProxyJump none
+    ProxyCommand none
+</code></pre>
+
+<p>ARM 小盒子那边也是一样：<code class="language-plaintext highlighter-rouge">oes</code> 走 Tailscale，<code class="language-plaintext highlighter-rouge">n1</code> 是 <code class="language-plaintext highlighter-rouge">ProxyJump oes</code></p>
+
+<p>在笔记本上看 <code class="language-plaintext highlighter-rouge">tailscale status</code>，主力那台显示的是 IPv6 直连，没有走中继，所以 SSH 用起来和在局域网里差不多</p>
+
+<h2 id="两个名字而不是一个聪明的名字">两个名字，而不是一个聪明的名字</h2>
+
+<p>有一天我试过只用一个 <code class="language-plaintext highlighter-rouge">j1900-main</code>，在哪都能连：用 <code class="language-plaintext highlighter-rouge">ProxyCommand</code> 先试局域网地址，2 秒连不上再换 Tailscale 地址：</p>
+
+<pre><code class="language-sshconfig">ProxyCommand sh -c 'nc -G 2 &lt;局域网地址&gt; 22 || exec nc -G 8 %h %p'
+</code></pre>
+
+<p>能用，但看不出这次连接走的是哪条路，而且不在家的时候，每次连接都要先等局域网那次超时</p>
+
+<p>第二天配置又改回了两个普通的名字：<code class="language-plaintext highlighter-rouge">ssh j1900</code> 在哪都能用，<code class="language-plaintext highlighter-rouge">ssh j1900-lan</code> 直接走家里网络，两个名字一眼就知道走的是哪条路，也不用每次等一个注定失败的尝试</p>
+
+<h2 id="让密钥检查一直开着的那一行">让密钥检查一直开着的那一行</h2>
+
+<p><code class="language-plaintext highlighter-rouge">StrictHostKeyChecking yes</code> 会拒绝 <code class="language-plaintext highlighter-rouge">known_hosts</code> 里没有密钥的主机</p>
+
+<p>同一台机器换了一个地址去连，比如从局域网地址换成 Tailscale 地址，或者从以前的公网地址加端口换成局域网地址，SSH 都会把它当成一台“新”主机，虽然密钥根本没变</p>
+
+<p>最省事的办法是再接受一次新密钥，但我不想这么做，因为那个提示本来就是要你认真看的</p>
+
+<p><code class="language-plaintext highlighter-rouge">HostKeyAlias</code> 让 SSH 用旧名字去查密钥，这样我之前核对过的那把密钥会继续被检查，换了一把不同的密钥照样会被拒绝</p>
+
+<h2 id="机器上放行了什么">机器上放行了什么</h2>
+
+<p>主力那台 J1900 上，<code class="language-plaintext highlighter-rouge">ufw</code> 只放行家里局域网、<code class="language-plaintext highlighter-rouge">tailscale0</code> 上的流量，以及 UDP 41641，让 Tailscale 可以直连，其他一律不让进</p>
+
+<p>两台 J1900 和 VPS 上，<code class="language-plaintext highlighter-rouge">sshd -T</code> 显示 <code class="language-plaintext highlighter-rouge">passwordauthentication no</code> 和 <code class="language-plaintext highlighter-rouge">kbdinteractiveauthentication no</code>，root 只能用密钥登录</p>
+
+<p>我没有用 Tailscale SSH，Tailscale 只负责提供一条路，谁能进来还是由 OpenSSH 和我自己的密钥决定</p>
+
+<p>第二台 J1900 的网卡也开了 Wake-on-LAN（magic packet）</p>
+
+<h2 id="写这篇时才发现的事">写这篇时才发现的事</h2>
+
+<p>那台机器上的几个 DDNS 脚本里，有一个从 10 月 19 日开始一直在日志里写“读取 DNS 记录失败（token 或记录 ID 失效？）”</p>
+
+<p>什么都没坏，因为 SSH 已经不走那条记录了，一个没人依赖的任务，可以安安静静地失败一个月，这几条记录接下来要一条条看一下</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">本文目录</p>
+      <ol><li><a href="#一开始的做法">一开始的做法</a></li><li><a href="#现在的做法">现在的做法</a></li><li><a href="#两个名字而不是一个聪明的名字">两个名字，而不是一个聪明的名字</a></li><li><a href="#让密钥检查一直开着的那一行">让密钥检查一直开着的那一行</a></li><li><a href="#机器上放行了什么">机器上放行了什么</a></li><li><a href="#写这篇时才发现的事">写这篇时才发现的事</a></li></ol>
+      <a class="toc-back" href="/zh/#writing">全部文章</a>
+    </aside>
+  </div>
+  <section class="post-related" aria-label="相关文章">
+    <h2>同一方向的其他文章</h2>
+    <ul><li><a href="/2026/11/01/stateful-alerts-zh/">只在状态变化时发的服务器告警</a></li><li><a href="/2026/11/01/spare-machines-zh/">两台 J1900 和一台 N1 上跑什么</a></li></ul>
+  </section>
+  <nav class="more" aria-label="更多文章">
+    <a class="card more-link" href="/2026/11/19/exchange-tracker-zh/">
+      <span class="more-label">上一篇 · Exchange Tracker</span>
+      <span class="more-title">记录 Monash 交换项目的变化</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/11/21/study-kit-download-choices-zh/">
+      <span class="more-label">下一篇 · Study Kit</span>
+      <span class="more-title">Study Kit 1.16.0：下载大小上限和跳过文件清单</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Monash University Malaysia 计算机科学，记录开发与学习</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">运行状态</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

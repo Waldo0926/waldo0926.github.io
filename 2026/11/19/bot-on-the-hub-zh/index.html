@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>微信机器人接入 Monash Hub | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="微信机器人接入 Monash Hub" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="zh_Hans" />
+<meta name="description" content="马莫百科的机器人现在也在 Monash Hub 的提问面板里回答，网站访客看不到只适用于公众号的内容" />
+<meta property="og:description" content="马莫百科的机器人现在也在 Monash Hub 的提问面板里回答，网站访客看不到只适用于公众号的内容" />
+<link rel="canonical" href="https://blog.secureview.tech/2026/11/19/bot-on-the-hub-zh/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/11/19/bot-on-the-hub-zh/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/bot-on-the-hub-zh.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-11-19T11:40:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/bot-on-the-hub-zh.png" />
+<meta property="twitter:title" content="微信机器人接入 Monash Hub" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-11-19T11:40:00+08:00","datePublished":"2026-11-19T11:40:00+08:00","description":"马莫百科的机器人现在也在 Monash Hub 的提问面板里回答，网站访客看不到只适用于公众号的内容","headline":"微信机器人接入 Monash Hub","image":"https://blog.secureview.tech/assets/og/bot-on-the-hub-zh.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/11/19/bot-on-the-hub-zh/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/11/19/bot-on-the-hub-zh/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/11/19/bot-on-the-hub-zh/">
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/11/19/bot-on-the-hub/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css?v=1795234673">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/zh/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/zh/#writing">文章</a>
+        <a href="/zh/#projects">项目</a>
+        <a href="/zh/projects/">归档</a>
+        <a href="/zh/search/">搜索</a>
+        <a href="/zh/about/">关于</a>
+      </nav>
+      <a class="lang-switch" href="/2026/11/19/bot-on-the-hub/" lang="en" hreflang="en">English</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/zh/#writing">文章</a>
+      <span aria-hidden="true">/</span>
+      <span>Q&A bot</span>
+    </p>
+    <h1 class="display post-title">微信机器人接入 Monash Hub</h1><p class="lede">马莫百科的机器人现在也在 Monash Hub 的提问面板里回答，<wbr>网站访客看不到只适用于公众号的内容</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-11-19T11:40:00+08:00">19 Nov 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>约 3 分钟</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/11/19/bot-on-the-hub/">English</a>
+        <a href="/2026/11/19/bot-on-the-hub-zh/" lang="zh-Hans" class="on" aria-current="page">中文</a>
+      </span>
+    </div>
+  </header>
+  <p class="post-source small muted"> · 资料核对：2026-11-19
+  </p>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p>马莫百科的微信机器人回答 Monash 马来西亚校区学生和家长的问题，它知道的东西来自两处：只能<a href="/2026/10/25/quote-only-rag-zh/">逐字引用</a>的官方页面，还有我<a href="/2026/11/17/bot-learns-from-chat-zh/">在聊天里教它的回答</a></p>
+
+<p>Monash Hub 自己也有一个提问面板，就是右下角那个圆按钮，它完全不用模型，只是把问题导到 Hub 上对应的页面、课程或重要日期</p>
+
+<p>问“第一学期什么时候开学”“FIT2102 怎么样”它很擅长，但图书馆怎么打印、学生签证怎么办，它一概不知道，而这些机器人早就答得不错了</p>
+
+<p>所以现在提问面板两边都问</p>
+
+<h2 id="面板怎么用这两个答案">面板怎么用这两个答案</h2>
+
+<p>你问一个问题，页面会同时发给 Hub 自己的路由和机器人，等两边都回来</p>
+
+<p>机器人引用官方页面时可能要几秒，慢了或者挂了，它那部分就不显示，其他照常出来</p>
+
+<ul>
+  <li>机器人的回答只是指回 Hub 的话就不显示，因为面板上已经有那个页面了</li>
+  <li>机器人有自己的回答，就放在单独一个气泡里，标明是机器人答的</li>
+  <li>打招呼或者问“你是谁”，只回一段简短介绍，什么都不搜</li>
+</ul>
+
+<h2 id="网站访客不是公众号粉丝">网站访客不是公众号粉丝</h2>
+
+<p>机器人跑在另一台服务器上，所以 Hub 调用它新加的 <code class="language-plaintext highlighter-rouge">POST /web/ask</code>，带一个共享密钥，没设密钥的话这个接口根本不存在</p>
+
+<p>有些话只在微信里说得通，比如「回复人工」或者“在 Monash Hub 上查看更多”，网页上的回答会把它们去掉</p>
+
+<p>更大的区别是答不上来的时候</p>
+
+<p>在微信里，<a href="/2026/11/17/bot-forwarding-zh/">机器人答不上的正经问题会转给我</a>，从网站来的不会转，因为我没法回复一个匿名的浏览器，转过来只会多一堆永远等不到回答的消息</p>
+
+<p>所以面板会请访客去公众号问，那里我能回复</p>
+
+<p>每个浏览器有一个随机 id，机器人按这个 id 限流，和限制微信用户一样，另外 Hub 每个地址每小时最多问机器人 60 次，网页上的回答超过 12 秒机器人就放弃，机器人日志里访客记成 <code class="language-plaintext highlighter-rouge">web:</code> 加上这个随机 id 的哈希</p>
+
+<p>部署时有个细节比想象中费时间：Hub 的 API 跑在容器里，机器人监听的是宿主机的 loopback 地址，容器访问不到，最后是在宿主机的 nginx 上给 <code class="language-plaintext highlighter-rouge">/web/ask</code> 加了一条转发，步骤写在运维手册里</p>
+
+<h2 id="进群的小修复">进群的小修复</h2>
+
+<p>这周另一个改动在私聊里</p>
+
+<p>有人加了 MonashGuide 的微信，私聊说想进学生群，这个号本来就是拉人进群的号，但机器人回的却是公众号那段话，叫人去加 MonashGuide 好友，可他们已经加了</p>
+
+<p>现在只在私聊里，像“进群”“能拉我进群吗”“群二维码过期了”这种短句，会回「请稍等，Waldo 看到后会邀请你进群～」，同时给我发一条提醒说谁想进群，同一个人一天最多提醒一次</p>
+
+<p>比较长、只是顺带提到群的问题照常回答，公众号和群聊里的行为都没变</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">本文目录</p>
+      <ol><li><a href="#面板怎么用这两个答案">面板怎么用这两个答案</a></li><li><a href="#网站访客不是公众号粉丝">网站访客不是公众号粉丝</a></li><li><a href="#进群的小修复">进群的小修复</a></li></ol>
+      <a class="toc-back" href="/zh/#writing">全部文章</a>
+    </aside>
+  </div>
+  <section class="post-related" aria-label="相关文章">
+    <h2>同一方向的其他文章</h2>
+    <ul><li><a href="/2026/11/17/bot-learns-from-chat-zh/">用平常的消息教机器人</a></li><li><a href="/2026/11/17/bot-forwarding-zh/">机器人哪些消息转给我</a></li><li><a href="/2026/10/25/quote-only-rag-zh/">只发送原文句子的问答机器人</a></li></ul>
+  </section>
+  <nav class="more" aria-label="更多文章">
+    <a class="card more-link" href="/2026/11/19/secureview-passphrase-zh/">
+      <span class="more-label">上一篇 · SecureView</span>
+      <span class="more-title">SecureView 的密码检查</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/11/19/exchange-tracker-zh/">
+      <span class="more-label">下一篇 · Exchange Tracker</span>
+      <span class="more-title">记录 Monash 交换项目的变化</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Monash University Malaysia 计算机科学，记录开发与学习</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">运行状态</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

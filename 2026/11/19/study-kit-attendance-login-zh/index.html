@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Study Kit 1.14：考勤登录恢复 | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Study Kit 1.14：考勤登录恢复" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="zh_Hans" />
+<meta name="description" content="考勤登录过期时，Study Kit 会用电脑上已有的浏览器配置登回去，需要密码或 MFA 时就停下" />
+<meta property="og:description" content="考勤登录过期时，Study Kit 会用电脑上已有的浏览器配置登回去，需要密码或 MFA 时就停下" />
+<link rel="canonical" href="https://blog.secureview.tech/2026/11/19/study-kit-attendance-login-zh/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/11/19/study-kit-attendance-login-zh/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/study-kit-attendance-login-zh.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-11-19T10:00:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/study-kit-attendance-login-zh.png" />
+<meta property="twitter:title" content="Study Kit 1.14：考勤登录恢复" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-11-19T10:00:00+08:00","datePublished":"2026-11-19T10:00:00+08:00","description":"考勤登录过期时，Study Kit 会用电脑上已有的浏览器配置登回去，需要密码或 MFA 时就停下","headline":"Study Kit 1.14：考勤登录恢复","image":"https://blog.secureview.tech/assets/og/study-kit-attendance-login-zh.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/11/19/study-kit-attendance-login-zh/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/11/19/study-kit-attendance-login-zh/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/11/19/study-kit-attendance-login-zh/">
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/11/19/study-kit-attendance-login/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css?v=1795234673">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/zh/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/zh/#writing">文章</a>
+        <a href="/zh/#projects">项目</a>
+        <a href="/zh/projects/">归档</a>
+        <a href="/zh/search/">搜索</a>
+        <a href="/zh/about/">关于</a>
+      </nav>
+      <a class="lang-switch" href="/2026/11/19/study-kit-attendance-login/" lang="en" hreflang="en">English</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/zh/#writing">文章</a>
+      <span aria-hidden="true">/</span>
+      <span>Study Kit</span>
+    </p>
+    <h1 class="display post-title">Study Kit 1.14：<wbr>考勤登录恢复</h1><p class="lede">考勤登录过期时，<wbr>Study Kit 会用电脑上已有的浏览器配置登回去，<wbr>需要密码或 MFA 时就停下</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-11-19T10:00:00+08:00">19 Nov 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>约 2 分钟</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/11/19/study-kit-attendance-login/">English</a>
+        <a href="/2026/11/19/study-kit-attendance-login-zh/" lang="zh-Hans" class="on" aria-current="page">中文</a>
+      </span>
+    </div>
+  </header>
+  <p class="post-source small muted">
+    <a href="https://github.com/Waldo0926/monash-study-kit" rel="noopener external" target="_blank">对应源码</a> · 资料核对：2026-11-19
+  </p>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p>Study Kit 可选的考勤功能会去读 Monash 的考勤门户，AI 才能告诉你哪几节课还没签到</p>
+
+<p>最大的问题是登录：隔一阵就会过期，而且往往是 AI 说“读不到考勤”时才发现，然后得重新跑一次 <code class="language-plaintext highlighter-rouge">monash attendance login</code>，偏偏都是赶着要答案的时候</p>
+
+<p>1.14 想在完全不碰密码的前提下把这件事做好一点</p>
+
+<h2 id="它做什么">它做什么</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>monash attendance maintain
+</code></pre></div></div>
+
+<p>它会检查考勤登录还能不能用，过期了的话，就用 Study Kit 本来为考勤单独保存在你电脑上的那个浏览器登录状态，悄悄打开门户</p>
+
+<p>如果 Okta 在那个浏览器里还记得你，门户会自己登回去，你什么都不用做</p>
+
+<p>如果 Monash 要你输密码或 MFA，它就停下来报告 <code class="language-plaintext highlighter-rouge">needs_login</code>，由你自己运行 <code class="language-plaintext highlighter-rouge">monash attendance login</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">monash attendance renew --timeout 30</code> 是手动试一次同样的静默恢复</p>
+
+<h2 id="它守的规矩">它守的规矩</h2>
+
+<ul>
+  <li><strong>从不替你输入</strong>：密码、MFA 验证码都不碰，留给你自己</li>
+  <li><strong>失败了会等</strong>：认证失败以后一小时内不再试，免得一直去戳 Okta<br />
+换了新的登录状态文件（比如你刚重新登录过）会马上重新检查</li>
+  <li><strong>不把网络问题当成登录过期</strong>：超时或证书错误就照实报告</li>
+  <li><strong>不丢掉能用的东西</strong>：恢复失败时保留之前的登录状态，不会覆盖掉</li>
+  <li><strong>一次只用一个</strong>：本机浏览器登录状态同一时间只给一个进程用，两个 Study Kit 进程不会抢</li>
+</ul>
+
+<h2 id="它保证不了的">它保证不了的</h2>
+
+<p>登录里 Okta 那部分只存在于你登录的那台电脑上，能复用的只是考勤门户自己的登录状态，Okta 的登录状态从不导出</p>
+
+<p>所以它只在同一台电脑上有效，电脑睡眠或断网时，登录照样可能过期</p>
+
+<p>它让平时的情况顺一点，但不是绕过登录的办法</p>
+
+<p>1.14 之前，后台任务续期失败也会算成成功，问题就被藏起来了，现在会如实报告</p>
+
+<p>完整改动见<a href="https://github.com/Waldo0926/monash-study-kit/blob/main/CHANGELOG.md">更新记录</a></p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">本文目录</p>
+      <ol><li><a href="#它做什么">它做什么</a></li><li><a href="#它守的规矩">它守的规矩</a></li><li><a href="#它保证不了的">它保证不了的</a></li></ol>
+      <a class="toc-back" href="/zh/#writing">全部文章</a>
+    </aside>
+  </div>
+  <section class="post-related" aria-label="相关文章">
+    <h2>同一方向的其他文章</h2>
+    <ul><li><a href="/2026/11/21/study-kit-download-choices-zh/">Study Kit 1.16.0：下载大小上限和跳过文件清单</a></li><li><a href="/2026/11/19/study-kit-uninstall-zh/">Study Kit 1.15.0：卸载时吊销 Google 授权</a></li><li><a href="/2026/11/19/study-kit-submissions-zh/">Study Kit 1.13：读取已交作业和评语</a></li></ul>
+  </section>
+  <nav class="more" aria-label="更多文章">
+    <a class="card more-link" href="/2026/11/19/study-kit-submissions-zh/">
+      <span class="more-label">上一篇 · Study Kit</span>
+      <span class="more-title">Study Kit 1.13：读取已交作业和评语</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/11/19/hub-compare-years-zh/">
+      <span class="more-label">下一篇 · Monash Hub</span>
+      <span class="more-title">对比一门课在不同 Handbook 年份的变化</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Monash University Malaysia 计算机科学，记录开发与学习</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">运行状态</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

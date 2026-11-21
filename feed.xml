@@ -1,0 +1,609 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://blog.secureview.tech/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.secureview.tech/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-11-21T12:17:53+08:00</updated><id>https://blog.secureview.tech/feed.xml</id><title type="html">Shuoxun Wen</title><subtitle>Projects, code and engineering notes from Shuoxun Wen, Computer Science at Monash University Malaysia.</subtitle><author><name>Shuoxun Wen</name></author><entry xml:lang="zh-Hans"><title type="html">Study Kit 1.16.0：下载大小上限和跳过文件清单</title><link href="https://blog.secureview.tech/2026/11/21/study-kit-download-choices-zh/" rel="alternate" type="text/html" title="Study Kit 1.16.0：下载大小上限和跳过文件清单" /><published>2026-11-21T11:45:00+08:00</published><updated>2026-11-21T11:45:00+08:00</updated><id>https://blog.secureview.tech/2026/11/21/study-kit-download-choices-zh</id><content type="html" xml:base="https://blog.secureview.tech/2026/11/21/study-kit-download-choices-zh/"><![CDATA[<p><a href="https://github.com/Waldo0926/monash-study-kit">Study Kit</a> 会把课程在 Moodle 上的文件同步到电脑上，方便 AI 软件搜索和读取</p>
+
+<p>之前只有录像默认不下载，其他文件都会下，有的课会放几个 GB 的数据集或者打包的录播</p>
+
+<p>Chrome 插件 <a href="https://github.com/Zetanegative1/Monash-Moodle-Downloader">Monash Moodle Downloader</a> 4.7.0 加了大小上限和类型过滤，我参考它给 Study Kit 也加上了</p>
+
+<h2 id="新的设置">新的设置</h2>
+
+<p>在 <code class="language-plaintext highlighter-rouge">download_videos</code> 之外加了两个设置：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">max_file_mb</code>：默认 300，超过的文件不下载，记成链接并写上大小</li>
+  <li><code class="language-plaintext highlighter-rouge">skip_types</code>：按类型不下载，可选 <code class="language-plaintext highlighter-rouge">pdf</code>、<code class="language-plaintext highlighter-rouge">slides</code>、<code class="language-plaintext highlighter-rouge">docs</code>、<code class="language-plaintext highlighter-rouge">sheets</code>、<code class="language-plaintext highlighter-rouge">archives</code>、<code class="language-plaintext highlighter-rouge">images</code>、<code class="language-plaintext highlighter-rouge">audio</code>、<code class="language-plaintext highlighter-rouge">code</code></li>
+</ul>
+
+<p>只想这一次不同，可以用 <code class="language-plaintext highlighter-rouge">monash sync --videos</code>、<code class="language-plaintext highlighter-rouge">--max-mb 50</code>、<code class="language-plaintext highlighter-rouge">--skip-types archives</code>，不会改设置</p>
+
+<p>Moodle 的地址经常看不出文件类型，比如资源是 <code class="language-plaintext highlighter-rouge">view.php?id=…</code>，真正的文件可能是一个没有扩展名的 CloudFront 链接</p>
+
+<p>所以判断是在收到响应头之后、写文件之前做的：文件名看 <code class="language-plaintext highlighter-rouge">Content-Disposition</code>，类型看 <code class="language-plaintext highlighter-rouge">Content-Type</code>，大小看 <code class="language-plaintext highlighter-rouge">Content-Length</code></p>
+
+<p>如果服务器没给大小，就一边下载一边计数，超过上限就停止，并删掉下了一半的文件</p>
+
+<p>Moodle 文件夹是整个 zip 下载的，现在 zip 里的文件也按同样规则处理</p>
+
+<p>这里顺便修了一个问题：以前关掉 <code class="language-plaintext highlighter-rouge">download_videos</code> 后，文件夹 zip 里的录像还是会被解压出来</p>
+
+<h2 id="查看和补下跳过的文件">查看和补下跳过的文件</h2>
+
+<p>跳过的文件会记到数据库的一张表里，<code class="language-plaintext highlighter-rouge">monash sync</code> 结束时会列出这次新跳过的文件</p>
+
+<p><code class="language-plaintext highlighter-rouge">monash skipped</code> 列出全部：</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FIT2109
+  [3] Week 05/Dataset.csv（太大，512 MB）
+  [7] Week 09/Project data/raw.zip（太大，1200 MB）
+</code></pre></div></div>
+
+<p>补下有两种方式：</p>
+
+<ul>
+  <li>少量文件用 <code class="language-plaintext highlighter-rouge">monash skipped --get 3</code>，不受上限限制，下载前会检查硬盘剩余空间</li>
+  <li>大量文件用 <code class="language-plaintext highlighter-rouge">monash sync --max-mb 2000</code> 调大上限再同步一次，已经下好的文件不会重复下载</li>
+</ul>
+
+<p>在 AI 软件里也可以问“有哪些文件没下载”，然后告诉它要哪几个</p>
+
+<p>编号是表的行号，同步时是更新原有的行，所以后台同步之后编号不会变</p>
+
+<h2 id="修复的两个问题">修复的两个问题</h2>
+
+<p><strong>单独同步一门课时没有加锁</strong>：完整同步会加锁，避免 AI 软件的后台同步和终端里的同步同时运行，但 <code class="language-plaintext highlighter-rouge">monash sync FIT2109</code> 和 <code class="language-plaintext highlighter-rouge">monash export --sync</code> 没有加</p>
+
+<p>两者同时同步同一门课时，一边可能删掉另一边正在下载的临时文件</p>
+
+<p>现在这两个命令和 <code class="language-plaintext highlighter-rouge">--get</code> 都使用同一个锁，后台正在同步时会提示稍后再试</p>
+
+<p><strong>Windows 保留文件名</strong>：<code class="language-plaintext highlighter-rouge">CON.pdf</code>、<code class="language-plaintext highlighter-rouge">NUL</code> 这类文件名在 Windows 上无法保存，以前这个文件每次同步都会失败，现在会在文件名前加 <code class="language-plaintext highlighter-rouge">_</code></p>
+
+<h2 id="没有做的">没有做的</h2>
+
+<p>我考虑过并发下载，但文件夹本来就是一个 zip，而且工具在请求之间固定间隔 0.4 秒，避免给 Moodle 造成压力</p>
+
+<p>并发下载需要给 cookie 和数据库加锁，收益不大，所以还是逐个下载</p>
+
+<p>具体改动见<a href="https://github.com/Waldo0926/monash-study-kit/blob/main/CHANGELOG.md">更新日志</a>，使用说明见 <a href="https://docs.secureview.tech/zh-cn/study-kit/cli/#选择下载哪些文件">docs.secureview.tech</a></p>]]></content><author><name>Shuoxun Wen</name></author><category term="Python" /><category term="Moodle" /><category term="CLI" /><category term="MCP" /><summary type="html"><![CDATA[Study Kit 1.16.0 可以设文件大小上限、按类型不下载，跳过的文件用 monash skipped 查看和补下]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/study-kit-download-choices-zh.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/study-kit-download-choices-zh.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="en"><title type="html">Study Kit 1.16.0: download size limit and skipped files list</title><link href="https://blog.secureview.tech/2026/11/21/study-kit-download-choices/" rel="alternate" type="text/html" title="Study Kit 1.16.0: download size limit and skipped files list" /><published>2026-11-21T11:45:00+08:00</published><updated>2026-11-21T11:45:00+08:00</updated><id>https://blog.secureview.tech/2026/11/21/study-kit-download-choices</id><content type="html" xml:base="https://blog.secureview.tech/2026/11/21/study-kit-download-choices/"><![CDATA[<p><a href="https://github.com/Waldo0926/monash-study-kit">Study Kit</a> syncs your units’ Moodle files to your computer so your AI app can search and read them.</p>
+
+<p>Before this release only videos were skipped by default. Everything else was downloaded, including datasets or zipped recordings of a few GB in some units.</p>
+
+<p>The Chrome extension <a href="https://github.com/Zetanegative1/Monash-Moodle-Downloader">Monash Moodle Downloader</a> added a size limit and type filters in 4.7.0, and I added the same to Study Kit.</p>
+
+<h2 id="new-settings">New settings</h2>
+
+<p>Two settings next to <code class="language-plaintext highlighter-rouge">download_videos</code>:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">max_file_mb</code>: 300 by default. Larger files are saved as a link with their size</li>
+  <li><code class="language-plaintext highlighter-rouge">skip_types</code>: kinds of files not to download: <code class="language-plaintext highlighter-rouge">pdf</code>, <code class="language-plaintext highlighter-rouge">slides</code>, <code class="language-plaintext highlighter-rouge">docs</code>, <code class="language-plaintext highlighter-rouge">sheets</code>, <code class="language-plaintext highlighter-rouge">archives</code>, <code class="language-plaintext highlighter-rouge">images</code>, <code class="language-plaintext highlighter-rouge">audio</code>, <code class="language-plaintext highlighter-rouge">code</code></li>
+</ul>
+
+<p>For one sync only, use <code class="language-plaintext highlighter-rouge">monash sync --videos</code>, <code class="language-plaintext highlighter-rouge">--max-mb 50</code> or <code class="language-plaintext highlighter-rouge">--skip-types archives</code>. Settings are not changed.</p>
+
+<p>Moodle addresses often don’t show the file type. A resource is <code class="language-plaintext highlighter-rouge">view.php?id=…</code>, and the actual file can be a CloudFront link with no extension.</p>
+
+<p>So the check happens after the response headers arrive and before anything is written: the name from <code class="language-plaintext highlighter-rouge">Content-Disposition</code>, the type from <code class="language-plaintext highlighter-rouge">Content-Type</code>, the size from <code class="language-plaintext highlighter-rouge">Content-Length</code>.</p>
+
+<p>If the server sends no size, the download counts bytes, stops at the limit and deletes the partial file.</p>
+
+<p>Moodle folders are downloaded as one zip, and the files inside now follow the same rules. This also fixed an old bug: videos inside a folder zip were extracted even with <code class="language-plaintext highlighter-rouge">download_videos</code> off.</p>
+
+<h2 id="listing-and-downloading-skipped-files">Listing and downloading skipped files</h2>
+
+<p>Skipped files are stored in a table in the database. At the end of <code class="language-plaintext highlighter-rouge">monash sync</code> it lists the files skipped for the first time.</p>
+
+<p><code class="language-plaintext highlighter-rouge">monash skipped</code> lists all of them:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FIT2109
+  [3] Week 05/Dataset.csv (too big, 512 MB)
+  [7] Week 09/Project data/raw.zip (too big, 1200 MB)
+</code></pre></div></div>
+
+<p>The CLI prints this in Chinese; it is translated here.</p>
+
+<p>Two ways to download them:</p>
+
+<ul>
+  <li>A few files: <code class="language-plaintext highlighter-rouge">monash skipped --get 3</code>. It ignores the limit and checks free disk space first</li>
+  <li>Many files: <code class="language-plaintext highlighter-rouge">monash sync --max-mb 2000</code>. Files already downloaded are not downloaded again</li>
+</ul>
+
+<p>You can also ask your AI app which files were not downloaded and tell it which ones you want.</p>
+
+<p>The numbers are the table’s row IDs. Sync updates existing rows, so the numbers stay the same after a background sync.</p>
+
+<h2 id="two-fixes">Two fixes</h2>
+
+<p><strong>No lock when syncing one unit.</strong> A full sync takes a lock so the AI app’s background sync and a terminal sync don’t run at the same time, but <code class="language-plaintext highlighter-rouge">monash sync FIT2109</code> and <code class="language-plaintext highlighter-rouge">monash export --sync</code> didn’t. If both synced the same unit, one could delete the other’s partly downloaded files. Both commands and <code class="language-plaintext highlighter-rouge">--get</code> now use the same lock and ask you to try again later if a sync is running.</p>
+
+<p><strong>Windows reserved names.</strong> Files named <code class="language-plaintext highlighter-rouge">CON.pdf</code> or <code class="language-plaintext highlighter-rouge">NUL</code> can’t be saved on Windows, so they failed on every sync. They now get a <code class="language-plaintext highlighter-rouge">_</code> in front.</p>
+
+<h2 id="not-done">Not done</h2>
+
+<p>I considered parallel downloads. Folders already come as one zip, and the kit waits 0.4 seconds between requests to keep load on Moodle low. Parallel downloads would need locks around the cookie jar and the database, so files are still downloaded one at a time.</p>
+
+<p>Details are in the <a href="https://github.com/Waldo0926/monash-study-kit/blob/main/CHANGELOG.md">changelog</a> and the guide is on <a href="https://docs.secureview.tech/study-kit/cli/#choose-what-gets-downloaded">docs.secureview.tech</a>.</p>]]></content><author><name>Shuoxun Wen</name></author><category term="Python" /><category term="Moodle" /><category term="CLI" /><category term="MCP" /><summary type="html"><![CDATA[Study Kit 1.16.0 adds a file size limit and file type filters. Skipped files can be listed and downloaded with monash skipped.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/study-kit-download-choices.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/study-kit-download-choices.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="zh-Hans"><title type="html">家里 IP 会变时怎么 SSH 回服务器</title><link href="https://blog.secureview.tech/2026/11/19/ssh-home-servers-zh/" rel="alternate" type="text/html" title="家里 IP 会变时怎么 SSH 回服务器" /><published>2026-11-19T12:15:00+08:00</published><updated>2026-11-19T12:15:00+08:00</updated><id>https://blog.secureview.tech/2026/11/19/ssh-home-servers-zh</id><content type="html" xml:base="https://blog.secureview.tech/2026/11/19/ssh-home-servers-zh/"><![CDATA[<p>在讲<a href="/2026/11/01/spare-machines-zh/">闲置机器</a>那篇里，我留了一个问题：家里公网 IP 变了以后，怎么还能 SSH 进去？现在这个问题解决了，下面是现在实际在跑的做法，地址、端口、域名和密钥名都故意没写</p>
+
+<p>机器有这些：家里两台 J1900（其中一台每天晚上跑<a href="/2026/11/19/exchange-tracker-zh/">交换 tracker</a>），一台跑 Armbian 的 ARM 小盒子，同一个网络里还有一台 N1，以及放我公开网站的 VPS，我的笔记本通常在完全不同的地方</p>
+
+<h2 id="一开始的做法">一开始的做法</h2>
+
+<p>最开始是路由器把一个非标准端口转发到其中一台 J1900，<code class="language-plaintext highlighter-rouge">~/.ssh/config</code> 里写的是家里的公网 IP，运营商一换地址，配置里的地址就错了</p>
+
+<p>常见的解决办法是动态 DNS，这台机器上现在也还跑着几个脚本，每隔几分钟把当前公网 IP 写进 Cloudflare 的 A 记录</p>
+
+<p>其中一个会同时问两个查 IP 的服务，两边不一致就不更新，地址看起来像运营商 NAT（<code class="language-plaintext highlighter-rouge">100.64.0.0/10</code>）也不更新，因为那种情况下外面本来就连不进来</p>
+
+<p>但 DNS 只回答“机器在哪”，不决定“谁能登录”，一个转发出去的 SSH 端口，不管叫什么名字，都是对整个互联网开放的</p>
+
+<h2 id="现在的做法">现在的做法</h2>
+
+<p>十月我在主力那台 J1900 上装了 Tailscale，SSH 改成连它的 Tailscale 地址，Tailscale 能穿过两边的 NAT，所以家里 IP 怎么换都没关系</p>
+
+<pre><code class="language-sshconfig">Host j1900-main
+    HostName &lt;tailscale 地址&gt;
+    HostKeyAlias &lt;旧地址&gt;
+    IdentitiesOnly yes
+    StrictHostKeyChecking yes
+    ServerAliveInterval 30
+    ServerAliveCountMax 3
+</code></pre>
+
+<p>第二台 J1900 和我的笔记本不在同一个 tailnet 里，所以通过第一台在家里局域网跳过去：</p>
+
+<pre><code class="language-sshconfig">Host j1900
+    HostName &lt;局域网地址&gt;
+    ProxyJump j1900-main
+
+Host j1900-lan
+    HostName &lt;局域网地址&gt;
+    ProxyJump none
+    ProxyCommand none
+</code></pre>
+
+<p>ARM 小盒子那边也是一样：<code class="language-plaintext highlighter-rouge">oes</code> 走 Tailscale，<code class="language-plaintext highlighter-rouge">n1</code> 是 <code class="language-plaintext highlighter-rouge">ProxyJump oes</code></p>
+
+<p>在笔记本上看 <code class="language-plaintext highlighter-rouge">tailscale status</code>，主力那台显示的是 IPv6 直连，没有走中继，所以 SSH 用起来和在局域网里差不多</p>
+
+<h2 id="两个名字而不是一个聪明的名字">两个名字，而不是一个聪明的名字</h2>
+
+<p>有一天我试过只用一个 <code class="language-plaintext highlighter-rouge">j1900-main</code>，在哪都能连：用 <code class="language-plaintext highlighter-rouge">ProxyCommand</code> 先试局域网地址，2 秒连不上再换 Tailscale 地址：</p>
+
+<pre><code class="language-sshconfig">ProxyCommand sh -c 'nc -G 2 &lt;局域网地址&gt; 22 || exec nc -G 8 %h %p'
+</code></pre>
+
+<p>能用，但看不出这次连接走的是哪条路，而且不在家的时候，每次连接都要先等局域网那次超时</p>
+
+<p>第二天配置又改回了两个普通的名字：<code class="language-plaintext highlighter-rouge">ssh j1900</code> 在哪都能用，<code class="language-plaintext highlighter-rouge">ssh j1900-lan</code> 直接走家里网络，两个名字一眼就知道走的是哪条路，也不用每次等一个注定失败的尝试</p>
+
+<h2 id="让密钥检查一直开着的那一行">让密钥检查一直开着的那一行</h2>
+
+<p><code class="language-plaintext highlighter-rouge">StrictHostKeyChecking yes</code> 会拒绝 <code class="language-plaintext highlighter-rouge">known_hosts</code> 里没有密钥的主机</p>
+
+<p>同一台机器换了一个地址去连，比如从局域网地址换成 Tailscale 地址，或者从以前的公网地址加端口换成局域网地址，SSH 都会把它当成一台“新”主机，虽然密钥根本没变</p>
+
+<p>最省事的办法是再接受一次新密钥，但我不想这么做，因为那个提示本来就是要你认真看的</p>
+
+<p><code class="language-plaintext highlighter-rouge">HostKeyAlias</code> 让 SSH 用旧名字去查密钥，这样我之前核对过的那把密钥会继续被检查，换了一把不同的密钥照样会被拒绝</p>
+
+<h2 id="机器上放行了什么">机器上放行了什么</h2>
+
+<p>主力那台 J1900 上，<code class="language-plaintext highlighter-rouge">ufw</code> 只放行家里局域网、<code class="language-plaintext highlighter-rouge">tailscale0</code> 上的流量，以及 UDP 41641，让 Tailscale 可以直连，其他一律不让进</p>
+
+<p>两台 J1900 和 VPS 上，<code class="language-plaintext highlighter-rouge">sshd -T</code> 显示 <code class="language-plaintext highlighter-rouge">passwordauthentication no</code> 和 <code class="language-plaintext highlighter-rouge">kbdinteractiveauthentication no</code>，root 只能用密钥登录</p>
+
+<p>我没有用 Tailscale SSH，Tailscale 只负责提供一条路，谁能进来还是由 OpenSSH 和我自己的密钥决定</p>
+
+<p>第二台 J1900 的网卡也开了 Wake-on-LAN（magic packet）</p>
+
+<h2 id="写这篇时才发现的事">写这篇时才发现的事</h2>
+
+<p>那台机器上的几个 DDNS 脚本里，有一个从 10 月 19 日开始一直在日志里写“读取 DNS 记录失败（token 或记录 ID 失效？）”</p>
+
+<p>什么都没坏，因为 SSH 已经不走那条记录了，一个没人依赖的任务，可以安安静静地失败一个月，这几条记录接下来要一条条看一下</p>]]></content><author><name>Shuoxun Wen</name></author><category term="SSH" /><category term="Tailscale" /><category term="Linux" /><category term="Networking" /><summary type="html"><![CDATA[从端口转发加 DDNS 换成 Tailscale 加 ProxyJump，每台机器两个名字，以及 HostKeyAlias 的用法]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/ssh-home-servers-zh.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/ssh-home-servers-zh.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="en"><title type="html">SSH to home servers when the IP changes</title><link href="https://blog.secureview.tech/2026/11/19/ssh-home-servers/" rel="alternate" type="text/html" title="SSH to home servers when the IP changes" /><published>2026-11-19T12:15:00+08:00</published><updated>2026-11-19T12:15:00+08:00</updated><id>https://blog.secureview.tech/2026/11/19/ssh-home-servers</id><content type="html" xml:base="https://blog.secureview.tech/2026/11/19/ssh-home-servers/"><![CDATA[<p>In my post about <a href="/2026/11/01/spare-machines/">spare machines</a> I left one question open: how do I still get in over SSH when the home IP changes? It’s answered now, so here is the setup as it runs today. Addresses, ports, domains and key names are left out on purpose.</p>
+
+<p>The machines: two J1900 boxes at home (one of them runs the <a href="/2026/11/19/exchange-tracker/">exchange tracker</a> every evening), a small ARM box running Armbian with an N1 on the same network, and the VPS that hosts my public sites. My laptop is usually somewhere else entirely.</p>
+
+<h2 id="where-it-started">Where it started</h2>
+
+<p>At first the router forwarded a non-standard port to one J1900, and <code class="language-plaintext highlighter-rouge">~/.ssh/config</code> pointed at the home public IP. Every time the ISP gave out a new address, the hostname in my config was wrong.</p>
+
+<p>The usual fix is dynamic DNS, and the box still runs scripts that put its current public IP into a Cloudflare A record every few minutes. One of them checks two IP services and refuses to update if they disagree, or if the address looks like carrier NAT (<code class="language-plaintext highlighter-rouge">100.64.0.0/10</code>), because then there’s nothing to reach from outside anyway.</p>
+
+<p>But DNS only answers where the box is. It doesn’t decide who may log in, and a forwarded SSH port is open to the whole internet whatever its name.</p>
+
+<h2 id="what-it-is-now">What it is now</h2>
+
+<p>In October I put Tailscale on the main J1900 and pointed SSH at its Tailscale address instead. Tailscale gets through NAT on both sides, so the home IP can change as often as it likes.</p>
+
+<pre><code class="language-sshconfig">Host j1900-main
+    HostName &lt;tailscale address&gt;
+    HostKeyAlias &lt;old address&gt;
+    IdentitiesOnly yes
+    StrictHostKeyChecking yes
+    ServerAliveInterval 30
+    ServerAliveCountMax 3
+</code></pre>
+
+<p>The second J1900 isn’t on the same tailnet as my laptop, so I reach it through the first one over the home LAN:</p>
+
+<pre><code class="language-sshconfig">Host j1900
+    HostName &lt;LAN address&gt;
+    ProxyJump j1900-main
+
+Host j1900-lan
+    HostName &lt;LAN address&gt;
+    ProxyJump none
+    ProxyCommand none
+</code></pre>
+
+<p>The ARM box works the same way: <code class="language-plaintext highlighter-rouge">oes</code> is reachable on Tailscale, and <code class="language-plaintext highlighter-rouge">n1</code> is <code class="language-plaintext highlighter-rouge">ProxyJump oes</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">tailscale status</code> on my laptop shows the main box as a direct connection over IPv6, not through a relay, so SSH feels like the LAN.</p>
+
+<h2 id="two-names-instead-of-one-clever-one">Two names instead of one clever one</h2>
+
+<p>For one day I tried a single <code class="language-plaintext highlighter-rouge">j1900-main</code> that worked everywhere. A <code class="language-plaintext highlighter-rouge">ProxyCommand</code> tried the LAN address with a 2 second timeout and fell back to the Tailscale address:</p>
+
+<pre><code class="language-sshconfig">ProxyCommand sh -c 'nc -G 2 &lt;LAN address&gt; 22 || exec nc -G 8 %h %p'
+</code></pre>
+
+<p>It worked, but it hid which path a connection had taken, and away from home every connection first waited for the LAN attempt to time out. The next day the config went back to two plain names: <code class="language-plaintext highlighter-rouge">ssh j1900</code> works from anywhere, and <code class="language-plaintext highlighter-rouge">ssh j1900-lan</code> goes straight over the home network. With two names the path is obvious, and nothing waits for an attempt that can’t succeed.</p>
+
+<h2 id="the-line-that-kept-host-key-checking-on">The line that kept host key checking on</h2>
+
+<p><code class="language-plaintext highlighter-rouge">StrictHostKeyChecking yes</code> refuses a host whose key isn’t in <code class="language-plaintext highlighter-rouge">known_hosts</code>. Reaching the same box at a new address, a Tailscale one instead of the LAN one, or a LAN one instead of the old public address and port, means SSH sees a “new” host, even though the key is the same.</p>
+
+<p>I didn’t want to just accept the new key, since that warning is there to catch a changed host. <code class="language-plaintext highlighter-rouge">HostKeyAlias</code> tells SSH to look up the key under the old name instead, so the key I already checked keeps being checked, and a different key still gets refused.</p>
+
+<h2 id="what-the-boxes-allow">What the boxes allow</h2>
+
+<p>On the main J1900, <code class="language-plaintext highlighter-rouge">ufw</code> allows the home LAN, anything on <code class="language-plaintext highlighter-rouge">tailscale0</code>, and UDP 41641 so Tailscale can make direct connections. Nothing else comes in.</p>
+
+<p>On both J1900s and the VPS, <code class="language-plaintext highlighter-rouge">sshd -T</code> says <code class="language-plaintext highlighter-rouge">passwordauthentication no</code> and <code class="language-plaintext highlighter-rouge">kbdinteractiveauthentication no</code>. Root can only log in with a key. I don’t use Tailscale SSH. Tailscale only gives a route, and OpenSSH with my own keys still decides who gets in.</p>
+
+<p>The second J1900 also has Wake-on-LAN turned on in its network card (magic packet).</p>
+
+<h2 id="something-i-only-found-while-writing-this">Something I only found while writing this</h2>
+
+<p>Of the DDNS scripts on that box, one has been logging “failed to read the DNS record (token or record ID invalid?)” since 19 October. Nothing broke, because SSH no longer goes through that record. A job nobody depends on any more can fail quietly for a month. Those records are next on the list to go through.</p>]]></content><author><name>Shuoxun Wen</name></author><category term="SSH" /><category term="Tailscale" /><category term="Linux" /><category term="Networking" /><summary type="html"><![CDATA[Moving from a forwarded port and DDNS to Tailscale and ProxyJump, with two names per host and HostKeyAlias.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/ssh-home-servers.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/ssh-home-servers.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="zh-Hans"><title type="html">记录 Monash 交换项目的变化</title><link href="https://blog.secureview.tech/2026/11/19/exchange-tracker-zh/" rel="alternate" type="text/html" title="记录 Monash 交换项目的变化" /><published>2026-11-19T12:00:00+08:00</published><updated>2026-11-19T12:00:00+08:00</updated><id>https://blog.secureview.tech/2026/11/19/exchange-tracker-zh</id><content type="html" xml:base="https://blog.secureview.tech/2026/11/19/exchange-tracker-zh/"><![CDATA[<p>Monash 在 <a href="https://www.monash.edu/study-abroad/outbound/program-search">program search</a> 上列出了所有学期交换的合作学校，每个项目写着开没开放、几个名额、分数线，还有一个可申请程度的颜色</p>
+
+<p>但页面不会告诉你上周写的是什么，我开始规划自己交换的时候，一直在问：“这所是刚关的，还是一直这样？”</p>
+
+<p>所以从八月开始，有一个 tracker 每天晚上把整个名单读一遍，把变化记下来，线上数据和爬虫是私有的，<a href="https://waldo0926.github.io/monash-abroad-tracker-demo/">公开 demo</a> 用虚构数据展示了同一个查看页面，设计思路写在<a href="https://github.com/Waldo0926/monash-abroad-tracker-demo">它的 README</a> 里</p>
+
+<h2 id="不打扰对方网站">不打扰对方网站</h2>
+
+<p>代码里没有写死任何学校名单，每次先读搜索页，留下类型是 Semester exchange 的卡片（大约 164 个），再逐个打开详情页</p>
+
+<p>一次只发一个请求，每次运行都实时读 <code class="language-plaintext highlighter-rouge">robots.txt</code>，遵守里面的 <code class="language-plaintext highlighter-rouge">Crawl-delay: 30</code>，就算读不到这个文件也至少隔 30 秒，所以跑完一轮要 85 分钟左右，一天只跑一次，慢一点没关系</p>
+
+<p>对方网站不是自己能控制的，总会出问题，所以规则定得比较保守：</p>
+
+<ul>
+  <li>某个详情页抓失败，这个项目保留上次的数据，超时不等于被删了</li>
+  <li>搜索页抓失败，整轮直接停下，数据一点不动</li>
+  <li>项目数量比上次少了 20% 以上，触发安全阀，什么都不写</li>
+</ul>
+
+<h2 id="留着页面原话">留着页面原话</h2>
+
+<p>每个字段存两份：页面上的原文和整理后的值，比如 <code class="language-plaintext highlighter-rouge">OPEN.</code> 变成 <code class="language-plaintext highlighter-rouge">Open</code>，<code class="language-plaintext highlighter-rouge">60% WAM</code> 变成 <code class="language-plaintext highlighter-rouge">60.0</code> 和 <code class="language-plaintext highlighter-rouge">WAM</code></p>
+
+<p>这样查看页面说某个分数线涨了，我永远可以回去看 Monash 当时的原话是什么</p>
+
+<p>只有真的有变化，才会写一个新的快照文件，同一天再跑一次什么都不会多</p>
+
+<h2 id="和上一轮比而不是和昨天比">和上一轮比，而不是和昨天比</h2>
+
+<p>一开始是和昨天比，结果发现没什么用，大部分日子什么都没变，“变化”那一列总是空的，同学们真正想知道的是：这一轮和上一轮申请季比有什么不同</p>
+
+<p>所以上一轮被冻结成基准放在仓库里，对比表每次都只用两样东西重新算：基准和今天的数据，从来不在原表上改，所以错的一行不会留到第二天</p>
+
+<p>名额变少、分数线变高算更难，名额变多、重新开放算利好</p>
+
+<p>一轮申请截止后，最后一份数据会单独归档：原始 JSON 和 CSV 一个字节不改，一份大家可以自己筛选的 Excel，这次运行的开始和结束时间，还有 SHA-256 校验值，这份归档可以直接当下一轮的基准</p>
+
+<h2 id="为什么放在家里跑">为什么放在家里跑</h2>
+
+<p>GitHub 托管的 runner 访问 Monash 网站会被直接返回 HTTP 403，所以爬虫放在家里一台 Debian 小主机上，用 systemd timer 定时跑</p>
+
+<p>每天晚上 19:00 跑一次，因为对方是上班时间改数据，每两小时有一次补跑，只有上次定时抓取已经超过 20 小时才会真的去抓，手动跑的那次不算当晚那一次</p>
+
+<p>无人值守跑了一段时间，发现了一些平时根本发现不了的 bug：</p>
+
+<ul>
+  <li>生成的数据文件里混进了 git 冲突标记，因为脚本是先抓取再 pull，现在改成先同步再抓取，有冲突就绝不提交</li>
+  <li>一轮要跑 90 分钟，这期间别的地方写进数据的东西，会被这轮结束时保存的那份覆盖掉</li>
+  <li>在 <code class="language-plaintext highlighter-rouge">set -o pipefail</code> 下，<code class="language-plaintext highlighter-rouge">git log | grep -q</code> 有时会被当成失败：grep 一匹配到就退出，git 收到 SIGPIPE 以 141 结束，整条管道就算失败了，结果“今天已经抓过”时灵时不灵，网站被抓了两遍</li>
+  <li>更早的时候用 macOS 的 launchd 定时，但一次都没跑过，因为脚本放在桌面文件夹里，被 macOS 的隐私保护挡住了</li>
+</ul>
+
+<p>现在每次更新数据，在发布之前都会先检查一遍：字段结构、每个项目网址只有一条记录，还有 JSON 和 CSV 两份内容一致，以前只改数据的提交会跳过 CI，所以这个检查直接放在更新流程里</p>
+
+<h2 id="数据说明不了的事">数据说明不了的事</h2>
+
+<p>一直盯着这份名单，让我在规划自己选课的时候更明白一件事：课名相似只是搜索线索，不代表能转学分</p>
+
+<p>真正决定的是课程大纲、考核方式、学分、课程级别，以及你在那边的那个学期这门课到底开不开，如果这门课只在另一个学期开，内容对得再好也用不上</p>
+
+<p>我也会把三种匹配分开看：从公开信息看起来对得上的、学院讨论过的、有书面批准的，合作学校改了开课安排，以前的对应关系也要重新核对</p>
+
+<p>tracker 能告诉你某个项目什么时候开放、关闭或者变难了，至于那边的课能不能算进你的学位，还是要问自己的学院</p>]]></content><author><name>Shuoxun Wen</name></author><category term="Python" /><category term="Web scraping" /><category term="systemd" /><category term="Data quality" /><summary type="html"><![CDATA[家里一台小主机每天晚上读一遍 Monash 的交换项目，记录新增学校、名额、分数线和开放状态的变化]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/exchange-tracker-zh.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/exchange-tracker-zh.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="en"><title type="html">Tracking changes to Monash exchange programs</title><link href="https://blog.secureview.tech/2026/11/19/exchange-tracker/" rel="alternate" type="text/html" title="Tracking changes to Monash exchange programs" /><published>2026-11-19T12:00:00+08:00</published><updated>2026-11-19T12:00:00+08:00</updated><id>https://blog.secureview.tech/2026/11/19/exchange-tracker</id><content type="html" xml:base="https://blog.secureview.tech/2026/11/19/exchange-tracker/"><![CDATA[<p>Monash lists its semester exchange partners on the <a href="https://www.monash.edu/study-abroad/outbound/program-search">program search</a>. Each program shows whether it’s open, how many places there are, the cut-off and an availability colour. What the page doesn’t show is what it said last week. When I started planning my own exchange, the question I kept asking was “did that one just close, or was it always like this?”</p>
+
+<p>So since August a tracker has read the whole list every evening and kept what changed. The live data and the crawler are private. A <a href="https://waldo0926.github.io/monash-abroad-tracker-demo/">public demo</a> shows the same viewer with made up data, and <a href="https://github.com/Waldo0926/monash-abroad-tracker-demo">its README</a> explains the design.</p>
+
+<h2 id="reading-it-politely">Reading it politely</h2>
+
+<p>There is no list of universities in the code. Each run reads the search page, keeps every card whose type is Semester exchange (about 164 of them), then opens each detail page.</p>
+
+<p>It’s one request at a time. <code class="language-plaintext highlighter-rouge">robots.txt</code> is read live on every run, and its <code class="language-plaintext highlighter-rouge">Crawl-delay: 30</code> is followed, with 30 seconds as the floor even if the file can’t be fetched. That makes a full run about 85 minutes. Slow is fine for something that runs once a day.</p>
+
+<p>Things go wrong on a site you don’t control, so the rules are conservative:</p>
+
+<ul>
+  <li>If a detail page fails, the program keeps its previous values. A timeout is not a deletion.</li>
+  <li>If the search page fails, the whole run stops and the data isn’t touched.</li>
+  <li>If the number of programs drops by more than 20% from the last run, a guard trips and nothing is written.</li>
+</ul>
+
+<h2 id="keeping-what-the-page-actually-said">Keeping what the page actually said</h2>
+
+<p>Every field is stored twice: the page’s own text and a normalised value. <code class="language-plaintext highlighter-rouge">OPEN.</code> becomes <code class="language-plaintext highlighter-rouge">Open</code>, <code class="language-plaintext highlighter-rouge">60% WAM</code> becomes <code class="language-plaintext highlighter-rouge">60.0</code> and <code class="language-plaintext highlighter-rouge">WAM</code>. When the viewer says a cut-off went up, I can always go back to the exact words Monash used.</p>
+
+<p>A new snapshot file is written only when something really changed. Running it again on the same day adds nothing.</p>
+
+<h2 id="comparing-against-the-last-round">Comparing against the last round</h2>
+
+<p>Comparing with yesterday turned out to be useless. On most days nothing changes, so the “changes” column was empty. What students actually want to know is how this round differs from the last application round.</p>
+
+<p>The last round is frozen as a baseline in the repo. The comparison table is rebuilt every time as a function of two inputs, the baseline and today’s data. It’s never edited in place, so a wrong row can’t survive into the next day. Fewer places or a higher cut-off show as harder, and more places or reopening show as better.</p>
+
+<p>When a round closes, its final dataset is archived on its own: the original JSON and CSV byte for byte, an Excel copy people can filter, when the run started and finished, and SHA-256 checksums. That archive can become the next round’s baseline.</p>
+
+<h2 id="why-it-runs-at-home">Why it runs at home</h2>
+
+<p>GitHub’s hosted runners get HTTP 403 from the Monash site, so the crawl runs on a small Debian box at home with systemd timers. It runs every evening at 19:00, because the site is edited during office hours. Retries every two hours only crawl if the last scheduled run is more than 20 hours old. A manual run never counts as the evening one.</p>
+
+<p>Running unattended found bugs I wouldn’t have found otherwise:</p>
+
+<ul>
+  <li>Git conflict markers ended up inside the generated data, because the script crawled first and pulled second. It now syncs first and refuses to commit if there’s a conflict.</li>
+  <li>A run takes 90 minutes. Anything written to the data during that time was overwritten when the run saved its own copy at the end.</li>
+  <li>Under <code class="language-plaintext highlighter-rouge">set -o pipefail</code>, <code class="language-plaintext highlighter-rouge">git log | grep -q</code> sometimes counted as a failure. grep exits as soon as it matches, git gets SIGPIPE and exits with 141, and the whole pipe fails. So “already crawled today” randomly said no and the site got crawled twice.</li>
+  <li>An earlier macOS launchd job never ran at all, because the script lived on the Desktop and macOS privacy protection blocked it.</li>
+</ul>
+
+<p>Every refresh now also runs a contract check before anything is published: the schema, one record per program URL, and that the JSON and CSV copies agree. Data-only commits used to skip CI, so this check runs inside the refresh itself.</p>
+
+<h2 id="what-the-data-cant-tell-you">What the data can’t tell you</h2>
+
+<p>Tracking the list made one thing very clear while I planned my own units: a similar course title is a search clue, not a credit match.</p>
+
+<p>What decides it is the unit outline, the assessment, the credit points, the level, and whether the unit is actually taught in the semester you’ll be there. A perfect match that only runs in the other semester is no use. I also keep three kinds of match apart: ones that look right from public information, ones a faculty has discussed, and ones with written approval. An old mapping has to be checked again when the partner changes its offerings.</p>
+
+<p>The tracker tells you when a program opens, closes or gets harder. Whether its units count toward your degree is still a question for your faculty.</p>]]></content><author><name>Shuoxun Wen</name></author><category term="Python" /><category term="Web scraping" /><category term="systemd" /><category term="Data quality" /><summary type="html"><![CDATA[A small box at home reads the Monash exchange programs each evening and records new partners, places, cut-offs and status changes.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/exchange-tracker.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/exchange-tracker.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="zh-Hans"><title type="html">微信机器人接入 Monash Hub</title><link href="https://blog.secureview.tech/2026/11/19/bot-on-the-hub-zh/" rel="alternate" type="text/html" title="微信机器人接入 Monash Hub" /><published>2026-11-19T11:40:00+08:00</published><updated>2026-11-19T11:40:00+08:00</updated><id>https://blog.secureview.tech/2026/11/19/bot-on-the-hub-zh</id><content type="html" xml:base="https://blog.secureview.tech/2026/11/19/bot-on-the-hub-zh/"><![CDATA[<p>马莫百科的微信机器人回答 Monash 马来西亚校区学生和家长的问题，它知道的东西来自两处：只能<a href="/2026/10/25/quote-only-rag-zh/">逐字引用</a>的官方页面，还有我<a href="/2026/11/17/bot-learns-from-chat-zh/">在聊天里教它的回答</a></p>
+
+<p>Monash Hub 自己也有一个提问面板，就是右下角那个圆按钮，它完全不用模型，只是把问题导到 Hub 上对应的页面、课程或重要日期</p>
+
+<p>问“第一学期什么时候开学”“FIT2102 怎么样”它很擅长，但图书馆怎么打印、学生签证怎么办，它一概不知道，而这些机器人早就答得不错了</p>
+
+<p>所以现在提问面板两边都问</p>
+
+<h2 id="面板怎么用这两个答案">面板怎么用这两个答案</h2>
+
+<p>你问一个问题，页面会同时发给 Hub 自己的路由和机器人，等两边都回来</p>
+
+<p>机器人引用官方页面时可能要几秒，慢了或者挂了，它那部分就不显示，其他照常出来</p>
+
+<ul>
+  <li>机器人的回答只是指回 Hub 的话就不显示，因为面板上已经有那个页面了</li>
+  <li>机器人有自己的回答，就放在单独一个气泡里，标明是机器人答的</li>
+  <li>打招呼或者问“你是谁”，只回一段简短介绍，什么都不搜</li>
+</ul>
+
+<h2 id="网站访客不是公众号粉丝">网站访客不是公众号粉丝</h2>
+
+<p>机器人跑在另一台服务器上，所以 Hub 调用它新加的 <code class="language-plaintext highlighter-rouge">POST /web/ask</code>，带一个共享密钥，没设密钥的话这个接口根本不存在</p>
+
+<p>有些话只在微信里说得通，比如「回复人工」或者“在 Monash Hub 上查看更多”，网页上的回答会把它们去掉</p>
+
+<p>更大的区别是答不上来的时候</p>
+
+<p>在微信里，<a href="/2026/11/17/bot-forwarding-zh/">机器人答不上的正经问题会转给我</a>，从网站来的不会转，因为我没法回复一个匿名的浏览器，转过来只会多一堆永远等不到回答的消息</p>
+
+<p>所以面板会请访客去公众号问，那里我能回复</p>
+
+<p>每个浏览器有一个随机 id，机器人按这个 id 限流，和限制微信用户一样，另外 Hub 每个地址每小时最多问机器人 60 次，网页上的回答超过 12 秒机器人就放弃，机器人日志里访客记成 <code class="language-plaintext highlighter-rouge">web:</code> 加上这个随机 id 的哈希</p>
+
+<p>部署时有个细节比想象中费时间：Hub 的 API 跑在容器里，机器人监听的是宿主机的 loopback 地址，容器访问不到，最后是在宿主机的 nginx 上给 <code class="language-plaintext highlighter-rouge">/web/ask</code> 加了一条转发，步骤写在运维手册里</p>
+
+<h2 id="进群的小修复">进群的小修复</h2>
+
+<p>这周另一个改动在私聊里</p>
+
+<p>有人加了 MonashGuide 的微信，私聊说想进学生群，这个号本来就是拉人进群的号，但机器人回的却是公众号那段话，叫人去加 MonashGuide 好友，可他们已经加了</p>
+
+<p>现在只在私聊里，像“进群”“能拉我进群吗”“群二维码过期了”这种短句，会回「请稍等，Waldo 看到后会邀请你进群～」，同时给我发一条提醒说谁想进群，同一个人一天最多提醒一次</p>
+
+<p>比较长、只是顺带提到群的问题照常回答，公众号和群聊里的行为都没变</p>]]></content><author><name>Shuoxun Wen</name></author><category term="Python" /><category term="FastAPI" /><category term="Nuxt" /><category term="WeChat" /><summary type="html"><![CDATA[马莫百科的机器人现在也在 Monash Hub 的提问面板里回答，网站访客看不到只适用于公众号的内容]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/bot-on-the-hub-zh.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/bot-on-the-hub-zh.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="en"><title type="html">The WeChat bot on Monash Hub</title><link href="https://blog.secureview.tech/2026/11/19/bot-on-the-hub/" rel="alternate" type="text/html" title="The WeChat bot on Monash Hub" /><published>2026-11-19T11:40:00+08:00</published><updated>2026-11-19T11:40:00+08:00</updated><id>https://blog.secureview.tech/2026/11/19/bot-on-the-hub</id><content type="html" xml:base="https://blog.secureview.tech/2026/11/19/bot-on-the-hub/"><![CDATA[<p>The 马莫百科 WeChat bot answers questions from Monash Malaysia students and parents. Everything it knows comes from official pages it may only <a href="/2026/10/25/quote-only-rag/">quote word for word</a>, and from answers I’ve <a href="/2026/11/17/bot-learns-from-chat/">taught it in chat</a>.</p>
+
+<p>Monash Hub has its own Ask panel, the round button at the bottom right. That one uses no model at all. It routes the question to the right page, unit or key date on the Hub. It’s good at “when does semester 1 start” and “what’s FIT2102 like”. It knows nothing about printing at the library or how to apply for a Student Pass, which the bot already answers well.</p>
+
+<p>So the Ask panel now asks both.</p>
+
+<h2 id="how-the-panel-uses-the-two-answers">How the panel uses the two answers</h2>
+
+<p>When you ask something, the page sends the question to the Hub’s own router and to the bot at the same time, and waits for both. The bot can take a few seconds when it quotes official pages. If it’s slow or down, its part is just missing and the rest still shows.</p>
+
+<ul>
+  <li>If the bot’s answer only points back to the Hub, it’s hidden, since the panel already shows that page.</li>
+  <li>If the bot has its own answer, it appears in a separate bubble labelled as the bot’s.</li>
+  <li>A greeting or “who are you” gets a short introduction and nothing is searched.</li>
+</ul>
+
+<h2 id="a-website-visitor-isnt-a-wechat-follower">A website visitor isn’t a WeChat follower</h2>
+
+<p>The bot runs on a separate server, so the Hub calls a new <code class="language-plaintext highlighter-rouge">POST /web/ask</code> on it with a shared secret. If the secret isn’t set, the route doesn’t exist.</p>
+
+<p>Some lines only make sense inside WeChat, like 「回复人工」 or “see more on Monash Hub”. Those are removed from web answers.</p>
+
+<p>The bigger difference is what happens when the bot has nothing. In WeChat, a <a href="/2026/11/17/bot-forwarding/">real question it can’t answer is forwarded to me</a>. From the website it isn’t. I can’t reply to an anonymous browser, so forwarding would only give me messages nobody would ever see answered. Instead the panel tells the visitor to ask the 公众号, where I can reply.</p>
+
+<p>Each browser gets a random id, and the bot rate limits that id the same way it limits a WeChat user. On top of that the Hub allows 60 bot questions per address per hour, and the bot gives up on a web answer after 12 seconds. In the bot’s logs a visitor shows up as <code class="language-plaintext highlighter-rouge">web:</code> plus a hash of that random id.</p>
+
+<p>One deployment detail took longer than it should have. The Hub’s API runs in a container, and the bot listens on the host’s loopback address, which a container can’t reach. The fix was an nginx route on the host for <code class="language-plaintext highlighter-rouge">/web/ask</code>, written up in the operations guide.</p>
+
+<h2 id="a-small-fix-for-进群">A small fix for 进群</h2>
+
+<p>The other change this week was in private chats. People add the MonashGuide WeChat account and ask to join the student group. That account is the one that sends invites, but the bot replied with the 公众号 text telling them to add MonashGuide as a friend. They already had.</p>
+
+<p>Now, in a private chat only, a short request like 进群, 能拉我进群吗 or 群二维码过期了 gets 「请稍等，Waldo 看到后会邀请你进群～」, and I get a note saying who wants to join, at most once a day per person. A longer question that just mentions the group is answered as usual. The 公众号 and group chats didn’t change.</p>]]></content><author><name>Shuoxun Wen</name></author><category term="Python" /><category term="FastAPI" /><category term="Nuxt" /><category term="WeChat" /><summary type="html"><![CDATA[The 马莫百科 bot now answers in the Ask panel on Monash Hub, with WeChat-only text removed for website visitors.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/bot-on-the-hub.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/bot-on-the-hub.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="zh-Hans"><title type="html">SecureView 的密码检查</title><link href="https://blog.secureview.tech/2026/11/19/secureview-passphrase-zh/" rel="alternate" type="text/html" title="SecureView 的密码检查" /><published>2026-11-19T11:30:00+08:00</published><updated>2026-11-19T11:30:00+08:00</updated><id>https://blog.secureview.tech/2026/11/19/secureview-passphrase-zh</id><content type="html" xml:base="https://blog.secureview.tech/2026/11/19/secureview-passphrase-zh/"><![CDATA[<p><a href="https://secureview.tech">SecureView</a> 是我们的毕业设计，每个账号有两个密码</p>
+
+<p>登录密码和普通网站一样由服务器检查，加密用的 passphrase 则从来不离开浏览器，它经过 Argon2id 打开账号密钥，账号密钥再打开每个文件的密钥，密钥设计我<a href="/2026/10/24/secureview-keys-zh/">之前写过一篇</a></p>
+
+<p>服务器拿不到 passphrase，也就没法拒绝太弱的，有一段时间唯一的规则是浏览器里检查“至少 10 个字符”，<code class="language-plaintext highlighter-rouge">aaaaaaaaaa</code> 和 <code class="language-plaintext highlighter-rouge">password12</code> 都能通过</p>
+
+<h2 id="两边都量一下">两边都量一下</h2>
+
+<p>动手改之前，我们想先拿到数字，而不是凭感觉说“有 Argon2id 应该没事”</p>
+
+<p><strong>对用户有多慢</strong>：网站上有一个公开页面 <code class="language-plaintext highlighter-rouge">/benchmark/argon2</code>，跑的就是解锁对话框用的那段密钥派生代码，库和参数完全一样（Argon2id，64 MiB，3 轮）</p>
+
+<p>在 Apple Silicon Mac 的 Chrome 和 Safari，还有 iPhone 上，都在 100 到 151 毫秒之间，对话框里写着“故意做得慢”，其实也就十分之一秒</p>
+
+<p><strong>对攻击者有多慢</strong>：用原生 C 实现、同样的参数跑了一个脚本，再用已知答案的测试向量确认浏览器算出来的密钥一个字节都不差，所以这些数字可以直接套到真被偷走的密钥信封上</p>
+
+<p>一台 10 核笔记本，每个账号每秒大约能试 53 到 58 次，十个核只比一个核快 5.3 倍，因为每猜一次都要占 64 MiB 内存，先跑满的是内存带宽</p>
+
+<p>按每秒 60 次（往攻击者有利的方向取整），威胁模型里一台笔记本的表是这样：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>passphrase</th>
+      <th>全部试完要多久</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>在常见猜测列表的前 10,000 个里</td>
+      <td>2.8 分钟</td>
+    </tr>
+    <tr>
+      <td>在一千万条的泄露密码列表里</td>
+      <td>1.9 天</td>
+    </tr>
+    <tr>
+      <td>10 个随机小写字母</td>
+      <td>74,600 年</td>
+    </tr>
+    <tr>
+      <td>4 个随机 Diceware 单词</td>
+      <td>190 万年</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>就算一百万台笔记本一起跑，四个随机单词也要大约 1.9 年</p>
+
+<p>结论很清楚：密钥派生的成本没问题，弱的是 passphrase 的规则</p>
+
+<h2 id="现在浏览器检查什么">现在浏览器检查什么</h2>
+
+<p>注册、修改 passphrase 和用密钥文件重置这三个地方，现在会拒绝这些 passphrase：</p>
+
+<ul>
+  <li>在常见列表里（服务器登录密码黑名单里 10 个字符以上的，加上常见的 passphrase 默认值）</li>
+  <li>重复或者连续的字符</li>
+  <li>大部分是你的用户名或邮箱</li>
+</ul>
+
+<p>然后建议用四个或更多随机单词，一个正常的句子里刚好带了自己名字，还是可以通过</p>
+
+<p>需要说明的是，这只是浏览器里的检查，改过的客户端可以跳过，所以威胁模型里这一条写的是“已缓解”，后面附着这句话，而不是“已修复”</p>
+
+<h2 id="两个相关的改动">两个相关的改动</h2>
+
+<p><strong>修改 passphrase</strong>：以前想换新的 passphrase，只能用私钥文件，而那个文件本来应该锁好放着</p>
+
+<p>现在设置页有一张卡片，输入当前的 passphrase，在浏览器里打开存着的密钥，用新的 passphrase 重新封装，再读回来确认能打开，两个 passphrase 都不离开浏览器，光偷到登录状态也改不了</p>
+
+<p><strong>每次都问</strong>：以前第一次解锁后，账号密钥会在这个标签页里开着，15 分钟没操作才锁上</p>
+
+<p>有队友提出，偷到登录状态的人就能直接用主人已经解锁过的标签页，所以现在每次解密下载、每次分享都要输入 passphrase，这一个操作一结束就把密钥丢掉，不管成功还是失败</p>
+
+<p>密钥本来就只是页面内存里一个不可导出的 <code class="language-plaintext highlighter-rouge">CryptoKey</code>，从来没放进 sessionStorage 或 IndexedDB，所以丢掉就是真的清掉了</p>
+
+<h2 id="还没测的">还没测的</h2>
+
+<p>没有测 Android 手机、Firefox 和低端设备，而且 Safari 在 128 MiB 时莫名比 256 MiB 慢六倍</p>
+
+<p>数字显示还有空间把每次猜测的成本提高到四倍，同时解锁仍在 0.6 秒以内，但在测过便宜的 Android 手机之前我们没有调，这些都写在威胁模型里，原始结果也放在旁边</p>]]></content><author><name>Shuoxun Wen</name></author><category term="Security" /><category term="Argon2id" /><category term="Web Crypto" /><category term="Threat modelling" /><summary type="html"><![CDATA[服务器看不到 passphrase，所以检查放到了浏览器里，我们测了 Argon2id 的耗时，并改了 10 个字符的规则]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/secureview-passphrase-zh.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/secureview-passphrase-zh.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry xml:lang="en"><title type="html">Passphrase checks in SecureView</title><link href="https://blog.secureview.tech/2026/11/19/secureview-passphrase/" rel="alternate" type="text/html" title="Passphrase checks in SecureView" /><published>2026-11-19T11:30:00+08:00</published><updated>2026-11-19T11:30:00+08:00</updated><id>https://blog.secureview.tech/2026/11/19/secureview-passphrase</id><content type="html" xml:base="https://blog.secureview.tech/2026/11/19/secureview-passphrase/"><![CDATA[<p><a href="https://secureview.tech">SecureView</a>, our final-year project, has two secrets per account. The login password is checked by the server like on any site. The encryption passphrase never leaves the browser. It goes through Argon2id to open the account key, and that key opens the file keys. I wrote about the key design <a href="/2026/10/24/secureview-keys/">in an earlier post</a>.</p>
+
+<p>Because the server never gets the passphrase, it can’t reject a weak one. For a while the only rule was “at least 10 characters”, checked in the browser. That rule let <code class="language-plaintext highlighter-rouge">aaaaaaaaaa</code> and <code class="language-plaintext highlighter-rouge">password12</code> through.</p>
+
+<h2 id="measuring-both-sides">Measuring both sides</h2>
+
+<p>Before changing anything we wanted numbers, not a feeling that Argon2id makes it fine.</p>
+
+<p><strong>What it costs a user.</strong> A public page on the site, <code class="language-plaintext highlighter-rouge">/benchmark/argon2</code>, runs the same key derivation function the unlock dialog uses, with the same library build and parameters (Argon2id, 64 MiB, 3 passes). On Chrome and Safari on an Apple Silicon Mac and on an iPhone it took 100 to 151 ms. The unlock dialog says it’s slow on purpose, but it’s a tenth of a second.</p>
+
+<p><strong>What it costs an attacker.</strong> A script ran the native C implementation with the same parameters, and known-answer test vectors confirmed the browser derives exactly the same key, so the numbers apply to a real stolen key envelope. One 10-core laptop managed about 53 to 58 guesses per second per account. Ten cores only gave 5.3 times one core, because each guess holds 64 MiB and memory bandwidth runs out first.</p>
+
+<p>Rounded up to 60 guesses a second, the threat model’s table looks like this for one laptop:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Passphrase</th>
+      <th>Time to try them all</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>In the first 10,000 of a guessing list</td>
+      <td>2.8 minutes</td>
+    </tr>
+    <tr>
+      <td>Anywhere in a 10 million entry leaked password list</td>
+      <td>1.9 days</td>
+    </tr>
+    <tr>
+      <td>10 random lowercase letters</td>
+      <td>74,600 years</td>
+    </tr>
+    <tr>
+      <td>4 random Diceware words</td>
+      <td>1.9 million years</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Even a million laptops would need about 1.9 years for the four random words.</p>
+
+<p>So the conclusion was clear. The key derivation cost was fine. The passphrase rule was the weak link.</p>
+
+<h2 id="what-the-browser-checks-now">What the browser checks now</h2>
+
+<p>Registration, the change passphrase card and the key file reset now refuse a passphrase that:</p>
+
+<ul>
+  <li>is on a common list (the server’s login deny list at 10 or more characters, plus common passphrase defaults)</li>
+  <li>is repeated or sequential characters</li>
+  <li>is mostly your username or email</li>
+</ul>
+
+<p>and they suggest four or more random words instead. A real phrase that happens to contain your name still passes.</p>
+
+<p>One limit: this is a browser check, and a modified client can skip it. The threat model marks that finding as mitigated with that sentence attached, not as fixed.</p>
+
+<h2 id="two-related-changes">Two related changes</h2>
+
+<p><strong>Changing the passphrase.</strong> Before, the only way to a new passphrase was the private key file, which should stay locked away somewhere. Settings now has a card that takes the current passphrase, opens the stored key in the browser, seals it again under the new one, and reads it back to check it opens. Neither passphrase leaves the browser, and a stolen session alone can’t change it.</p>
+
+<p><strong>Asking every time.</strong> After the first unlock, the account key used to stay open in the tab for 15 idle minutes. A teammate pointed out that someone with a stolen login could then use a tab the owner had already unlocked. Now every decrypted download and every share asks for the passphrase, and the key is dropped as soon as that one action finishes, whether it worked or not. The key was only ever a non-extractable <code class="language-plaintext highlighter-rouge">CryptoKey</code> in page memory, never in sessionStorage or IndexedDB, so dropping it really does clear it.</p>
+
+<h2 id="what-we-didnt-measure">What we didn’t measure</h2>
+
+<p>No Android phone, no Firefox and no low-end hardware were tested, and Safari was oddly six times slower at 128 MiB than at 256 MiB. The numbers show there’s room to make each guess four times as expensive while staying under 0.6 s per unlock, but we didn’t raise it until a cheap Android phone has been measured. All of this is written down in the threat model with the raw results next to it.</p>]]></content><author><name>Shuoxun Wen</name></author><category term="Security" /><category term="Argon2id" /><category term="Web Crypto" /><category term="Threat modelling" /><summary type="html"><![CDATA[The server never sees the passphrase, so the checks moved to the browser. We measured Argon2id costs and changed the 10 character rule.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.secureview.tech/assets/og/secureview-passphrase.png" /><media:content medium="image" url="https://blog.secureview.tech/assets/og/secureview-passphrase.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>

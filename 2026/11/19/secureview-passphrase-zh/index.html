@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>SecureView 的密码检查 | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="SecureView 的密码检查" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="zh_Hans" />
+<meta name="description" content="服务器看不到 passphrase，所以检查放到了浏览器里，我们测了 Argon2id 的耗时，并改了 10 个字符的规则" />
+<meta property="og:description" content="服务器看不到 passphrase，所以检查放到了浏览器里，我们测了 Argon2id 的耗时，并改了 10 个字符的规则" />
+<link rel="canonical" href="https://blog.secureview.tech/2026/11/19/secureview-passphrase-zh/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/11/19/secureview-passphrase-zh/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/secureview-passphrase-zh.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-11-19T11:30:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/secureview-passphrase-zh.png" />
+<meta property="twitter:title" content="SecureView 的密码检查" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-11-19T11:30:00+08:00","datePublished":"2026-11-19T11:30:00+08:00","description":"服务器看不到 passphrase，所以检查放到了浏览器里，我们测了 Argon2id 的耗时，并改了 10 个字符的规则","headline":"SecureView 的密码检查","image":"https://blog.secureview.tech/assets/og/secureview-passphrase-zh.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/11/19/secureview-passphrase-zh/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/11/19/secureview-passphrase-zh/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/11/19/secureview-passphrase-zh/">
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/11/19/secureview-passphrase/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css?v=1795234673">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/zh/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/zh/#writing">文章</a>
+        <a href="/zh/#projects">项目</a>
+        <a href="/zh/projects/">归档</a>
+        <a href="/zh/search/">搜索</a>
+        <a href="/zh/about/">关于</a>
+      </nav>
+      <a class="lang-switch" href="/2026/11/19/secureview-passphrase/" lang="en" hreflang="en">English</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/zh/#writing">文章</a>
+      <span aria-hidden="true">/</span>
+      <span>SecureView</span>
+    </p>
+    <h1 class="display post-title">SecureView 的密码检查</h1><p class="lede">服务器看不到 passphrase，<wbr>所以检查放到了浏览器里，<wbr>我们测了 Argon2id 的耗时，<wbr>并改了 10 个字符的规则</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-11-19T11:30:00+08:00">19 Nov 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>约 4 分钟</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/11/19/secureview-passphrase/">English</a>
+        <a href="/2026/11/19/secureview-passphrase-zh/" lang="zh-Hans" class="on" aria-current="page">中文</a>
+      </span>
+    </div>
+  </header>
+  <p class="post-source small muted">
+    <a href="https://github.com/Waldo0926/SecureView" rel="noopener external" target="_blank">对应源码</a> · 资料核对：2026-11-19
+  </p>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p><a href="https://secureview.tech">SecureView</a> 是我们的毕业设计，每个账号有两个密码</p>
+
+<p>登录密码和普通网站一样由服务器检查，加密用的 passphrase 则从来不离开浏览器，它经过 Argon2id 打开账号密钥，账号密钥再打开每个文件的密钥，密钥设计我<a href="/2026/10/24/secureview-keys-zh/">之前写过一篇</a></p>
+
+<p>服务器拿不到 passphrase，也就没法拒绝太弱的，有一段时间唯一的规则是浏览器里检查“至少 10 个字符”，<code class="language-plaintext highlighter-rouge">aaaaaaaaaa</code> 和 <code class="language-plaintext highlighter-rouge">password12</code> 都能通过</p>
+
+<h2 id="两边都量一下">两边都量一下</h2>
+
+<p>动手改之前，我们想先拿到数字，而不是凭感觉说“有 Argon2id 应该没事”</p>
+
+<p><strong>对用户有多慢</strong>：网站上有一个公开页面 <code class="language-plaintext highlighter-rouge">/benchmark/argon2</code>，跑的就是解锁对话框用的那段密钥派生代码，库和参数完全一样（Argon2id，64 MiB，3 轮）</p>
+
+<p>在 Apple Silicon Mac 的 Chrome 和 Safari，还有 iPhone 上，都在 100 到 151 毫秒之间，对话框里写着“故意做得慢”，其实也就十分之一秒</p>
+
+<p><strong>对攻击者有多慢</strong>：用原生 C 实现、同样的参数跑了一个脚本，再用已知答案的测试向量确认浏览器算出来的密钥一个字节都不差，所以这些数字可以直接套到真被偷走的密钥信封上</p>
+
+<p>一台 10 核笔记本，每个账号每秒大约能试 53 到 58 次，十个核只比一个核快 5.3 倍，因为每猜一次都要占 64 MiB 内存，先跑满的是内存带宽</p>
+
+<p>按每秒 60 次（往攻击者有利的方向取整），威胁模型里一台笔记本的表是这样：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>passphrase</th>
+      <th>全部试完要多久</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>在常见猜测列表的前 10,000 个里</td>
+      <td>2.8 分钟</td>
+    </tr>
+    <tr>
+      <td>在一千万条的泄露密码列表里</td>
+      <td>1.9 天</td>
+    </tr>
+    <tr>
+      <td>10 个随机小写字母</td>
+      <td>74,600 年</td>
+    </tr>
+    <tr>
+      <td>4 个随机 Diceware 单词</td>
+      <td>190 万年</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>就算一百万台笔记本一起跑，四个随机单词也要大约 1.9 年</p>
+
+<p>结论很清楚：密钥派生的成本没问题，弱的是 passphrase 的规则</p>
+
+<h2 id="现在浏览器检查什么">现在浏览器检查什么</h2>
+
+<p>注册、修改 passphrase 和用密钥文件重置这三个地方，现在会拒绝这些 passphrase：</p>
+
+<ul>
+  <li>在常见列表里（服务器登录密码黑名单里 10 个字符以上的，加上常见的 passphrase 默认值）</li>
+  <li>重复或者连续的字符</li>
+  <li>大部分是你的用户名或邮箱</li>
+</ul>
+
+<p>然后建议用四个或更多随机单词，一个正常的句子里刚好带了自己名字，还是可以通过</p>
+
+<p>需要说明的是，这只是浏览器里的检查，改过的客户端可以跳过，所以威胁模型里这一条写的是“已缓解”，后面附着这句话，而不是“已修复”</p>
+
+<h2 id="两个相关的改动">两个相关的改动</h2>
+
+<p><strong>修改 passphrase</strong>：以前想换新的 passphrase，只能用私钥文件，而那个文件本来应该锁好放着</p>
+
+<p>现在设置页有一张卡片，输入当前的 passphrase，在浏览器里打开存着的密钥，用新的 passphrase 重新封装，再读回来确认能打开，两个 passphrase 都不离开浏览器，光偷到登录状态也改不了</p>
+
+<p><strong>每次都问</strong>：以前第一次解锁后，账号密钥会在这个标签页里开着，15 分钟没操作才锁上</p>
+
+<p>有队友提出，偷到登录状态的人就能直接用主人已经解锁过的标签页，所以现在每次解密下载、每次分享都要输入 passphrase，这一个操作一结束就把密钥丢掉，不管成功还是失败</p>
+
+<p>密钥本来就只是页面内存里一个不可导出的 <code class="language-plaintext highlighter-rouge">CryptoKey</code>，从来没放进 sessionStorage 或 IndexedDB，所以丢掉就是真的清掉了</p>
+
+<h2 id="还没测的">还没测的</h2>
+
+<p>没有测 Android 手机、Firefox 和低端设备，而且 Safari 在 128 MiB 时莫名比 256 MiB 慢六倍</p>
+
+<p>数字显示还有空间把每次猜测的成本提高到四倍，同时解锁仍在 0.6 秒以内，但在测过便宜的 Android 手机之前我们没有调，这些都写在威胁模型里，原始结果也放在旁边</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">本文目录</p>
+      <ol><li><a href="#两边都量一下">两边都量一下</a></li><li><a href="#现在浏览器检查什么">现在浏览器检查什么</a></li><li><a href="#两个相关的改动">两个相关的改动</a></li><li><a href="#还没测的">还没测的</a></li></ol>
+      <a class="toc-back" href="/zh/#writing">全部文章</a>
+    </aside>
+  </div>
+  <section class="post-related" aria-label="相关文章">
+    <h2>同一方向的其他文章</h2>
+    <ul><li><a href="/2026/11/01/mysql-concurrency-zh/">SecureView 的并发测试</a></li><li><a href="/2026/10/24/secureview-pool-zh/">SecureView 压测：100 人同时上传时的失败</a></li><li><a href="/2026/10/24/secureview-keys-zh/">服务器解不开文件的文件分享</a></li></ul>
+  </section>
+  <nav class="more" aria-label="更多文章">
+    <a class="card more-link" href="/2026/11/19/study-kit-uninstall-zh/">
+      <span class="more-label">上一篇 · Study Kit</span>
+      <span class="more-title">Study Kit 1.15.0：卸载时吊销 Google 授权</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/11/19/bot-on-the-hub-zh/">
+      <span class="more-label">下一篇 · Q&A bot</span>
+      <span class="more-title">微信机器人接入 Monash Hub</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Monash University Malaysia 计算机科学，记录开发与学习</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">运行状态</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

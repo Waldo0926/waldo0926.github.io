@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Study Kit 1.14: attendance login recovery | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Study Kit 1.14: attendance login recovery" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="When the attendance login expires, Study Kit tries to sign back in with the browser profile on your computer and stops when a password or MFA is needed." />
+<meta property="og:description" content="When the attendance login expires, Study Kit tries to sign back in with the browser profile on your computer and stops when a password or MFA is needed." />
+<link rel="canonical" href="https://blog.secureview.tech/2026/11/19/study-kit-attendance-login/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/11/19/study-kit-attendance-login/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/study-kit-attendance-login.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-11-19T10:00:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/study-kit-attendance-login.png" />
+<meta property="twitter:title" content="Study Kit 1.14: attendance login recovery" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-11-19T10:00:00+08:00","datePublished":"2026-11-19T10:00:00+08:00","description":"When the attendance login expires, Study Kit tries to sign back in with the browser profile on your computer and stops when a password or MFA is needed.","headline":"Study Kit 1.14: attendance login recovery","image":"https://blog.secureview.tech/assets/og/study-kit-attendance-login.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/11/19/study-kit-attendance-login/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/11/19/study-kit-attendance-login/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/11/19/study-kit-attendance-login/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/11/19/study-kit-attendance-login-zh/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css?v=1795234673">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/#writing">Writing</a>
+        <a href="/#projects">Projects</a>
+        <a href="/projects/">Archive</a>
+        <a href="/search/">Search</a>
+        <a href="/about/">About</a>
+      </nav>
+      <a class="lang-switch" href="/2026/11/19/study-kit-attendance-login-zh/" lang="zh-Hans" hreflang="zh-Hans">中文</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/#writing">Writing</a>
+      <span aria-hidden="true">/</span>
+      <span>Study Kit</span>
+    </p>
+    <h1 class="display post-title">Study Kit 1.14: attendance login recovery</h1><p class="lede">When the attendance login expires, Study Kit tries to sign back in with the browser profile on your computer and stops when a password or MFA is needed.</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-11-19T10:00:00+08:00">19 Nov 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>2 min read</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/11/19/study-kit-attendance-login/" class="on" aria-current="page">English</a>
+        <a href="/2026/11/19/study-kit-attendance-login-zh/" lang="zh-Hans">中文</a>
+      </span>
+    </div>
+  </header>
+  <p class="post-source small muted">
+    <a href="https://github.com/Waldo0926/monash-study-kit" rel="noopener external" target="_blank">Source repository</a> · Source reviewed: 2026-11-19
+  </p>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p>Study Kit’s optional attendance part reads the Monash attendance portal so the AI can tell you which classes you haven’t checked in to. The weak point was the login. It expired every so often, and the first sign was the AI saying it couldn’t read attendance. Then I had to run <code class="language-plaintext highlighter-rouge">monash attendance login</code> again, usually right when I wanted the answer.</p>
+
+<p>Version 1.14 tries to fix that without ever handling a password.</p>
+
+<h2 id="what-it-does">What it does</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>monash attendance maintain
+</code></pre></div></div>
+
+<p>This checks whether the attendance login still works. If it has expired, it opens the portal quietly with the separate browser profile Study Kit already keeps on your computer for attendance. If Okta still remembers you in that profile, the portal signs you back in and nothing else happens. If Monash asks for a password or MFA, it stops and reports <code class="language-plaintext highlighter-rouge">needs_login</code>, and you run <code class="language-plaintext highlighter-rouge">monash attendance login</code> yourself.</p>
+
+<p><code class="language-plaintext highlighter-rouge">monash attendance renew --timeout 30</code> is the same quiet attempt once, by hand.</p>
+
+<h2 id="the-rules-it-follows">The rules it follows</h2>
+
+<ul>
+  <li><strong>It never types for you.</strong> No password, no MFA code. Those stay with you.</li>
+  <li><strong>It backs off.</strong> After a failed authentication it waits an hour before trying again, so it doesn’t keep poking Okta. Replacing the login state file (for example after you log in again) makes it check straight away.</li>
+  <li><strong>It doesn’t mistake a network problem for an expired login.</strong> A timeout or a certificate error is reported as what it is.</li>
+  <li><strong>It doesn’t lose what worked.</strong> If recovery fails, the previous login state is kept rather than overwritten.</li>
+  <li><strong>One at a time.</strong> Use of the local browser profile is serialized, so two Study Kit processes don’t fight over it.</li>
+</ul>
+
+<h2 id="what-it-cant-promise">What it can’t promise</h2>
+
+<p>The Okta part of the login only exists on the computer where you signed in. What gets saved for reuse is the attendance portal’s own session, never the identity provider’s. So this works on the same computer, and it can’t stop a login expiring while the computer is asleep or offline. It makes the common case smoother; it isn’t a way around signing in.</p>
+
+<p>Before 1.14, the background job counted a failed keepalive as a success, which hid the problem. It now reports the failure. The <a href="https://github.com/Waldo0926/monash-study-kit/blob/main/CHANGELOG.md">changelog</a> has the full list.</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">On this page</p>
+      <ol><li><a href="#what-it-does">What it does</a></li><li><a href="#the-rules-it-follows">The rules it follows</a></li><li><a href="#what-it-cant-promise">What it can’t promise</a></li></ol>
+      <a class="toc-back" href="/#writing">All writing</a>
+    </aside>
+  </div>
+  <section class="post-related" aria-label="Related posts">
+    <h2>More on this subject</h2>
+    <ul><li><a href="/2026/11/21/study-kit-download-choices/">Study Kit 1.16.0: download size limit and skipped files list</a></li><li><a href="/2026/11/19/study-kit-uninstall/">Study Kit 1.15.0: revoking Google access on uninstall</a></li><li><a href="/2026/11/19/study-kit-submissions/">Study Kit 1.13: reading your submissions and feedback</a></li></ul>
+  </section>
+  <nav class="more" aria-label="More posts">
+    <a class="card more-link" href="/2026/11/19/study-kit-submissions/">
+      <span class="more-label">Previous · Study Kit</span>
+      <span class="more-title">Study Kit 1.13: reading your submissions and feedback</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/11/19/hub-compare-years/">
+      <span class="more-label">Next · Monash Hub</span>
+      <span class="more-title">Comparing a unit across Handbook years</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Computer Science at Monash University. Backend and AI application development.</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">Status</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Passphrase checks in SecureView | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Passphrase checks in SecureView" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="The server never sees the passphrase, so the checks moved to the browser. We measured Argon2id costs and changed the 10 character rule." />
+<meta property="og:description" content="The server never sees the passphrase, so the checks moved to the browser. We measured Argon2id costs and changed the 10 character rule." />
+<link rel="canonical" href="https://blog.secureview.tech/2026/11/19/secureview-passphrase/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/11/19/secureview-passphrase/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/secureview-passphrase.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-11-19T11:30:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/secureview-passphrase.png" />
+<meta property="twitter:title" content="Passphrase checks in SecureView" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-11-19T11:30:00+08:00","datePublished":"2026-11-19T11:30:00+08:00","description":"The server never sees the passphrase, so the checks moved to the browser. We measured Argon2id costs and changed the 10 character rule.","headline":"Passphrase checks in SecureView","image":"https://blog.secureview.tech/assets/og/secureview-passphrase.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/11/19/secureview-passphrase/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/11/19/secureview-passphrase/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/11/19/secureview-passphrase/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/11/19/secureview-passphrase-zh/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css?v=1795234673">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/#writing">Writing</a>
+        <a href="/#projects">Projects</a>
+        <a href="/projects/">Archive</a>
+        <a href="/search/">Search</a>
+        <a href="/about/">About</a>
+      </nav>
+      <a class="lang-switch" href="/2026/11/19/secureview-passphrase-zh/" lang="zh-Hans" hreflang="zh-Hans">中文</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/#writing">Writing</a>
+      <span aria-hidden="true">/</span>
+      <span>SecureView</span>
+    </p>
+    <h1 class="display post-title">Passphrase checks in SecureView</h1><p class="lede">The server never sees the passphrase, so the checks moved to the browser. We measured Argon2id costs and changed the 10 character rule.</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-11-19T11:30:00+08:00">19 Nov 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>4 min read</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/11/19/secureview-passphrase/" class="on" aria-current="page">English</a>
+        <a href="/2026/11/19/secureview-passphrase-zh/" lang="zh-Hans">中文</a>
+      </span>
+    </div>
+  </header>
+  <p class="post-source small muted">
+    <a href="https://github.com/Waldo0926/SecureView" rel="noopener external" target="_blank">Source repository</a> · Source reviewed: 2026-11-19
+  </p>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p><a href="https://secureview.tech">SecureView</a>, our final-year project, has two secrets per account. The login password is checked by the server like on any site. The encryption passphrase never leaves the browser. It goes through Argon2id to open the account key, and that key opens the file keys. I wrote about the key design <a href="/2026/10/24/secureview-keys/">in an earlier post</a>.</p>
+
+<p>Because the server never gets the passphrase, it can’t reject a weak one. For a while the only rule was “at least 10 characters”, checked in the browser. That rule let <code class="language-plaintext highlighter-rouge">aaaaaaaaaa</code> and <code class="language-plaintext highlighter-rouge">password12</code> through.</p>
+
+<h2 id="measuring-both-sides">Measuring both sides</h2>
+
+<p>Before changing anything we wanted numbers, not a feeling that Argon2id makes it fine.</p>
+
+<p><strong>What it costs a user.</strong> A public page on the site, <code class="language-plaintext highlighter-rouge">/benchmark/argon2</code>, runs the same key derivation function the unlock dialog uses, with the same library build and parameters (Argon2id, 64 MiB, 3 passes). On Chrome and Safari on an Apple Silicon Mac and on an iPhone it took 100 to 151 ms. The unlock dialog says it’s slow on purpose, but it’s a tenth of a second.</p>
+
+<p><strong>What it costs an attacker.</strong> A script ran the native C implementation with the same parameters, and known-answer test vectors confirmed the browser derives exactly the same key, so the numbers apply to a real stolen key envelope. One 10-core laptop managed about 53 to 58 guesses per second per account. Ten cores only gave 5.3 times one core, because each guess holds 64 MiB and memory bandwidth runs out first.</p>
+
+<p>Rounded up to 60 guesses a second, the threat model’s table looks like this for one laptop:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Passphrase</th>
+      <th>Time to try them all</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>In the first 10,000 of a guessing list</td>
+      <td>2.8 minutes</td>
+    </tr>
+    <tr>
+      <td>Anywhere in a 10 million entry leaked password list</td>
+      <td>1.9 days</td>
+    </tr>
+    <tr>
+      <td>10 random lowercase letters</td>
+      <td>74,600 years</td>
+    </tr>
+    <tr>
+      <td>4 random Diceware words</td>
+      <td>1.9 million years</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Even a million laptops would need about 1.9 years for the four random words.</p>
+
+<p>So the conclusion was clear. The key derivation cost was fine. The passphrase rule was the weak link.</p>
+
+<h2 id="what-the-browser-checks-now">What the browser checks now</h2>
+
+<p>Registration, the change passphrase card and the key file reset now refuse a passphrase that:</p>
+
+<ul>
+  <li>is on a common list (the server’s login deny list at 10 or more characters, plus common passphrase defaults)</li>
+  <li>is repeated or sequential characters</li>
+  <li>is mostly your username or email</li>
+</ul>
+
+<p>and they suggest four or more random words instead. A real phrase that happens to contain your name still passes.</p>
+
+<p>One limit: this is a browser check, and a modified client can skip it. The threat model marks that finding as mitigated with that sentence attached, not as fixed.</p>
+
+<h2 id="two-related-changes">Two related changes</h2>
+
+<p><strong>Changing the passphrase.</strong> Before, the only way to a new passphrase was the private key file, which should stay locked away somewhere. Settings now has a card that takes the current passphrase, opens the stored key in the browser, seals it again under the new one, and reads it back to check it opens. Neither passphrase leaves the browser, and a stolen session alone can’t change it.</p>
+
+<p><strong>Asking every time.</strong> After the first unlock, the account key used to stay open in the tab for 15 idle minutes. A teammate pointed out that someone with a stolen login could then use a tab the owner had already unlocked. Now every decrypted download and every share asks for the passphrase, and the key is dropped as soon as that one action finishes, whether it worked or not. The key was only ever a non-extractable <code class="language-plaintext highlighter-rouge">CryptoKey</code> in page memory, never in sessionStorage or IndexedDB, so dropping it really does clear it.</p>
+
+<h2 id="what-we-didnt-measure">What we didn’t measure</h2>
+
+<p>No Android phone, no Firefox and no low-end hardware were tested, and Safari was oddly six times slower at 128 MiB than at 256 MiB. The numbers show there’s room to make each guess four times as expensive while staying under 0.6 s per unlock, but we didn’t raise it until a cheap Android phone has been measured. All of this is written down in the threat model with the raw results next to it.</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">On this page</p>
+      <ol><li><a href="#measuring-both-sides">Measuring both sides</a></li><li><a href="#what-the-browser-checks-now">What the browser checks now</a></li><li><a href="#two-related-changes">Two related changes</a></li><li><a href="#what-we-didnt-measure">What we didn’t measure</a></li></ol>
+      <a class="toc-back" href="/#writing">All writing</a>
+    </aside>
+  </div>
+  <section class="post-related" aria-label="Related posts">
+    <h2>More on this subject</h2>
+    <ul><li><a href="/2026/11/01/mysql-concurrency/">SecureView concurrency testing</a></li><li><a href="/2026/10/24/secureview-pool/">SecureView load test: upload failures at 100 users</a></li><li><a href="/2026/10/24/secureview-keys/">File sharing where the server can't decrypt the files</a></li></ul>
+  </section>
+  <nav class="more" aria-label="More posts">
+    <a class="card more-link" href="/2026/11/19/study-kit-uninstall/">
+      <span class="more-label">Previous · Study Kit</span>
+      <span class="more-title">Study Kit 1.15.0: revoking Google access on uninstall</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/11/19/bot-on-the-hub/">
+      <span class="more-label">Next · Q&A bot</span>
+      <span class="more-title">The WeChat bot on Monash Hub</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Computer Science at Monash University. Backend and AI application development.</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">Status</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
