@@ -2,12 +2,12 @@
 layout: post
 date: 2026-11-19 12:00:00 +0800
 project: Exchange Tracker
-description: "从八月开始，家里一台小主机每天晚上把 Monash 所有学期交换项目读一遍，记下哪里变了：新增学校、名额、分数线、开放还是关闭，怎么做到不打扰对方网站，为什么对比每次都从头算，以及为什么课名相似不等于能转学分"
+description: "家里一台小主机每天晚上读一遍 Monash 的交换项目，记录新增学校、名额、分数线和开放状态的变化"
 ref: exchange-tracker
 lang: zh-Hans
 source_repo: monash-abroad-tracker-demo
 source_checked: 2026-11-19
-title: "每天晚上，看 Monash 的交换名单变了什么"
+title: "记录 Monash 交换项目的变化"
 tags: [Python, Web scraping, systemd, Data quality]
 image: /assets/og/exchange-tracker-zh.png
 ---
@@ -67,7 +67,7 @@ GitHub 托管的 runner 访问 Monash 网站会被直接返回 HTTP 403，所以
 
 一直盯着这份名单，让我在规划自己选课的时候更明白一件事：课名相似只是搜索线索，不代表能转学分
 
-真正决定的是课程大纲、考核方式、学分、课程级别，以及你在那边的那个学期这门课到底开不开，一门对得很好但只在另一个学期开的课，等于没用
+真正决定的是课程大纲、考核方式、学分、课程级别，以及你在那边的那个学期这门课到底开不开，如果这门课只在另一个学期开，内容对得再好也用不上
 
 我也会把三种匹配分开看：从公开信息看起来对得上的、学院讨论过的、有书面批准的，合作学校改了开课安排，以前的对应关系也要重新核对
 

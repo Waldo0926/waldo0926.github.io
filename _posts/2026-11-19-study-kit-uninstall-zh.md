@@ -2,12 +2,12 @@
 layout: post
 date: 2026-11-19 11:20:00 +0800
 project: Study Kit
-description: "删掉令牌文件，并不等于收回了背后的授权，Study Kit 1.15.0 卸载时会先向 Google 吊销 Drive 和 Gmail 的授权再删数据，吊销失败就什么都不删"
+description: "monash uninstall 现在会先吊销 Google Drive 和 Gmail 授权再删数据，吊销失败就不删"
 ref: study-kit-uninstall
 lang: zh-Hans
 source_repo: monash-study-kit
 source_checked: 2026-11-19
-title: "卸载的时候，授权也要收回来"
+title: "Study Kit 1.15.0：卸载时吊销 Google 授权"
 tags: [Python, OAuth, Google, Privacy]
 image: /assets/og/study-kit-uninstall-zh.png
 ---
@@ -35,15 +35,13 @@ image: /assets/og/study-kit-uninstall-zh.png
 
 其他失败，比如没网或者 Google 报错，卸载会在动你文件之前停下来，说明原因，让你联网后再跑一次，或者先去 [myaccount.google.com/permissions](https://myaccount.google.com/permissions) 手动撤销
 
-顺序很重要，如果先删再吊销，一旦吊销失败，授权还活着，手里却没有令牌可以用来吊销了，留着文件就随时可以重试
+顺序不能反过来，如果先删再吊销，一旦吊销失败，授权还活着，手里却没有令牌可以用来吊销了，留着文件就随时可以重试
 
 小一点的命令也是同样的规则：删除某个 profile 会先吊销它的 Google 令牌，退出 Gmail 也是先吊销再删令牌文件
 
 ## Ed 不一样
 
 Ed 没有吊销令牌的接口，所以最后 Study Kit 会打印 Ed API 令牌设置页的链接，请你自己去那里删
-
-这件事我宁愿直接说清楚，也不想假装卸载已经全部处理好了
 
 ## 1.15.0 上了 PyPI
 
@@ -55,4 +53,4 @@ Ed 没有吊销令牌的接口，所以最后 Study Kit 会打印 Ed API 令牌�
 
 我自己在 Mac 上遇到过一个情况：更新时 uv 重建了环境，旧的 `monash` 进程最后会报 `ImportError: cannot import name 'update_check'`
 
-这时新版本其实已经装好了，跑一下 `monash --version` 就能确认，这个报错的修复正在 1.15.1 里审
+这时新版本其实已经装好了，跑一下 `monash --version` 就能确认，这个报错的修复已经合进 1.15.1

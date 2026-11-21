@@ -2,11 +2,11 @@
 layout: post
 date: 2026-10-24 10:00:00 +0800
 project: Monash Hub
-description: "One VPS, no one watching the deploys. How the deploy script checks the right commit is live and puts the previous images back when it is not."
+description: "The deploy script on the VPS checks that the right commit is running and puts the previous images back if it is not."
 ref: deploy-rollback
 lang: en
 preview: deploy-rollback
-title: "How Monash Hub deploys itself and rolls back"
+title: "Automatic deploys and rollback for Monash Hub"
 image: /assets/og/deploy-rollback.png
 ---
 
@@ -89,11 +89,5 @@ The deploy also used to run two one-off data repairs that fetched two units from
 ## Before the deploy
 
 CI runs first: backend tests against a real PostgreSQL with a check that models and migrations agree, dependency audits, the frontend typecheck and build, and Playwright browser tests that go through the unit page, the course map and ratings at desktop and phone sizes. If CI fails, Deploy never starts.
-
-## Takeaways
-
-- Name the deployed commit, and make it visible from the live site.
-- Make rollback cheap. Keeping the old images is faster than rebuilding and does not depend on the network or package registries at that moment.
-- Keep steps that depend on outside websites out of the deploy script.
 
 Code: [deploy.sh](https://github.com/Waldo0926/monash-hub/blob/main/deployment/deploy.sh), [smoke.sh](https://github.com/Waldo0926/monash-hub/blob/main/deployment/smoke.sh), [deploy.yml](https://github.com/Waldo0926/monash-hub/blob/main/.github/workflows/deploy.yml). Pull requests: [#151](https://github.com/Waldo0926/monash-hub/pull/151), [#188](https://github.com/Waldo0926/monash-hub/pull/188).

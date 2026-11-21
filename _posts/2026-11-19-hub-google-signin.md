@@ -2,19 +2,19 @@
 layout: post
 date: 2026-11-19 11:10:00 +0800
 project: Monash Hub
-description: "Monash Hub now has a Google sign-in button. Accounts are matched by email, so most of the work went into making sure that match can't be abused: a signed state tied to the browser, a verified address, and a session token that never reaches a server log."
+description: "Accounts are matched by email, so the sign-in checks a signed state, a verified address and keeps the session token out of server logs."
 ref: hub-google-signin
 lang: en
 source_repo: monash-hub
 source_checked: 2026-11-19
-title: "Adding Google sign-in without opening a door into someone else's account"
+title: "Adding Google sign-in to Monash Hub"
 tags: [Python, FastAPI, OAuth, Security]
 image: /assets/og/hub-google-signin.png
 ---
 
 Monash Hub has had email and password accounts since the start. People asked for "continue with Google", the way MonMap does it, so the sign-in and register pages now have that button. It's live.
 
-The button is the easy part. The decision that matters is how a Google sign-in finds the right Hub account, because that decision is also how it could find the wrong one.
+Adding the button was simple. Most of the work was deciding how a Google sign-in finds the right Hub account, because a mistake there would let someone into the wrong one.
 
 ## Matched by email, so the email has to be real
 

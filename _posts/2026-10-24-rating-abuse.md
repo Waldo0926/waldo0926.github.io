@@ -2,11 +2,11 @@
 layout: post
 date: 2026-10-24 17:30:00 +0800
 project: Monash Hub
-description: "Students can rate a unit without an account. How one browser keeps one rating per unit, why the limit is on the network and not the key, and what this still does not stop."
+description: "Students can rate a unit without an account. This post covers how repeat ratings are limited and what the limits still don't stop."
 ref: rating-abuse
 lang: en
 preview: rating-abuse
-title: "Unit ratings without sign-in, and keeping them honest"
+title: "Unit ratings without sign-in, and limiting repeat votes"
 image: /assets/og/rating-abuse.png
 ---
 

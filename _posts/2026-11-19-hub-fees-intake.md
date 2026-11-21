@@ -2,12 +2,12 @@
 layout: post
 date: 2026-11-19 11:00:00 +0800
 project: Monash Hub
-description: "Monash Hub shows the 2027 Malaysia fees. A published fee is not proof that a degree takes students in a given intake, and neither is proof that applications are open today. How the fees page keeps the three apart, and why every row currently says not verified."
+description: "Monash Hub shows 2027 Malaysia fees. A listed fee doesn't mean a degree takes that intake or that applications are open, so each row says not verified."
 ref: hub-fees-intake
 lang: en
 source_repo: monash-hub
 source_checked: 2026-11-19
-title: "A fee table doesn't mean applications are open"
+title: "Fees, intakes and applications on Monash Hub"
 tags: [Python, FastAPI, Nuxt, Data provenance]
 image: /assets/og/hub-fees-intake.png
 ---
@@ -47,7 +47,7 @@ The page has year and intake filters, and they stay in the URL. The API sends ba
 
 I called the live API while writing this. For October 2027 there are 58 fee rows. 53 link to a programme page, and 52 of those were fetched and matched by title. None of them has an explicit sentence about applications, so all 58 say **not verified** for the intake.
 
-That looks like an empty result, but it is the honest one. The page still shows the fee, the October list and the general deadlines, each with its own source, and tells you to check the degree page or ask Monash before deciding anything.
+That looks like an empty result, but there is no reliable source yet. The page still shows the fee, the October list and the general deadlines, each with its own source, and tells you to check the degree page or ask Monash before deciding anything.
 
 ## What's still missing
 

@@ -2,17 +2,17 @@
 layout: post
 date: 2026-10-24 17:00:00 +0800
 project: Monash Hub
-description: "Five thousand units and hundreds of official pages, translated into Chinese for free. Why a glossary sits in front of the model, and how a bad translation falls back to English."
+description: "Over five thousand units and hundreds of official pages translated into Chinese at no cost, with a glossary in front of the model and English as the fallback."
 ref: translation-pipeline
 lang: en
 preview: translation-pipeline
-title: "Translating the Monash Handbook without paying for it"
+title: "Translating the Monash Handbook for free"
 image: /assets/og/translation-pipeline.png
 ---
 
 Most people who read [Monash Hub](https://monashhub.secureview.tech) are Chinese students. What they need to read is in English: about five thousand Handbook units, the degree structures, and several hundred official Monash pages. Monash keeps changing it, so the Handbook is crawled again every week. A paid translation API would cost more than a student project can spend, so the site uses free engines. This post covers what goes wrong when you do that, and what the pipeline does about it.
 
-## A plain translator gets the important words wrong
+## A plain translator gets the key terms wrong
 
 The first engine was Argos Translate, an offline model that runs on the same VPS. It costs nothing and has no rate limit. On real Handbook pages it translated:
 
@@ -89,12 +89,5 @@ Japanese and Korean have very few readers, so they get machine output behind the
 At about ten seconds a string on the free model, a full Japanese and Korean fill takes a day or more. So it runs under its own lock after the crawl, and Chinese always goes first.
 
 *Update, 29 October: Japanese and Korean are no longer offered ([#251](https://github.com/Waldo0926/monash-hub/pull/251)). The readers are Chinese students, and keeping two more languages translated cost time and free quota that almost nobody used. The site is now English and Chinese.*
-
-## Takeaways
-
-- The glossary is where quality comes from. Most translation bugs were fixed by adding a term, and the fix reaches every page on the next run.
-- Check what the model returns before storing it. Every agreed term, code and number has to be there.
-- Store translations beside the source with a hash, so you know when they go stale.
-- A string you cannot translate well should stay in the original language.
 
 Code: [`engine.py`](https://github.com/Waldo0926/monash-hub/blob/main/crawler/translate/engine.py), [`llm.py`](https://github.com/Waldo0926/monash-hub/blob/main/crawler/translate/llm.py), [`glossary.py`](https://github.com/Waldo0926/monash-hub/blob/main/backend/app/knowledge/glossary.py), and the decision record [ADR 0004](https://github.com/Waldo0926/monash-hub/blob/main/docs/adr/0004-glossary-before-machine-translation.md).

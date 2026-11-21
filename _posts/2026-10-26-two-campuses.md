@@ -2,11 +2,11 @@
 layout: post
 date: 2026-10-26 10:30:00 +0800
 project: Monash Hub
-description: "Visas, insurance, intermission and closing units follow different rules at Monash's Australian and Malaysian campuses. How Monash Hub answers both side by side, and the test that fails an answer that forgets which country it is about."
+description: "Visas, insurance, intermission and unit closures follow different rules in Australia and Malaysia. Monash Hub answers both and a test checks the country."
 ref: two-campuses
 lang: en
 preview: two-campuses
-title: "One question, two campuses"
+title: "Answering for both Monash campuses"
 image: /assets/og/two-campuses.png
 ---
 
@@ -71,7 +71,7 @@ The Faculty of IT is revising its degrees, and each campus publishes its own tea
 
 Searching a closed unit used to say only that the Handbook has no such unit. Now it says which Handbook last had it and shows the teach-out notice for both campuses, the reader's campus first, each with a link to its faculty page ([#225](https://github.com/Waldo0926/monash-hub/pull/225)).
 
-Two rules keep this honest:
+Two rules cover this:
 
 - The notice is the faculty's own table, shown word for word. The site never works out a replacement itself.
 - Neither campus's list fills a gap in the other. When a campus's table leaves a unit out, the page says so, because "not listed" is not the same as "safe".
@@ -79,11 +79,5 @@ Two rules keep this honest:
 ## The bot does the same
 
 The WeChat bot answers from the same FAQ, plus Q&As I taught it and the account's articles. Its taught answers for visas, insurance and study load now give 【马来西亚校区】 and 【澳洲校区】 separately. When the model is asked, it may only quote, and a quote from an Australian page, or one with CoE, OSHC or similar in it, goes last under its own heading. I wrote about that part in [A Q&A bot where the model is only allowed to quote](/2026/10/25/quote-only-rag/).
-
-## Takeaways
-
-- When two sources disagree because they describe different places, show both and label them. Do not merge them.
-- A word list is enough to catch most unlabelled rules. CoE, OSHC and Student Pass each belong to one country.
-- "We have no notice for this unit" and "this unit is fine" are different answers. Say the first one.
 
 Code: [faq_seed.py](https://github.com/Waldo0926/monash-hub/blob/main/backend/app/knowledge/faq_seed.py), [teach_out.py](https://github.com/Waldo0926/monash-hub/blob/main/backend/app/knowledge/teach_out.py), [test_faq_matching.py](https://github.com/Waldo0926/monash-hub/blob/main/backend/tests/test_faq_matching.py).

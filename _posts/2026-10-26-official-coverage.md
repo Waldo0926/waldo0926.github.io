@@ -2,11 +2,11 @@
 layout: post
 date: 2026-10-26 11:30:00 +0800
 project: Monash Hub
-description: "Monash Hub's guides went from 662 official pages to about 3,100 in one weekend. How the list is built from two sitemaps, what gets left out, and why a failed fetch no longer takes a page down."
+description: "The page list now comes from two sitemaps, some pages are filtered out, and a failed fetch keeps the old copy of a page."
 ref: official-coverage
 lang: en
 preview: official-coverage
-title: "From 662 official pages to 3,100, without losing any when a crawl fails"
+title: "Monash Hub official pages: from 662 to about 3,100"
 image: /assets/og/official-coverage.png
 ---
 
@@ -90,11 +90,5 @@ The same weekend added limits to the weekly Handbook crawl ([#212](https://githu
 - One run marks at most 25 units inactive, or 2% of its targets if that is more. A Handbook answering 404 for everything would otherwise take every unit off the site for a week.
 - A run stops after 30 failures in a row and records why. Before, a Handbook that was down cost three attempts for each of 5,000 units.
 - A failed run, or one where more than 5% of targets failed, sends one email a day. `/api/health` shows the last run of each kind.
-
-## Takeaways
-
-- A sitemap is a better list than a crawl from the menu, but it lists everything, so the filter matters more than the fetcher.
-- Write "out of date" as a rule with today's year in it, not as a list of pages.
-- Only take content down when the source says it is gone. A refusal or a timeout says nothing about the page.
 
 Code: [coverage.py](https://github.com/Waldo0926/monash-hub/blob/main/crawler/official/coverage.py), [discover.py](https://github.com/Waldo0926/monash-hub/blob/main/crawler/official/discover.py), [repository.py](https://github.com/Waldo0926/monash-hub/blob/main/backend/app/knowledge/repository.py). Changelog: [CHANGELOG.md](https://github.com/Waldo0926/monash-hub/blob/main/CHANGELOG.md).

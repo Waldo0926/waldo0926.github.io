@@ -2,11 +2,11 @@
 layout: post
 date: 2026-10-26 09:30:00 +0800
 project: Monash Hub
-description: "Monash Hub can now be added to a phone's home screen and opens pages you have read with no signal. Why the service worker always tries the network first, what it refuses to save, and how an app left open for days picks up a new deploy."
+description: "Monash Hub can be added to a phone's home screen and opens pages you've read without signal. The service worker always tries the network first."
 ref: offline-app
 lang: en
 preview: offline-app
-title: "An offline app that never shows an old page when a new one is there"
+title: "Offline support for Monash Hub"
 image: /assets/og/offline-app.png
 ---
 
@@ -102,11 +102,5 @@ Playwright tests in CI cover the parts that are easy to break:
 - a page never opened gets the offline page, and "retry" works once the network is back
 - a unit that was not found is not saved
 - the install hint waits a few pages and stays closed once closed
-
-## Takeaways
-
-- Decide what the service worker is for before writing it, and write that at the top of the file.
-- Network first, cache only on a real network failure, and never cache an error.
-- An installed app can stay open for days. Check for a new build when it comes back to the front.
 
 Code: [sw.js](https://github.com/Waldo0926/monash-hub/blob/main/frontend/public/sw.js), [pwa.client.ts](https://github.com/Waldo0926/monash-hub/blob/main/frontend/plugins/pwa.client.ts), [pwa.spec.ts](https://github.com/Waldo0926/monash-hub/blob/main/e2e/tests/pwa.spec.ts).

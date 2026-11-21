@@ -2,12 +2,12 @@
 layout: post
 date: 2026-11-19 09:00:00 +0800
 project: Study Kit
-description: "Study Kit 1.12 加了 monash changes，在本机记下新上传的文件、改过的作业说明、挪过的截止时间和老师的新回复，它怎么在不多请求 Moodle 的情况下判断变化，以及为什么从不说某个文件被删了"
+description: "在本机记录课程里新上的文件、改过的作业说明、调整的截止时间和老师的新回复"
 ref: study-kit-changes
 lang: zh-Hans
 source_repo: monash-study-kit
 source_checked: 2026-11-19
-title: "这周我的课改了什么？"
+title: "Study Kit 1.12：monash changes"
 tags: [Python, SQLite, Moodle, Ed]
 image: /assets/og/study-kit-changes-zh.png
 ---
@@ -48,7 +48,7 @@ monash changes --days 7
 
 **会忘记**：超过 90 天的记录会删掉，最多只留 5000 条
 
-## 真正花时间的部分
+## 花时间最多的部分
 
 变更记录要靠得住，前提是同步本身靠得住，所以 1.12 大部分改动其实在这上面
 

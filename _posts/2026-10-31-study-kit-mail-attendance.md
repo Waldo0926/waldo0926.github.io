@@ -2,10 +2,10 @@
 layout: post
 date: 2026-10-31 18:00:00 +0800
 project: Study Kit
-description: "Study Kit 1.5.0 can optionally read your school mail and attendance. Anything that changes something shows you a full preview first and runs only after you confirm. Attendance reads two weeks in seconds without a browser, and students who never open a terminal can connect it by asking their AI app."
+description: "Study Kit can optionally read school mail and attendance. Actions that change something show a preview and only run after you confirm."
 ref: study-kit-mail-attendance
 lang: en
-title: "Study Kit gets school mail and attendance, and asks before it changes anything"
+title: "Study Kit 1.5.0: school mail and attendance"
 image: /assets/og/study-kit-mail-attendance.png
 ---
 
@@ -54,10 +54,3 @@ I did two things. First, the package now includes a desktop app client made just
 
 Second, a new tool, `start_school_service_setup`. A student says "connect my school email" in their AI app, and it installs the missing packages into the running install, opens the sign-in window and leaves only the sign-in to them. When it is done it tells the AI app to refresh its tool list. The tool costs about 145 tokens per conversation, so it hides itself once both parts are connected. The parameters of the original 17 tools are pinned by a hash in the tests, and none of them changed.
 
-## Takeaways
-
-- Writes are kept safe by the flow, not by a switch: a full preview, a single-use ticket bound to that content, the user's confirmation, and no automatic retries.
-- When an existing remote grant could gain a new ability, do not let it grow on its own. Ask the user to choose again.
-- Before replacing a parser that already works, run old and new side by side on real data, then make the new one the default.
-- When certificate verification fails, find out why. Do not turn verification off.
-- A feature is not done until an ordinary student can get through the steps to connect it.

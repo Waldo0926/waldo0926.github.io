@@ -2,32 +2,27 @@
 layout: post
 date: 2026-11-01 04:20:00 +0800
 project: Algorithms
-description: "把以前写的字符串算法重新整理成独立仓库：Z 匹配、BWT、后缀树、Rabin–Karp，还有那些不该被隐藏的实现限制。"
+description: "把 Z 匹配、BWT、Ukkonen 后缀树和 Rabin Karp 整理成单独的仓库，并写明各自的限制"
 ref: string-algorithms
 lang: zh-Hans
-title: "字符串算法课结束后，我还留着哪些代码"
+title: "字符串算法课结束后留下的代码"
 image: /assets/og/string-algorithms-zh.png
 ---
 
-整理以前的算法课代码时，我不太想把每个作业文件原样扔上 GitHub。课程已经结束了，有些代码能运行，但如果不把设计思路、复杂度和边界情况说明白，别人看不懂，我隔一段时间也未必记得为什么这么写。
+回头整理算法课的代码时，我不想把以前的作业文件夹原样放上 GitHub，代码也许还能跑，但没有设计、复杂度和边界情况的说明，别人看不懂，一年后的我也一样
 
-后来我把几个字符串算法整理成了[独立 Python 仓库](https://github.com/Waldo0926/advanced-string-algorithms)。里面有四组东西：
+我把四部分整理成一个[单独的 Python 仓库](https://github.com/Waldo0926/advanced-string-algorithms)：Z 算法精确匹配、基于 BWT 的近似匹配、Ukkonen 后缀树和 LCP 提取，以及用 Miller Rabin 生成素数的 Rabin Karp
 
-- Z 相关的精确匹配，包含从右向左匹配的跳跃预处理
-- BWT 和 backward search，在索引上尝试一次编辑的近似匹配
-- Ukkonen 后缀树，以及从树里提取 LCP 数组
-- Rabin–Karp 滚动哈希，搭配 Miller–Rabin 素性测试
+## 限制
 
-## 先讲清楚它不是什么
+它不是生产用的搜索引擎，BWT 的例子故意用了简单的后缀数组构建方法，这里的 Z 匹配在计算位移时有一步 `O(m²)` 的预处理，直接叫它们“快速文本搜索”会把这些开销藏起来
 
-这是拿来展示算法实现和实验的仓库，不是生产级全文检索引擎。比如 BWT 部分为了让实现容易读，后缀数组构造仍然用比较直观的方法；Z 匹配实现里的位移预处理有`O(m²)`的成本。如果只写“高效字符串匹配”，就把最重要的限制藏起来了。
+Ukkonen 后缀树里，我反复排查的问题都在 active point、suffix link 和 skip/count 上，代码写成可以一步一步跟着看的样子
 
-后缀树也是一样。Ukkonen 算法最容易讲得很玄，但写代码时真正会反复出错的是 active point、suffix link 和 skip/count 如何更新。比起只给一个理论上的时间复杂度，我更在意用小输入把这些状态跑对。
+## 测试
 
-## 测试怎么安排
+BWT 近似匹配的测试把替换、插入、删除和换位分开测，LCP 数组在小输入上和朴素算法对比，Rabin Karp 会拿原文核对每个候选，哈希相同不代表真的匹配
 
-我给 BWT 近似匹配分别覆盖替换、插入、删除和交换四种单步编辑；后缀树的 LCP 结果拿一个朴素参考实现对照；滚动哈希不仅检查命中位置，也要处理哈希相同但原文不同的情况。
+仓库里有能运行的例子和 pytest 测试，不包含作业题目、评分材料和其他课程资料
 
-仓库里保留了运行例子和 pytest 测试。课程作业的说明、评分材料和其他不该公开的资源没有放进去。
-
-代码在[advanced-string-algorithms](https://github.com/Waldo0926/advanced-string-algorithms)，实现笔记在[ALGORITHMS.md](https://github.com/Waldo0926/advanced-string-algorithms/blob/main/ALGORITHMS.md)。以后真要拿去处理大规模文本，我会先重做索引构建和性能评估，不会直接拿课程版的复杂度推断实际吞吐。
+更多说明在 [ALGORITHMS.md](https://github.com/Waldo0926/advanced-string-algorithms/blob/main/ALGORITHMS.md)，真要拿来做大规模索引的话，我会先按实际数据测一下性能，再把简单的构建步骤换掉

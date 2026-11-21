@@ -2,37 +2,35 @@
 layout: post
 date: 2026-11-01 04:10:00 +0800
 project: Homelab
-description: "Two J1900 boxes, a Debian N1 and a VPS. Before finding more services to run, I need to decide what should stay online and what should remain disposable."
+description: "Two J1900 boxes, a Debian N1 and a VPS, and how I decide what stays online and what can be wiped."
 ref: spare-machines
 lang: en
-title: "Two J1900 boxes and an N1: why I don't need more production servers"
+title: "What runs on my two J1900 boxes and the N1"
 image: /assets/og/spare-machines.png
 ---
 
-I recently got two older J1900 machines working again. There's also an N1 box running Debian, and the VPS that already hosts my public services. Having spare hardware brought back a familiar question: what else can I run on it?
+I got two old J1900 machines working again. I also have an N1 box running Debian, and a VPS that hosts my public services. Before deciding what else to run on them, I want to know what I'd lose if one of them stopped working.
 
-This time I want to answer a different question first: which things need to survive when one of those machines stops working?
+## Not everything runs at home
 
-## Not every box needs to run a website
+The public sites run on the VPS, which already has HTTPS, automatic deploys and monitoring. Copying all of that to home machines doesn't help much. The home IP changes, and power cuts, disk failures and router restarts are harder to deal with.
 
-My public sites already run on a VPS with HTTPS, automated deployment and monitoring. Replicating every production service at home isn't automatically useful. A home connection has a changing public address, and power, disks and router restarts introduce failure modes I don't control as easily.
+For now the larger J1900 is meant as a backup or standby, the other J1900 is for experiments, and the N1 is a small Debian test node. These are plans and nothing fails over automatically yet. Some of the machines can just stay off.
 
-For now I see the larger J1900 as a backup or standby box, the other J1900 as an isolated place to experiment, and the N1 as a small Debian/Linux test node. These are roles I'm working towards, not a claim that failover or a production backup is already implemented. Some machines can simply stay off.
+## Writing down the restore steps
 
-## The restore matters more than the backup
+I want to write down what happens if the VPS or one of the disks fails:
 
-I want to write down exactly what would happen if the VPS or one of the disks failed:
+- Which data exists in only one place?
+- Can I restore a database and its files on a clean machine?
+- How do I SSH in when the home IP changes?
+- Which jobs need a schedule and which only run when I start them?
+- Does an alert report a new failure, or the same one all day?
 
-- What data exists in only one place?
-- Can I restore a database and the files that belong to it on a clean machine?
-- How do I still get in over SSH when the home IP changes?
-- Which jobs need a schedule and which should run only on demand?
-- Will an alert describe a new failure, or repeat the same message all day?
+Installing Debian doesn't answer any of these.
 
-A working Debian install doesn't answer any of those questions.
+## Older projects
 
-## Keeping the useful parts of older projects
+My [homelab network automation](https://github.com/Waldo0926/homelab-network-automation) and [edge fleet operations](https://github.com/Waldo0926/edge-fleet-ops-automation) repositories are cleaned up rebuilds of earlier tools and don't describe what runs on these machines now.
 
-My [homelab network automation](https://github.com/Waldo0926/homelab-network-automation) and [edge fleet operations](https://github.com/Waldo0926/edge-fleet-ops-automation) repositories are sanitized reconstructions of earlier tooling, not claims about the current machines.
-
-The ideas that still seem worth carrying forward are stateful alerts, consecutive checks before acting, tight limits on automated operations, and dry-run by default. I'll document an actual restore exercise when I've completed one. That's a more useful result than a list of boxes I happen to own.
+Some ideas from them I want to reuse: keeping alert state, checking a few times before acting, limiting what automation can do, and running in dry run mode by default. I'll write about a real restore once I've done one.

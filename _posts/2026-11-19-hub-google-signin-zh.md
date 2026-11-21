@@ -2,19 +2,19 @@
 layout: post
 date: 2026-11-19 11:10:00 +0800
 project: Monash Hub
-description: "Monash Hub 加了用 Google 登录，账号是按邮箱对应的，所以大部分功夫花在防止这一步被利用：和浏览器绑定的签名 state、必须验证过的邮箱，还有一个永远不会出现在服务器日志里的登录令牌"
+description: "账号按邮箱对应，所以登录会检查签名的 state 和已验证的邮箱，会话令牌也不会出现在服务器日志里"
 ref: hub-google-signin
 lang: zh-Hans
 source_repo: monash-hub
 source_checked: 2026-11-19
-title: "加 Google 登录，但不能让人登进别人的账号"
+title: "Monash Hub 加入 Google 登录"
 tags: [Python, FastAPI, OAuth, Security]
 image: /assets/og/hub-google-signin-zh.png
 ---
 
 Monash Hub 一开始就有邮箱加密码的账号，后来有人想要像 MonMap 那样直接用 Google 登录，所以现在登录页和注册页都多了一个按钮，已经上线了
 
-按钮本身很好做，真正要想清楚的是：用 Google 登录时，怎么找到对应的 Hub 账号
+按钮本身很好做，主要要想清楚的是：用 Google 登录时，怎么找到对应的 Hub 账号
 
 因为找对账号的那条路，同样也可能找错
 

@@ -2,12 +2,12 @@
 layout: post
 date: 2026-11-19 09:00:00 +0800
 project: Study Kit
-description: "Study Kit 1.12 adds monash changes: a local log of new files, edited assignment instructions, moved deadlines and staff replies. How it decides what changed without asking Moodle twice, and why it never reports a file as removed."
+description: "A local log of new files, edited assignment instructions, moved deadlines and staff replies in your units."
 ref: study-kit-changes
 lang: en
 source_repo: monash-study-kit
 source_checked: 2026-11-19
-title: "What changed in my units this week?"
+title: "Study Kit 1.12: monash changes"
 tags: [Python, SQLite, Moodle, Ed]
 image: /assets/og/study-kit-changes.png
 ---

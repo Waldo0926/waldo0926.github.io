@@ -2,12 +2,12 @@
 layout: post
 date: 2026-11-19 09:30:00 +0800
 project: Study Kit
-description: "Study Kit 1.13 can read what you or your group submitted for an assignment, together with the full marking feedback, so you can go through the comments with your AI. What it reads, where the files go, and what it refuses to do."
+description: "Study Kit can read what you or your group submitted together with the marking feedback, so your AI app can go through the comments with you."
 ref: study-kit-submissions
 lang: en
 source_repo: monash-study-kit
 source_checked: 2026-11-19
-title: "Going through the marker's comments with your own submission open"
+title: "Study Kit 1.13: reading your submissions and feedback"
 tags: [Python, Moodle, MCP, Privacy]
 image: /assets/og/study-kit-submissions.png
 ---

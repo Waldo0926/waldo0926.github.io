@@ -2,11 +2,11 @@
 layout: post
 date: 2026-10-24 18:20:00 +0800
 project: SecureView
-description: "At 100 concurrent users, up to 78% of uploads failed while the CPU sat at 3%. How the cause was found, a first fix that made things worse, and the fix that brought failures to zero."
+description: "At 100 concurrent users up to 78% of uploads failed while CPU stayed at 3%. The cause, a first fix that made it worse, and the fix that worked."
 ref: secureview-pool
 lang: en
 preview: secureview-pool
-title: "100 users, 3% CPU, and most uploads failing"
+title: "SecureView load test: upload failures at 100 users"
 image: /assets/og/secureview-pool.png
 ---
 
@@ -42,13 +42,13 @@ The thread pool has 40 threads. With 100 users, 15 uploads held all 15 connectio
 
 This explains the 3% CPU. Nothing was computing. Everything was waiting.
 
-## The fix that made it worse
+## A first fix that made it worse
 
 The obvious fix was to release the connection after authentication, before writing the file. I tried only that, and **50 users** became slow too: download p95 went to 30 seconds.
 
 The upload's remaining database calls still ran on the event loop. Now they waited for a connection *on the event loop*, which blocks every request in the process, not just the upload. I did not ship it.
 
-## The fix that worked
+## The final fix
 
 The upload is split into three parts so that no database call runs on the event loop and no connection is held while waiting for a thread:
 
@@ -85,12 +85,5 @@ After the fix, throughput stays at about 56 operations a second at every step an
 - A unit test checks that the connection is released before staging starts.
 - The fault injection test kills the database connection at the exact commit that writes the file row, and checks that the cleanup job removes the orphaned object.
 - The full backend suite passed on MySQL after the change: 633 tests, 85% coverage.
-
-## Takeaways
-
-- Low CPU with failing requests means something is waiting. Look for pools, locks and timeouts, not for slow code.
-- Check a guess before fixing it. The first theory here sounded right and was wrong, and one measurement showed it.
-- In async Python, a blocking database call on the event loop stalls everything. Either make the call async or run it in the thread pool, and do not hold a connection across an `await`.
-- Keep the before and after numbers from the same tool. Then the fix is a measurement, not a claim.
 
 The full write-up with raw data is in [`docs/performance/pool-fix-2026-10-04/`](https://github.com/Waldo0926/SecureView/tree/main/docs/performance/pool-fix-2026-10-04), and the code is [`file_service.py`](https://github.com/Waldo0926/SecureView/blob/main/backend/app/services/file_service.py).

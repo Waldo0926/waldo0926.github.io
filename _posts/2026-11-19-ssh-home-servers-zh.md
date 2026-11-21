@@ -2,11 +2,11 @@
 layout: post
 date: 2026-11-19 12:15:00 +0800
 project: Homelab
-description: "家里的公网 IP 会变，有些机器又藏在别的机器后面，我怎么从端口转发加 DDNS 换成 Tailscale 加 ProxyJump，为什么每台机器有两个名字，以及换地址时靠 HostKeyAlias 这一行，不用盲目接受新密钥"
+description: "从端口转发加 DDNS 换成 Tailscale 加 ProxyJump，每台机器两个名字，以及 HostKeyAlias 的用法"
 ref: ssh-home-servers
 lang: zh-Hans
 source_checked: 2026-11-19
-title: "家里 IP 一直变，怎么稳定 SSH 回服务器"
+title: "家里 IP 会变时怎么 SSH 回服务器"
 tags: [SSH, Tailscale, Linux, Networking]
 image: /assets/og/ssh-home-servers-zh.png
 ---

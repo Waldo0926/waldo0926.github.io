@@ -2,12 +2,12 @@
 layout: post
 date: 2026-11-03 00:00:00 +0800
 project: Study Kit
-description: "How Study Kit 1.8–1.11.1 turns Moodle pages, Books, assignment briefs, Ed Lessons and linked Google files into a local course package, with offline PDF printing, isolated accounts and an explicit list of what is missing."
+description: "Study Kit 1.8 to 1.11.1 export Moodle pages, Books, assignment briefs, Ed Lessons and linked Google files as one local package with a list of what is missing."
 ref: study-kit-course-materials
 lang: en
 source_repo: monash-study-kit
 source_checked: 2026-11-03
-title: "A course is more than its PDFs: building the materials exporter"
+title: "Exporting a whole unit's course materials"
 tags: [Python, Moodle, Ed, Google Drive, PDF, Privacy]
 image: /assets/og/study-kit-course-materials.png
 ---

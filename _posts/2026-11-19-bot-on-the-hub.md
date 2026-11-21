@@ -2,11 +2,11 @@
 layout: post
 date: 2026-11-19 11:40:00 +0800
 project: Q&A bot
-description: "The 马莫百科 WeChat bot now also answers in the Ask panel on Monash Hub. Same answers, but a website visitor isn't a WeChat follower: what gets removed, what happens when the bot has nothing, and a small fix for people asking to join the group in a private chat."
+description: "The 马莫百科 bot now answers in the Ask panel on Monash Hub, with WeChat-only text removed for website visitors."
 ref: bot-on-the-hub
 lang: en
 source_checked: 2026-11-19
-title: "One bot, answering in two places"
+title: "The WeChat bot on Monash Hub"
 tags: [Python, FastAPI, Nuxt, WeChat]
 image: /assets/og/bot-on-the-hub.png
 ---

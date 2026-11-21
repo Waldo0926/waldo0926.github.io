@@ -2,12 +2,12 @@
 layout: post
 date: 2026-11-19 10:00:00 +0800
 project: Study Kit
-description: "Study Kit 1.14 会在考勤登录过期时，用你电脑上已有的浏览器登录状态自己试着登回去，Monash 要密码或 MFA 时就停下，它怎么判断、多久试一次，以及它保证不了什么"
+description: "考勤登录过期时，Study Kit 会用电脑上已有的浏览器配置登回去，需要密码或 MFA 时就停下"
 ref: study-kit-attendance-login
 lang: zh-Hans
 source_repo: monash-study-kit
 source_checked: 2026-11-19
-title: "不碰密码，让考勤登录别那么容易掉"
+title: "Study Kit 1.14：考勤登录恢复"
 tags: [Python, Playwright, SSO, Privacy]
 image: /assets/og/study-kit-attendance-login-zh.png
 ---

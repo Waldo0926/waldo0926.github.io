@@ -2,11 +2,11 @@
 layout: post
 date: 2026-10-30 18:00:00 +0800
 project: Study Kit
-description: "Study Kit 1.4.0 can now be reached from ChatGPT and Claude on the web. It stays a server for one person: a pairing code from your own terminal, a short list of callback addresses, rotating tokens, and only the tools that read."
+description: "ChatGPT and Claude on the web can now connect to Study Kit. It is still for one person, with pairing codes, fixed callback addresses and read-only tools."
 ref: study-kit-remote
 lang: en
 preview: study-kit-remote
-title: "Letting ChatGPT reach Study Kit, for one person only"
+title: "Study Kit 1.4.0: remote mode for ChatGPT"
 image: /assets/og/study-kit-remote.png
 ---
 
@@ -75,9 +75,3 @@ So the 16 query tools are all a token can reach. With a stolen token someone cou
 
 On 30 October the 1.4.0 package from PyPI also went through the same sign in and query flow in a clean environment, using the real Claude and ChatGPT callback addresses. That check had no public domain. With my own domain and server, ChatGPT Plus can query my Moodle and Ed. The steps are on [Host it yourself](https://docs.secureview.tech/study-kit/remote/).
 
-## Takeaways
-
-- A remote mode for a personal tool should stay personal. One owner, their own data, nothing started for them.
-- A code from your own terminal replaces a whole account system when there is only one user.
-- Check callback addresses when a client registers. After that, every later step can trust them.
-- Decide which tools leave the machine. Anything that logs in or writes stays local.

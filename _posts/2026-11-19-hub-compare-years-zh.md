@@ -2,7 +2,7 @@
 layout: post
 date: 2026-11-19 10:30:00 +0800
 project: Monash Hub
-description: "Monash Hub 可以对比同一门课在两个 Handbook 年份之间的变化：先修、校区、开课学期、考核和考试，为什么缺了某一年只算“未知”而不算停开，以及为什么空列表要有证据才算空"
+description: "对比两个 Handbook 年份的先修课、校区、开课学期、考核和考试，缺少的年份显示为未知"
 ref: hub-compare-years
 lang: zh-Hans
 source_repo: monash-hub
