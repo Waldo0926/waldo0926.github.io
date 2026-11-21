@@ -2,11 +2,11 @@
 layout: post
 date: 2026-11-19 11:40:00 +0800
 project: Q&A bot
-description: "马莫百科的微信机器人现在也在 Monash Hub 的提问面板里回答，答案一样，但网站访客不是公众号粉丝：哪些话要去掉，机器人答不上来时怎么办，还有私聊里有人要进群的一个小修复"
+description: "马莫百科的机器人现在也在 Monash Hub 的提问面板里回答，网站访客看不到只适用于公众号的内容"
 ref: bot-on-the-hub
 lang: zh-Hans
 source_checked: 2026-11-19
-title: "一个机器人，在两个地方回答"
+title: "微信机器人接入 Monash Hub"
 tags: [Python, FastAPI, Nuxt, WeChat]
 image: /assets/og/bot-on-the-hub-zh.png
 ---

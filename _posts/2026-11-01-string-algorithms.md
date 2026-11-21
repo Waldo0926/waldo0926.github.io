@@ -2,27 +2,27 @@
 layout: post
 date: 2026-11-01 04:20:00 +0800
 project: Algorithms
-description: "A post-course rebuild of Z matching, BWT search, Ukkonen suffix trees and Rabin–Karp, including the limitations I don't want to hide behind complexity claims."
+description: "Z matching, BWT search, Ukkonen suffix trees and Rabin Karp rebuilt as a standalone repo, with their limitations written down."
 ref: string-algorithms
 lang: en
-title: "The string algorithms I kept after the course ended"
+title: "String algorithms code I kept after the course"
 image: /assets/og/string-algorithms.png
 ---
 
-When I revisited my algorithms coursework, I didn't want to dump the old assignment directory straight onto GitHub. The code might still run, but without the design choices, complexity notes and boundary tests, it wouldn't mean much to someone else—or to me a year later.
+When I went back to my algorithms coursework, I didn't want to put the old assignment folder on GitHub as it was. The code might still run, but without notes on the design, complexity and edge cases it wouldn't be much use to anyone, including me a year later.
 
-I pulled four areas into a [standalone Python repository](https://github.com/Waldo0926/advanced-string-algorithms): Z-based exact matching, BWT-backed approximate matching, Ukkonen suffix trees with LCP extraction, and Rabin–Karp with Miller–Rabin prime generation.
+I moved four parts into a [separate Python repository](https://github.com/Waldo0926/advanced-string-algorithms): exact matching with the Z algorithm, approximate matching with BWT, Ukkonen suffix trees with LCP extraction, and Rabin Karp with Miller Rabin prime generation.
 
-## What the repository isn't
+## Limitations
 
-It isn't a production search engine. The BWT example deliberately has a simple suffix-array builder. The Z matcher has an `O(m²)` shift-preprocessing step in this implementation. Describing either as simply a “fast text-search algorithm” would hide a real cost.
+It isn't a production search engine. The BWT example uses a simple suffix array builder on purpose, and the Z matcher here has an `O(m²)` preprocessing step for shifts. Calling either a fast text search would hide that cost.
 
-Ukkonen's suffix tree is another good example. It's easy to mention linear-time construction, but the mistakes I kept looking for were in the active point, suffix links and skip/count bookkeeping. I wanted the implementation to make those transitions inspectable.
+For Ukkonen's suffix tree, the bugs I kept hunting were in the active point, suffix links and skip/count. The code is written so those steps can be followed one at a time.
 
-## How I check the results
+## Testing
 
-For BWT approximate matching, the test cases separate substitution, insertion, deletion and transposition. For the LCP array, I compare against a naive reference on small inputs. Rabin–Karp checks candidate matches against the original text rather than treating equal hashes as proof.
+For BWT approximate matching, the tests cover substitution, insertion, deletion and transposition separately. The LCP array is compared against a naive version on small inputs. Rabin Karp checks each candidate against the text, since equal hashes don't prove a match.
 
-There are runnable examples and pytest tests. The repo leaves out assignment sheets, marking material and private course resources; it is meant to show the algorithms and my implementation work.
+There are runnable examples and pytest tests. Assignment sheets, marking material and other course resources are not included.
 
-The source is [advanced-string-algorithms](https://github.com/Waldo0926/advanced-string-algorithms), with additional notes in [ALGORITHMS.md](https://github.com/Waldo0926/advanced-string-algorithms/blob/main/ALGORITHMS.md). Before using any of it for large-scale indexing I'd benchmark the real workload and replace the intentionally simple construction steps.
+More notes are in [ALGORITHMS.md](https://github.com/Waldo0926/advanced-string-algorithms/blob/main/ALGORITHMS.md). Before using any of this for indexing at scale, I'd benchmark the real workload and replace the simple construction steps.

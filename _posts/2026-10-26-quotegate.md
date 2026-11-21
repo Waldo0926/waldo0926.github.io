@@ -2,11 +2,11 @@
 layout: post
 date: 2026-10-26 11:00:00 +0800
 project: quotegate
-description: "The word-for-word check in my WeChat bot is now its own Python package with no dependencies. What it keeps and drops, why it does not use a second model as a judge, and how a release gets from a tag to PyPI."
+description: "The quote check from the WeChat bot is now a separate Python package with no dependencies, published to PyPI from a tag."
 ref: quotegate
 lang: en
 preview: quotegate
-title: "Turning a bot's quote check into a package"
+title: "Turning the bot's quote check into a Python package"
 image: /assets/og/quotegate.png
 ---
 
@@ -77,11 +77,5 @@ I wanted releases to be boring:
 ## What is next
 
 The bot still has its own copy of the check in `wxbot/rag.py`. Moving it onto the package is the next step, so the two cannot drift apart.
-
-## Takeaways
-
-- Pull code out when it has a clear input and output, and leave the parts that know about your product behind.
-- Write down what the package does not stop. For a safety check that matters more than the feature list.
-- Check the release in the release workflow: version, changelog and branch, then a clean install.
 
 Code: [core.py](https://github.com/Waldo0926/quotegate/blob/main/src/quotegate/core.py), [test.yml](https://github.com/Waldo0926/quotegate/blob/main/.github/workflows/test.yml), [release.yml](https://github.com/Waldo0926/quotegate/blob/main/.github/workflows/release.yml). Package: [pypi.org/project/quotegate](https://pypi.org/project/quotegate/).

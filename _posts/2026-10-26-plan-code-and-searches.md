@@ -2,11 +2,11 @@
 layout: post
 date: 2026-10-26 10:00:00 +0800
 project: Monash Hub
-description: "Monash Hub has no accounts for course plans. How a plan moves to another device in a link the server never receives, how the home page shows real searches while storing only a word, a day and a count, and a privacy note that had to be corrected."
+description: "Course plans move between devices through a link the server never receives, and popular searches are stored as a word, a day and a count."
 ref: plan-code-and-searches
 lang: en
 preview: plan-code-and-searches
-title: "A plan code the server never sees, and searches counted without people"
+title: "Plan codes and popular searches on Monash Hub"
 image: /assets/og/plan-code-and-searches.png
 ---
 
@@ -99,11 +99,5 @@ rows = db.execute(
 A day adds at most 20 to a term, and a term has to have been searched on two different days. Rows older than 60 days are deleted. Until at least three terms pass, the home page shows the six examples again, labelled as examples.
 
 These guards raise the cost. They do not make it impossible: someone who searches the same real term on two days can still get it listed. Since a term only counts when it finds something on the site, the worst case is a real unit code or topic showing up that not many people searched.
-
-## Takeaways
-
-- The part of a URL after `#` is a free way to pass data between two copies of your own page without the server.
-- Read your privacy notes again after each feature. Mine was true when written and wrong a few features later.
-- Before showing "popular" anything, decide what one person can do to it. Caps per day and a minimum number of days are cheap.
 
 Code: [planCode.ts](https://github.com/Waldo0926/monash-hub/blob/main/frontend/utils/planCode.ts), [plan.vue](https://github.com/Waldo0926/monash-hub/blob/main/frontend/pages/plan.vue), [popular.py](https://github.com/Waldo0926/monash-hub/blob/main/backend/app/search/popular.py).

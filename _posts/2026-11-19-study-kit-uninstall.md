@@ -2,12 +2,12 @@
 layout: post
 date: 2026-11-19 11:20:00 +0800
 project: Study Kit
-description: "Deleting a token file doesn't take back the permission behind it. Study Kit 1.15.0 now revokes its Google Drive and Gmail grants before it deletes your data, and refuses to delete anything if that fails."
+description: "monash uninstall now revokes the Google Drive and Gmail grants before deleting data, and deletes nothing if revoking fails."
 ref: study-kit-uninstall
 lang: en
 source_repo: monash-study-kit
 source_checked: 2026-11-19
-title: "Uninstalling should take the permission back too"
+title: "Study Kit 1.15.0: revoking Google access on uninstall"
 tags: [Python, OAuth, Google, Privacy]
 image: /assets/og/study-kit-uninstall.png
 ---
@@ -31,16 +31,16 @@ If Google answers `400 invalid_token`, the grant is already dead: it expired, or
 
 Any other failure, like no internet or a Google error, stops the uninstall before it touches your files. It prints the reason and tells you to run it again once you're online, or to remove the access at [myaccount.google.com/permissions](https://myaccount.google.com/permissions) first.
 
-This order matters. If it deleted first and revoked second, a failed revoke would leave a live grant and no token left to revoke it with. Keeping the files means you can always retry.
+The order is important. If it deleted first and revoked second, a failed revoke would leave a live grant and no token left to revoke it with. Keeping the files means you can always retry.
 
 The same rule applies in the smaller commands. Removing a profile revokes its Google tokens first, and logging out of Gmail revokes before it deletes the token file.
 
 ## Ed is different
 
-Ed has no API for revoking a token. So at the end, Study Kit prints a link to Ed's API token settings and asks you to delete the token there yourself. I'd rather say that plainly than pretend uninstall covers it.
+Ed has no API for revoking a token. So at the end, Study Kit prints a link to Ed's API token settings and asks you to delete the token there yourself.
 
 ## 1.15.0 on PyPI
 
 1.15.0 is also the first release on PyPI since 1.11.2. Versions 1.12 to 1.14 were merged but never tagged, so anyone installing from PyPI was stuck on 1.11.2. If you installed earlier, `monash update` gets you everything since then: `monash changes`, reading your own submissions, attendance login recovery, and this uninstall fix.
 
-One thing I hit on my own Mac: when uv rebuilds the environment during the update, the old `monash` process can finish with `ImportError: cannot import name 'update_check'`. The new version is already installed by then, so run `monash --version` to check. The fix for that message is in review as 1.15.1.
+One thing I hit on my own Mac: when uv rebuilds the environment during the update, the old `monash` process can finish with `ImportError: cannot import name 'update_check'`. The new version is already installed by then, so run `monash --version` to check. The fix for that message is merged as 1.15.1.

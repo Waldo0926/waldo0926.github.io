@@ -2,29 +2,27 @@
 layout: post
 date: 2026-11-01 07:10:00 +0800
 project: Blog
-description: "Writing, building and serving a static blog are different jobs. GitHub Pages remains a mirror; the VPS serves the main domain."
+description: "Posts are built with Jekyll, served from my VPS, and GitHub Pages stays up as a mirror."
 ref: blog-build-rollback
 lang: en
-title: "Why I use Jekyll but serve the blog from my own VPS"
+title: "How this blog is built and served"
 image: /assets/og/blog-build-rollback.png
 source_repo: waldo0926.github.io
 source_checked: 2026-11-01
 ---
 
-I was tempted to make the blog a full web app. More projects, better navigation and search can all make a database-backed rewrite sound appealing. But the thing this site does most is still simple: it turns Markdown into pages.
+The blog is built with Jekyll. It handles posts, layouts, the feed and the sitemap, and each Chinese post shares a `ref` with its English version so readers can switch language. I thought about turning it into a web app with a database, but the site mostly turns Markdown into pages, so I kept Jekyll and only redid the home page.
 
-I kept Jekyll. It already handles posts, layouts, feeds and the sitemap. Chinese and English versions share a reference so readers can switch languages. A nicer portfolio homepage didn't require throwing that away.
+## Where it is built and where it is served
 
-## Building and serving are separate jobs
+The source is in [waldo0926.github.io](https://github.com/Waldo0926/waldo0926.github.io). GitHub Actions builds the site into a separate `site` branch, and my VPS pulls that branch on a schedule and serves blog.secureview.tech. The VPS only serves static files and doesn't run Jekyll.
 
-The source lives in [waldo0926.github.io](https://github.com/Waldo0926/waldo0926.github.io). GitHub Actions builds the static site into a dedicated site branch. My VPS pulls those generated files on a schedule and serves blog.secureview.tech.
+The GitHub Pages address still works as a mirror. There is no automatic failover between the two.
 
-Visitors don't need the Jekyll toolchain running on the VPS. The GitHub Pages address stays available as a separate mirror. Two working URLs are useful, but I wouldn't call that automatic failover.
+## Checks on each PR
 
-## Small publishing pipelines still break
+A broken template can take down a whole page, so every PR builds the site and checks that each post has its link preview image.
 
-One accidental broken template can take down an entire page. I added PR checks for the Jekyll build and the social preview images, rather than discovering missing assets after publishing.
+Links are the other thing that breaks. The English and Chinese versions of a post link to each other, and so do the project pages. A change to the domain or the navigation can break these without any code change.
 
-Links are the other maintenance cost. Bilingual posts must point to each other, and the project archive needs the same treatment. Domain or navigation changes can break these relationships without touching a line of application code.
-
-The [repository](https://github.com/Waldo0926/waldo0926.github.io) documents the current workflow. This post records how the blog is built today, not a promise that its deployment will never change.
+The [repository README](https://github.com/Waldo0926/waldo0926.github.io) has the current setup. This post describes how it works now and may go out of date if I change the deployment.

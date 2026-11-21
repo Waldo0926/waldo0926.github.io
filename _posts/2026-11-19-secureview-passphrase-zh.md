@@ -2,12 +2,12 @@
 layout: post
 date: 2026-11-19 11:30:00 +0800
 project: SecureView
-description: "SecureView 的服务器从来看不到打开文件用的 passphrase，所以也没法检查它，我们实测了 Argon2id 对用户和攻击者分别有多慢，发现真正的弱点是“至少 10 个字符”这条规则，于是把检查放进了浏览器"
+description: "服务器看不到 passphrase，所以检查放到了浏览器里，我们测了 Argon2id 的耗时，并改了 10 个字符的规则"
 ref: secureview-passphrase
 lang: zh-Hans
 source_repo: SecureView
 source_checked: 2026-11-19
-title: "服务器看不到的那个密码"
+title: "SecureView 的密码检查"
 tags: [Security, Argon2id, Web Crypto, Threat modelling]
 image: /assets/og/secureview-passphrase-zh.png
 ---
@@ -53,7 +53,7 @@ image: /assets/og/secureview-passphrase-zh.png
 
 然后建议用四个或更多随机单词，一个正常的句子里刚好带了自己名字，还是可以通过
 
-要老实说的是，这只是浏览器里的检查，改过的客户端可以跳过，所以威胁模型里这一条写的是“已缓解”，后面附着这句话，而不是“已修复”
+需要说明的是，这只是浏览器里的检查，改过的客户端可以跳过，所以威胁模型里这一条写的是“已缓解”，后面附着这句话，而不是“已修复”
 
 ## 两个相关的改动
 

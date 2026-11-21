@@ -2,17 +2,17 @@
 layout: post
 date: 2026-11-01 18:30:00 +0800
 project: Study Kit
-description: "Ed Web could zip a whole unit's Ed materials and Study Kit could not, even though it already downloaded them. Closing that gap meant renaming files without downloading them again, catching attachments, a bug the tests had hidden, and deploying to a server that was not running what I thought it was."
+description: "Study Kit can now zip a unit's Ed Lessons by week. Getting there meant renaming existing files, downloading attachments and fixing a deploy."
 ref: study-kit-ed-export
 lang: en
 preview: study-kit-ed-export
 source_repo: monash-study-kit
 source_checked: 2026-11-01
-title: "One download button, three codebases: zipping a unit's Ed materials"
+title: "Zipping a unit's Ed materials in Study Kit"
 image: /assets/og/study-kit-ed-export.png
 ---
 
-The question was simple, and I should have asked it myself. [Ed Web](https://monashed.secureview.tech/app/) has a button that downloads a whole unit's Ed Lessons as one zip, sorted by week. Why doesn't [Study Kit](https://github.com/Waldo0926/monash-study-kit) have one, when it already syncs those files to your computer?
+Someone asked a simple question I hadn't thought of. [Ed Web](https://monashed.secureview.tech/app/) has a button that downloads a whole unit's Ed Lessons as one zip, sorted by week. Why doesn't [Study Kit](https://github.com/Waldo0926/monash-study-kit) have one, when it already syncs those files to your computer?
 
 It did sync them. It just kept them in folders named after Ed's numeric ids, like `39026/116285/201_Workshop 3 Slides.pdf`, skipped files attached inside Ed pages, and had no way to hand you the lot. My private server version had the same gap, from the other side: the zip existed on its website, but Claude could not give it to you in a conversation.
 
@@ -63,13 +63,13 @@ def _move_old(old: str | None, new: str) -> None:
         os.replace(src, dest)
 ```
 
-The new path is `<unit>/<NN module>/<NN lesson>/<NN title>`. The numbers matter more than they look. Without them, Finder sorts "Week 10" before "Week 2", and modules come out in the order of their database ids rather than the order on Ed, so the module number comes from the position of its first lesson. Unit codes need care too: `FIT3162/FIT3164` is one unit on Ed, and a slash is a folder separator, so it becomes `FIT3162+FIT3164`.
+The new path is `<unit>/<NN module>/<NN lesson>/<NN title>`. The numbers are needed. Without them, Finder sorts "Week 10" before "Week 2", and modules come out in the order of their database ids rather than the order on Ed, so the module number comes from the position of its first lesson. Unit codes need care too: `FIT3162/FIT3164` is one unit on Ed, and a slash is a folder separator, so it becomes `FIT3162+FIT3164`.
 
 The same move also covers a lesson that gets renamed on Ed, and files of slides that disappear are deleted along with any folder they leave empty.
 
 ## Attachments, and a stable id for something that has none
 
-Starter code usually is not a PDF slide. It is a `<file>` element inside a text page. Those are now downloaded too, but only when the link points at Ed's own file host, and only up to 200 MB, because a link to a dataset is still a link.
+Starter code usually is not a PDF slide. It is a `<file>` element inside a text page. Those are now downloaded too, but only when the link points at Ed's own file host, and only up to 200 MB each.
 
 Every row in `lesson_files` is keyed by Ed's slide id, and an attachment does not have one. I wanted to reuse the table, so every reader of it (the library, search, the lesson reader) would pick attachments up for free. The id is derived from the URL:
 
@@ -86,7 +86,7 @@ The export does not walk the folder. It reads modules, lessons and files from SQ
 
 ## A bug the tests had hidden
 
-While wiring the button into the library page I found that the page had never listed Ed files synced by Study Kit itself. The code checked whether a path sat under the Ed folder, but the database stores relative paths, so the check always failed. The existing test passed because it inserted an absolute path. The fix is one line; the lesson is to write fixtures the way production writes data. There is now a test with a relative path.
+While wiring the button into the library page I found that the page had never listed Ed files synced by Study Kit itself. The code checked whether a path sat under the Ed folder, but the database stores relative paths, so the check always failed. The existing test passed because it inserted an absolute path. The fix is one line, and test fixtures should be written the way production writes data. There is now a test with a relative path.
 
 ## Adding a tool without growing every conversation
 
@@ -122,14 +122,5 @@ So the deploy followed the snapshot pattern instead:
 5. Call the tool with the service's own environment, then download the signed link from outside: 200 with the zip, and 403 with a forged signature.
 
 Then I updated the repository copy too, which runs the timers and the SSH version of the server. The only package that changed in that environment was the core, which I confirmed by diffing `pip freeze` before and after.
-
-## Takeaways
-
-- When renaming user files, move what is there. Downloading it again costs users time and costs the upstream server bandwidth.
-- Something without an id still needs a stable one. Derive it from what changes when the content changes.
-- Build exports from the source of truth, not from whatever happens to be on disk.
-- Test fixtures should look like production data, or they will pass for the wrong reason.
-- When one repository calls into another, pin the contract in the one being called.
-- Before deploying, check what the server is actually running.
 
 Follow-up: the [whole-course exporter]({% post_url 2026-11-03-study-kit-course-materials %}) adds Moodle bodies, Google files, PDFs and isolated accounts.

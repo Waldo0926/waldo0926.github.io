@@ -2,11 +2,11 @@
 layout: post
 date: 2026-10-26 08:00:00 +0800
 project: Study Kit
-description: "Monash Study Kit lets an AI read your own Moodle and Ed. When you ask it what an assignment wants, it now follows a fixed order of sources: the brief and rubric, then staff answers on Ed, with dates and a source for every rule. How that rule is written, and the test that keeps the agent instructions true."
+description: "When you ask about an assignment, Study Kit reads the brief and rubric first, then staff answers on Ed, and gives a date and source for each rule."
 ref: assignment-sources
 lang: en
 preview: assignment-sources
-title: "Which source wins when an AI reads your assignment"
+title: "Which sources Study Kit uses for assignment questions"
 image: /assets/og/assignment-sources.png
 ---
 
@@ -45,7 +45,7 @@ The skill also says, in plain words: help the student understand the requirement
 
 ## A test that keeps the skill true
 
-Instructions written for an agent rot quietly. If a command is renamed, the agent runs a command that does not exist and tells the student something failed. So a test reads `SKILL.md` and checks it against the real CLI:
+Instructions written for an agent go out of date easily. If a command is renamed, the agent runs a command that does not exist and tells the student something failed. So a test reads `SKILL.md` and checks it against the real CLI:
 
 ```python
 TABLE = sorted(set(re.findall(r"^\|.*`(monash [^`]+)` \|$", TEXT, re.M)))
@@ -71,11 +71,5 @@ Every full command in the skill's table must parse with the real argument parser
 ## What this does not guarantee
 
 This is an instruction to a model, not code that checks its answer. A model can still misread a rubric or miss a thread. What the rule changes is what the student gets back: sources and dates they can check in a minute, and a clear "ask staff" when the sources disagree.
-
-## Takeaways
-
-- Tell the model which source wins before it sees the sources, and make it cite every rule.
-- An instruction like "only trust staff" needs the data to carry who is staff.
-- Test agent instructions against the real program, the same way you test docs examples.
 
 Code: [SKILL.md](https://github.com/Waldo0926/monash-study-kit/blob/main/skills/monash-study-kit/SKILL.md), [mcp_server.py](https://github.com/Waldo0926/monash-study-kit/blob/main/src/monash_study_kit/mcp_server.py), [test_skill.py](https://github.com/Waldo0926/monash-study-kit/blob/main/tests/test_skill.py), [CHANGELOG.md](https://github.com/Waldo0926/monash-study-kit/blob/main/CHANGELOG.md).

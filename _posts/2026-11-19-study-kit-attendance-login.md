@@ -2,12 +2,12 @@
 layout: post
 date: 2026-11-19 10:00:00 +0800
 project: Study Kit
-description: "Study Kit 1.14 tries to bring back an expired attendance login on its own, using the browser profile already on your computer, and stops when Monash wants a password or MFA. How it decides, how often it tries, and what it can't promise."
+description: "When the attendance login expires, Study Kit tries to sign back in with the browser profile on your computer and stops when a password or MFA is needed."
 ref: study-kit-attendance-login
 lang: en
 source_repo: monash-study-kit
 source_checked: 2026-11-19
-title: "Keeping the attendance login alive without touching your password"
+title: "Study Kit 1.14: attendance login recovery"
 tags: [Python, Playwright, SSO, Privacy]
 image: /assets/og/study-kit-attendance-login.png
 ---

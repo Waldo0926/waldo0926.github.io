@@ -2,19 +2,19 @@
 layout: post
 date: 2026-10-24 18:00:00 +0800
 project: SecureView
-description: "In SecureView the browser encrypts every file and the server never holds a key that opens one. How sharing works under that rule, and what happens when someone forgets their passphrase."
+description: "In SecureView every file is encrypted in the browser and the server holds no key that opens it. This post covers sharing and forgotten passphrases."
 ref: secureview-keys
 lang: en
 preview: secureview-keys
-title: "Sharing files the server cannot read"
+title: "File sharing where the server can't decrypt the files"
 image: /assets/og/secureview-keys.png
 ---
 
 [SecureView](https://github.com/Waldo0926/SecureView) is the file sharing platform our team built for our final year project at Monash. It is live, and I wrote 182 of the 203 merged pull requests. The rule behind it is simple to say: files are encrypted in the browser, and the server never receives anything that can decrypt them. Not the file, not the file key, not the user's private key, not the passphrase.
 
-The rule is easy to say and hard to keep once you add sharing, forgotten passphrases and stolen sessions. First, what the rule buys you.
+Sharing, forgotten passphrases and stolen sessions each make this rule harder to keep. First, what it protects.
 
-## What this buys you
+## What this protects
 
 **1. The server only stores encrypted files.** There is no original file on the server, and no key that opens one. The people running SecureView cannot read a user's files, and neither can someone who breaks into the server or copies the database. What they get is ciphertext and sealed keys, and without each user's passphrase that is useless.
 
@@ -99,12 +99,5 @@ Key custody is not the same as hiding everything. The server still sees:
 For that last point, the browser refuses passphrases that are common, patterned or mostly the username, and requires at least 10 characters. A modified client could skip those checks. They protect users from their own weak choices, not the server from an attacker.
 
 A server that is actively malicious can also serve old ciphertext or a swapped key bundle. The design gives zero-knowledge key custody at the API, not protection from a hostile operator.
-
-## Takeaways
-
-- Write down what the server must never receive, and check every endpoint against it.
-- If the server cannot validate something, ask the client to prove it, like the signed envelope replacement.
-- Recovery has to be designed with the encryption, not added later. Here it is a file the user keeps, and the docs say what losing it costs.
-- Write the limits down. A security claim reads better when it says what it does not cover.
 
 More detail: [`docs/SECURITY_FLOWS.md`](https://github.com/Waldo0926/SecureView/blob/main/docs/SECURITY_FLOWS.md), and the browser code in [`frontend/src/crypto/`](https://github.com/Waldo0926/SecureView/tree/main/frontend/src/crypto) (`share.ts`, `passphrase-reset.ts`).

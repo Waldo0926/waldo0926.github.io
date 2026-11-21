@@ -2,12 +2,12 @@
 layout: post
 date: 2026-11-19 12:00:00 +0800
 project: Exchange Tracker
-description: "Since August a small box at home has read every Monash semester exchange program each evening and recorded what changed: new partners, places, cut-offs, open or closed. What it takes to do that politely, why the comparison is rebuilt from scratch every time, and why a similar course title is not a credit match."
+description: "A small box at home reads the Monash exchange programs each evening and records new partners, places, cut-offs and status changes."
 ref: exchange-tracker
 lang: en
 source_repo: monash-abroad-tracker-demo
 source_checked: 2026-11-19
-title: "Watching Monash's exchange list change, one evening at a time"
+title: "Tracking changes to Monash exchange programs"
 tags: [Python, Web scraping, systemd, Data quality]
 image: /assets/og/exchange-tracker.png
 ---

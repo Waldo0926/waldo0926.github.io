@@ -2,11 +2,11 @@
 layout: post
 date: 2026-11-17 12:00:00 +0800
 project: Monash Hub
-description: "A page on Monash Hub for finding free electives by what students ask: is there an exam, does it need a prerequisite, is it taught at my campus. Why there is no final exam filter, and how the bot sends people there."
+description: "Filter free electives by exam, prerequisites and campus. There is no final exam filter because the data can't support it."
 ref: hub-electives
 lang: en
 preview: hub-electives
-title: "Finding an elective on Monash Hub"
+title: "Finding electives on Monash Hub"
 image: /assets/og/hub-electives.png
 ---
 

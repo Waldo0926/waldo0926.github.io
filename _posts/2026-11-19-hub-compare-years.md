@@ -2,7 +2,7 @@
 layout: post
 date: 2026-11-19 10:30:00 +0800
 project: Monash Hub
-description: "Monash Hub can compare one unit across two Handbook years: requisites, campuses, teaching periods, assessments and exams. Why a missing year is shown as unknown rather than discontinued, and why an empty list needs proof before it counts as empty."
+description: "Compare requisites, campuses, teaching periods, assessments and exams between two Handbook years. A missing year is shown as unknown."
 ref: hub-compare-years
 lang: en
 source_repo: monash-hub

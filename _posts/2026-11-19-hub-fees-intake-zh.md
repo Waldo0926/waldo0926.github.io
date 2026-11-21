@@ -2,12 +2,12 @@
 layout: post
 date: 2026-11-19 11:00:00 +0800
 project: Monash Hub
-description: "Monash Hub 上有马来西亚校区 2027 年的学费，但有学费不代表这个专业那个 intake 招生，更不代表现在能申请，学费页怎么把这三件事分开，以及为什么现在每一行都写着未核实"
+description: "Monash Hub 有马来西亚 2027 年的学费，但有学费不代表这个入学批次招生，也不代表现在能申请，所以每一行都标了未核实"
 ref: hub-fees-intake
 lang: zh-Hans
 source_repo: monash-hub
 source_checked: 2026-11-19
-title: "有学费，不代表现在能申请"
+title: "Monash Hub 的学费、入学批次和申请状态"
 tags: [Python, FastAPI, Nuxt, Data provenance]
 image: /assets/og/hub-fees-intake-zh.png
 ---
@@ -59,7 +59,7 @@ Handbook 课程代码也只从页面上明确的 Handbook 链接里读，没有�
 
 但没有一个页面明确写申请开没开，所以 58 行的 intake 状态全是**未核实**
 
-看起来像什么都没查到，但这才是如实的结果，页面照样会显示学费、10 月的名单和通用截止日期，各自写着来源，并提醒你做决定前看学位页面或者直接问 Monash
+看起来像什么都没查到，但现在确实还没有可靠的来源，页面照样会显示学费、10 月的名单和通用截止日期，各自写着来源，并提醒你做决定前看学位页面或者直接问 Monash
 
 ## 还没做到的
 

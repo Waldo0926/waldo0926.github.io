@@ -2,11 +2,11 @@
 layout: post
 date: 2026-10-25 19:00:00 +0800
 project: Q&A bot
-description: "A WeChat bot answers students and parents about visas, exams and enrolment. Why the language model in it may only quote sentences, how the code checks every quote, and which true sentences it still refuses to send."
+description: "The WeChat bot answers questions about visas, exams and enrolment. The model can only pick sentences from official pages, and the code checks each one."
 ref: quote-only-rag
 lang: en
 preview: quote-only-rag
-title: "A Q&A bot where the model is only allowed to quote"
+title: "A Q&A bot that only sends quoted sentences"
 image: /assets/og/quote-only-rag.png
 ---
 

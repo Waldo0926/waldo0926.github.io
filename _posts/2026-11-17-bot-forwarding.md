@@ -2,11 +2,11 @@
 layout: post
 date: 2026-11-17 10:00:00 +0800
 project: Q&A bot
-description: "The WeChat bot used to forward every message it could not answer to me, including small talk and noise. How it now decides what is worth my time, the cap per person, and how I tested it without real logs."
+description: "The bot used to forward every message it couldn't answer. Now it filters small talk and noise and has a daily cap per person."
 ref: bot-forwarding
 lang: en
 preview: bot-forwarding
-title: "Teaching the bot what not to forward to me"
+title: "Which messages the bot forwards to me"
 image: /assets/og/bot-forwarding.png
 ---
 
@@ -22,7 +22,7 @@ The second runs only after nothing could answer. It catches a message that is to
 
 ## When in doubt, forward
 
-A real question that is held back is worse than a silly one that reaches me. So every rule leans towards letting the message through. A message is held only when it clearly matches one of the cases above. Anyone who is held can reply 「人工」 and it is forwarded anyway.
+Holding back a real question costs more than receiving a pointless one. So every rule leans towards letting the message through. A message is held only when it clearly matches one of the cases above. Anyone who is held can reply 「人工」 and it is forwarded anyway.
 
 ## A cap per person
 

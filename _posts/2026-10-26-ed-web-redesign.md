@@ -2,11 +2,11 @@
 layout: post
 date: 2026-10-26 08:30:00 +0800
 project: Ed Web
-description: "Ed Web reads a course's Ed forum in the browser with no backend. The redesign added a refresh that only fetches posts that changed, an honest meaning for \"new\", Ed's post format rendered safely, and support for Ed's API tokens."
+description: "Ed Web reads a course's Ed forum in the browser with no backend. The redesign adds incremental refresh, a clearer \"new\" marker, safe rendering and Ed API tokens."
 ref: ed-web-redesign
 lang: en
 preview: ed-web-redesign
-title: "Refreshing an Ed forum in the browser without fetching it all again"
+title: "Ed Web redesign: refreshing only changed posts"
 image: /assets/og/ed-web-redesign.png
 ---
 
@@ -86,11 +86,5 @@ The page shows how many days a JWT has left, read from its `exp` field. An API t
 ## Testing a page with no backend
 
 The fetch and render logic lives in one `app.js` with no build step. The tests in `tests/sync.test.mjs` cut the functions they need out of `app.js` by marker strings and run them in Node, with no network. The screenshots in the README were taken against a fake Ed API with made-up units, people and posts, so no real course data is in the repository.
-
-## Takeaways
-
-- A cheap list plus a fingerprint per item turns a full refresh into a small one.
-- "New" should be measured from the last refresh, not from the post date.
-- When rendering someone else's markup, escape all text and allow only the link schemes you mean.
 
 Code: [app.js](https://github.com/Waldo0926/ed-web/blob/main/app.js), [ARCHITECTURE.md](https://github.com/Waldo0926/ed-web/blob/main/ARCHITECTURE.md), [sync.test.mjs](https://github.com/Waldo0926/ed-web/blob/main/tests/sync.test.mjs). Guide: [docs.secureview.tech/ed-web](https://docs.secureview.tech/ed-web/).

@@ -2,12 +2,12 @@
 layout: post
 date: 2026-11-19 09:30:00 +0800
 project: Study Kit
-description: "Study Kit 1.13 能读你或你们组交过的作业和完整的评分反馈，让 AI 对照着帮你看评语，它读哪些内容、文件存在哪、哪些事它不做"
+description: "Study Kit 能读你或你们组交过的作业和完整评语，让 AI 对照着帮你看"
 ref: study-kit-submissions
 lang: zh-Hans
 source_repo: monash-study-kit
 source_checked: 2026-11-19
-title: "把自己交的作业和老师评语放在一起看"
+title: "Study Kit 1.13：读取已交作业和评语"
 tags: [Python, Moodle, MCP, Privacy]
 image: /assets/og/study-kit-submissions-zh.png
 ---

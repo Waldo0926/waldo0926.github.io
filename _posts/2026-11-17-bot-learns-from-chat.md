@@ -2,11 +2,11 @@
 layout: post
 date: 2026-11-17 11:00:00 +0800
 project: Q&A bot
-description: "I used to teach the bot with fixed commands, so I often did not bother. Now a plain message from me is read as knowledge. How the bot tells a new fact from a correction or an answer, and what it does when it is not sure."
+description: "The bot now treats my plain messages as knowledge and tells a new fact from a correction or an answer, and asks when it isn't sure."
 ref: bot-learns-from-chat
 lang: en
 preview: bot-learns-from-chat
-title: "Letting me teach the bot by just talking to it"
+title: "Teaching the bot with normal messages"
 image: /assets/og/bot-learns-from-chat.png
 ---
 

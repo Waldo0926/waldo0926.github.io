@@ -2,12 +2,12 @@
 layout: post
 date: 2026-11-19 11:30:00 +0800
 project: SecureView
-description: "In SecureView the server never sees the passphrase that opens your files, so it can't check it either. We measured what Argon2id costs a user and an attacker, found the weak point was the 10 character rule, and moved the checks into the browser."
+description: "The server never sees the passphrase, so the checks moved to the browser. We measured Argon2id costs and changed the 10 character rule."
 ref: secureview-passphrase
 lang: en
 source_repo: SecureView
 source_checked: 2026-11-19
-title: "The password our server never sees"
+title: "Passphrase checks in SecureView"
 tags: [Security, Argon2id, Web Crypto, Threat modelling]
 image: /assets/og/secureview-passphrase.png
 ---
@@ -47,7 +47,7 @@ Registration, the change passphrase card and the key file reset now refuse a pas
 
 and they suggest four or more random words instead. A real phrase that happens to contain your name still passes.
 
-The honest limit: this is a browser check, and a modified client can skip it. The threat model marks that finding as mitigated with that sentence attached, not as fixed.
+One limit: this is a browser check, and a modified client can skip it. The threat model marks that finding as mitigated with that sentence attached, not as fixed.
 
 ## Two related changes
 

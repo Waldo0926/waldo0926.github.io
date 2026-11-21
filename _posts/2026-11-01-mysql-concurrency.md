@@ -2,29 +2,27 @@
 layout: post
 date: 2026-11-01 07:30:00 +0800
 project: SecureView
-description: "Connection-pool exhaustion and deadlocks became real questions only when the encrypted file-sharing app handled concurrent use."
+description: "Connection pool exhaustion and deadlocks only showed up once the file sharing app had many users at the same time."
 ref: mysql-concurrency
 lang: en
-title: "What SecureView's concurrency tests caught that a demo didn't"
+title: "SecureView concurrency testing"
 image: /assets/og/mysql-concurrency.png
 source_repo: SecureView
 source_checked: 2026-11-01
 ---
 
-In a one-person SecureView demo, the visible features were encryption, upload, sharing and decryption. Later, I spent more time on less visible work: database connections, concurrent requests and what happens after a failure.
+SecureView was our four-person final year project, a file sharing app where files are encrypted in the browser. My parts included testing, CI, deployment and some of the security features. In a one-person demo you see encryption, upload, sharing and decryption. Later I spent more time on database connections, concurrent requests and what happens after a failure.
 
-SecureView was our four-person final-year project. My work included testing, CI, deployment and security features. Correct encryption alone doesn't make a file-sharing service usable under load.
+## Upload failures that had nothing to do with encryption
 
-## Upload failures aren't always crypto failures
+A load test with 100 users found a connection pool problem. Many uploads failed before we found and fixed it. The results are in the project README, and this post doesn't add new benchmark numbers.
 
-A capacity test with 100 users exposed a connection-pool problem. Upload failures were substantial before the issue was diagnosed and fixed; the project's README records the test results. I'm not presenting a fresh benchmark in this post.
+We also hit MySQL deadlocks. These came from transaction boundaries and the order rows were locked in. A single upload never runs into them.
 
-We also encountered MySQL concurrency deadlocks. These bugs often involve transaction boundaries and lock ordering rather than the most complicated business function. A successful single upload exercises none of that contention.
+## A test for each fix
 
-## Leave a regression test behind
+After fixing a concurrency bug I want a test that reproduces it, since a few manual retries that happen to pass don't prove much. The MySQL tests, browser tests and fault injection cases are there to catch the same bugs again.
 
-After fixing a concurrency bug, I want a test that recreates the failure. A few successful manual retries aren't enough. The MySQL suite, browser tests and fault-injection cases help protect against regressions.
+To understand a deadlock you need to know which statements lock which rows, how retries work and whether a write finished. The error message alone doesn't tell you that.
 
-A deadlock error by itself isn't a complete diagnosis. It matters which statements lock which rows, how retries work, and whether a write's outcome is known.
-
-See the [SecureView repository](https://github.com/Waldo0926/SecureView) for historical measurements and environment notes. This is a retrospective on testing, not a new performance claim about the current deployment.
+The [SecureView repository](https://github.com/Waldo0926/SecureView) has the earlier measurements and environment notes. This post looks back at the testing and doesn't make claims about the current deployment.

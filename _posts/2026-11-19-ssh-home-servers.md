@@ -2,11 +2,11 @@
 layout: post
 date: 2026-11-19 12:15:00 +0800
 project: Homelab
-description: "My home IP changes and some boxes sit behind other boxes. How I went from a forwarded port and DDNS to Tailscale plus ProxyJump, why each host has two names, and the HostKeyAlias line that let me move addresses without accepting a new key blindly."
+description: "Moving from a forwarded port and DDNS to Tailscale and ProxyJump, with two names per host and HostKeyAlias."
 ref: ssh-home-servers
 lang: en
 source_checked: 2026-11-19
-title: "Getting into my home servers when the IP keeps changing"
+title: "SSH to home servers when the IP changes"
 tags: [SSH, Tailscale, Linux, Networking]
 image: /assets/og/ssh-home-servers.png
 ---
@@ -68,7 +68,7 @@ It worked, but it hid which path a connection had taken, and away from home ever
 
 `StrictHostKeyChecking yes` refuses a host whose key isn't in `known_hosts`. Reaching the same box at a new address, a Tailscale one instead of the LAN one, or a LAN one instead of the old public address and port, means SSH sees a "new" host, even though the key is the same.
 
-The lazy fix is to accept the key again. I'd rather not, because that's exactly the prompt you're meant to read carefully. `HostKeyAlias` tells SSH to look up the key under the old name instead, so the key I already checked keeps being checked, and a different key still gets refused.
+I didn't want to just accept the new key, since that warning is there to catch a changed host. `HostKeyAlias` tells SSH to look up the key under the old name instead, so the key I already checked keeps being checked, and a different key still gets refused.
 
 ## What the boxes allow
 

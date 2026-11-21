@@ -2,11 +2,11 @@
 layout: post
 date: 2026-10-26 09:00:00 +0800
 project: Attendance Helper
-description: "Before putting my attendance extension on the Chrome Web Store, I removed a permission, deleted URLs from a library I never call, and made the build refuse to package remote code. What the store checks, and how I checked it myself first."
+description: "Before listing the attendance extension I removed a permission, removed unused URLs from a library and made the build reject remote code."
 ref: chrome-store
 lang: en
 preview: chrome-store
-title: "Getting a Chrome extension ready for the Web Store"
+title: "Preparing a Chrome extension for the Web Store"
 image: /assets/og/chrome-store.png
 ---
 
@@ -79,11 +79,5 @@ The listing says no server, no analytics and no remote code. I wanted to check i
 One more fix went in before submitting, because strangers would now rely on it. In v1.3.50 and earlier, the page could say "已处理 2/2" while Attendance still showed a question mark for one class. "Success" only meant something had been clicked. Attendance is an ASP.NET page where the whole page is one form. The button search ran over every link in it, header and footer included, and took the first one with a word like "enter" in it.
 
 Since v1.3.51 the search only takes real buttons and postback links, never home, back, cancel or logout. After the click, the extension reopens that day in Attendance in a fresh tab and only counts a class as done when its row shows completed. The confirm page lists each class with its own result and the reason when it failed.
-
-## Takeaways
-
-- Store scans read files. A URL in code you never call is still a URL.
-- Put the review rules in your build script, and run it on every pull request.
-- Before asking for a permission, check whether a narrower API or a host permission already gives you what you need.
 
 Code: [build-store-zip.sh](https://github.com/Waldo0926/monash-attendance-reminder/blob/main/scripts/build-store-zip.sh), [manifest.json](https://github.com/Waldo0926/monash-attendance-reminder/blob/main/extension/manifest.json), [store/LISTING.md](https://github.com/Waldo0926/monash-attendance-reminder/blob/main/store/LISTING.md), [CHANGELOG.md](https://github.com/Waldo0926/monash-attendance-reminder/blob/main/CHANGELOG.md). Install guide: [docs.secureview.tech/attendance](https://docs.secureview.tech/attendance/).
