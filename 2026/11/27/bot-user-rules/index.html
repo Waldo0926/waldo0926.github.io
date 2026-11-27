@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Stopping forwards from one user, or staying silent | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Stopping forwards from one user, or staying silent" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Per-message filtering doesn’t stop one user from repeating the same thing or being rude. The bot now supports per-user no-forward and silent mute rules without changing anything for normal users." />
+<meta property="og:description" content="Per-message filtering doesn’t stop one user from repeating the same thing or being rude. The bot now supports per-user no-forward and silent mute rules without changing anything for normal users." />
+<link rel="canonical" href="https://blog.secureview.tech/2026/11/27/bot-user-rules/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/11/27/bot-user-rules/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/bot-user-rules.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-11-27T10:40:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/bot-user-rules.png" />
+<meta property="twitter:title" content="Stopping forwards from one user, or staying silent" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-11-27T10:40:00+08:00","datePublished":"2026-11-27T10:40:00+08:00","description":"Per-message filtering doesn’t stop one user from repeating the same thing or being rude. The bot now supports per-user no-forward and silent mute rules without changing anything for normal users.","headline":"Stopping forwards from one user, or staying silent","image":"https://blog.secureview.tech/assets/og/bot-user-rules.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/11/27/bot-user-rules/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/11/27/bot-user-rules/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/11/27/bot-user-rules/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/11/27/bot-user-rules-zh/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css?v=1795802204">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/#writing">Writing</a>
+        <a href="/#projects">Projects</a>
+        <a href="/projects/">Archive</a>
+        <a href="/search/">Search</a>
+        <a href="/about/">About</a>
+      </nav>
+      <a class="lang-switch" href="/2026/11/27/bot-user-rules-zh/" lang="zh-Hans" hreflang="zh-Hans">中文</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/#writing">Writing</a>
+      <span aria-hidden="true">/</span>
+      <span>Q&A bot</span>
+    </p>
+    <h1 class="display post-title">Stopping forwards from one user, or staying silent</h1><p class="lede">Per-message filtering doesn't stop one user from repeating the same thing or being rude. The bot now supports per-user no-forward and silent mute rules without changing anything for normal users.</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-11-27T10:40:00+08:00">27 Nov 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>3 min read</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/11/27/bot-user-rules/" class="on" aria-current="page">English</a>
+        <a href="/2026/11/27/bot-user-rules-zh/" lang="zh-Hans">中文</a>
+      </span>
+    </div>
+  </header>
+  <p class="post-source small muted"> · Source reviewed: 2026-11-27
+  </p>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p><a href="/2026/11/17/bot-forwarding/">Filtering individual messages and capping each person at 5 forwards a day</a> cleared out most small talk and noise.</p>
+
+<p>After using it for a while, per-message filtering still missed a different case: one specific person. The bot’s main path has no language model and does no tone check. If someone repeats the same question after being answered, or talks rudely while mentioning a unit or visa, up to five messages a day still land in my chat.</p>
+
+<p>I run the account in my own time, not as a support desk. So I added two per-user rules. Everyone else is untouched and still gets forwarded as before.</p>
+
+<h2 id="two-levels-no-forward-and-mute">Two levels: no-forward and mute</h2>
+
+<p>Each forwarded note already has a short pending id (<code class="language-plaintext highlighter-rouge">#42</code>), so the commands reuse it:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">不转 42</code>: the bot still answers anything it knows, but stops forwarding misses, <code class="language-plaintext highlighter-rouge">人工</code> and private-chat join requests to me, and stops <code class="language-plaintext highlighter-rouge">@</code>-ing me in groups.</li>
+  <li><code class="language-plaintext highlighter-rouge">拉黑 42</code>: complete silence. Every message from that user is dropped.</li>
+  <li><code class="language-plaintext highlighter-rouge">黑名单</code> and <code class="language-plaintext highlighter-rouge">解除 &lt;index&gt;</code>: list active rules or lift one if I change my mind.</li>
+</ul>
+
+<p>The easy part to miss in <code class="language-plaintext highlighter-rouge">no_forward</code> is the wording. If the bot stops forwarding a user but still replies “passed on to Waldo” or leaves “reply 「人工」 to ask Waldo” under an article, the user just keeps asking.</p>
+
+<p>So under <code class="language-plaintext highlighter-rouge">no_forward</code>, misses and <code class="language-plaintext highlighter-rouge">人工</code> only link Monash Hub and the 马莫百科 archive. Partial answers strip <code class="language-plaintext highlighter-rouge">ask_owner_tail()</code>, and the greeting intro and <code class="language-plaintext highlighter-rouge">triage.py</code> replies drop any mention of me. Setting either rule also marks that user’s open <code class="language-plaintext highlighter-rouge">pending</code> rows as <code class="language-plaintext highlighter-rouge">ignored</code>, so the next day’s reminder does not bring them back.</p>
+
+<h2 id="more-than-a-check-in-brainpy">More than a check in <code class="language-plaintext highlighter-rouge">brain.py</code></h2>
+
+<p>A two-line check at the top of <code class="language-plaintext highlighter-rouge">Brain.handle</code> was not enough once I traced all three WeChat channels.</p>
+
+<p><strong>Official account (<code class="language-plaintext highlighter-rouge">wxbot/mp.py</code>).</strong> Greetings (“你好”), non-text fallbacks, the first-message welcome and queued <code class="language-plaintext highlighter-rouge">outbox</code> replies all run before or outside <code class="language-plaintext highlighter-rouge">Brain.handle</code>. A muted user has to be stopped at the top of <code class="language-plaintext highlighter-rouge">MPServer.handle</code>, returning plain <code class="language-plaintext highlighter-rouge">success</code> so WeChat stays quiet without showing an error.</p>
+
+<p><strong>Personal account across DMs and groups (<code class="language-plaintext highlighter-rouge">wxbot/pcwx.py</code>).</strong> The same WeChat account arrives as <code class="language-plaintext highlighter-rouge">pc:&lt;wxid&gt;</code> in a private chat and <code class="language-plaintext highlighter-rouge">pc:&lt;room&gt;@chatroom|&lt;wxid&gt;</code> in a group. Rules are stored under a normalised <code class="language-plaintext highlighter-rouge">person_key</code> (<code class="language-plaintext highlighter-rouge">pc:&lt;wxid&gt;</code>) so one command covers private chats and every group. Muted users are also dropped before the per-group rate limit (<code class="language-plaintext highlighter-rouge">_room_busy</code>), so one muted account cannot burn the group’s quota for other students.</p>
+
+<p><strong>The SQL <code class="language-plaintext highlighter-rouge">LIKE</code> underscore trap.</strong> Closing a user’s open pending rows across groups queries <code class="language-plaintext highlighter-rouge">user_id LIKE 'pc:%|' + wxid</code>. WeChat <code class="language-plaintext highlighter-rouge">wxid_</code> strings contain underscores, which SQLite <code class="language-plaintext highlighter-rouge">LIKE</code> treats as a single-character wildcard. The code verifies <code class="language-plaintext highlighter-rouge">person_key(row["user_id"]) == key</code> in Python before updating so it never closes someone else’s row.</p>
+
+<p><strong>Outside <code class="language-plaintext highlighter-rouge">contact</code>.</strong> Any user can send <code class="language-plaintext highlighter-rouge">删除我的数据</code> to delete their rows from <code class="language-plaintext highlighter-rouge">log</code>, <code class="language-plaintext highlighter-rouge">outbox</code>, <code class="language-plaintext highlighter-rouge">pending</code> and <code class="language-plaintext highlighter-rouge">contact</code>. Keeping moderation rules in a separate <code class="language-plaintext highlighter-rouge">user_rule</code> table means deleting their own data does not clear a block.</p>
+
+<p>Admins and <code class="language-plaintext highlighter-rouge">OWNER_WXID</code> are also checked before writing a rule so I cannot accidentally lock myself out.</p>
+
+<h2 id="what-this-does-not-cover">What this does not cover</h2>
+
+<p>In WeChat, an official account <code class="language-plaintext highlighter-rouge">openid</code> (<code class="language-plaintext highlighter-rouge">mp:...</code>) and a personal account <code class="language-plaintext highlighter-rouge">wxid</code> (<code class="language-plaintext highlighter-rouge">pc:...</code>) are unrelated ids. There is no way to link them automatically, so if the same person writes on both channels, each side has to be set separately.</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">On this page</p>
+      <ol><li><a href="#two-levels-no-forward-and-mute">Two levels: no-forward and mute</a></li><li><a href="#more-than-a-check-in-brainpy">More than a check in <code class="language-plaintext highlighter-rouge</a></li><li><a href="#what-this-does-not-cover">What this does not cover</a></li></ol>
+      <a class="toc-back" href="/#writing">All writing</a>
+    </aside>
+  </div>
+  <section class="post-related" aria-label="Related posts">
+    <h2>More on this subject</h2>
+    <ul><li><a href="/2026/11/28/bot-web-fallback-auto-kb/">Searching Monash websites when the KB misses, with a 10 pm review</a></li><li><a href="/2026/11/27/bot-context-words/">Why 'how to print at Malaysia campus' matched the student visa answer</a></li><li><a href="/2026/11/19/bot-on-the-hub/">The WeChat bot on Monash Hub</a></li></ul>
+  </section>
+  <nav class="more" aria-label="More posts">
+    <a class="card more-link" href="/2026/11/27/hub-home-layout-and-e2e/">
+      <span class="more-label">Previous · Monash Hub</span>
+      <span class="more-title">Rebalancing the Monash Hub home page, and what Playwright caught</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/11/28/bot-web-fallback-auto-kb/">
+      <span class="more-label">Next · Q&A bot</span>
+      <span class="more-title">Searching Monash websites when the KB misses, with a 10 pm review</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Computer Science at Monash University. Backend and AI application development.</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">Status</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

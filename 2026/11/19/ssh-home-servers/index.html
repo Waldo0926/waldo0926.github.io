@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>SSH to home servers when the IP changes | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="SSH to home servers when the IP changes" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Moving from a forwarded port and DDNS to Tailscale and ProxyJump, with two names per host and HostKeyAlias." />
+<meta property="og:description" content="Moving from a forwarded port and DDNS to Tailscale and ProxyJump, with two names per host and HostKeyAlias." />
+<link rel="canonical" href="https://blog.secureview.tech/2026/11/19/ssh-home-servers/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/11/19/ssh-home-servers/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/ssh-home-servers.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-11-19T12:15:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/ssh-home-servers.png" />
+<meta property="twitter:title" content="SSH to home servers when the IP changes" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-11-19T12:15:00+08:00","datePublished":"2026-11-19T12:15:00+08:00","description":"Moving from a forwarded port and DDNS to Tailscale and ProxyJump, with two names per host and HostKeyAlias.","headline":"SSH to home servers when the IP changes","image":"https://blog.secureview.tech/assets/og/ssh-home-servers.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/11/19/ssh-home-servers/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/11/19/ssh-home-servers/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/11/19/ssh-home-servers/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/11/19/ssh-home-servers-zh/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css?v=1795802204">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/#writing">Writing</a>
+        <a href="/#projects">Projects</a>
+        <a href="/projects/">Archive</a>
+        <a href="/search/">Search</a>
+        <a href="/about/">About</a>
+      </nav>
+      <a class="lang-switch" href="/2026/11/19/ssh-home-servers-zh/" lang="zh-Hans" hreflang="zh-Hans">中文</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/#writing">Writing</a>
+      <span aria-hidden="true">/</span>
+      <span>Homelab</span>
+    </p>
+    <h1 class="display post-title">SSH to home servers when the IP changes</h1><p class="lede">Moving from a forwarded port and DDNS to Tailscale and ProxyJump, with two names per host and HostKeyAlias.</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-11-19T12:15:00+08:00">19 Nov 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>4 min read</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/11/19/ssh-home-servers/" class="on" aria-current="page">English</a>
+        <a href="/2026/11/19/ssh-home-servers-zh/" lang="zh-Hans">中文</a>
+      </span>
+    </div>
+  </header>
+  <p class="post-source small muted"> · Source reviewed: 2026-11-19
+  </p>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p>In my post about <a href="/2026/11/01/spare-machines/">spare machines</a> I left one question open: how do I still get in over SSH when the home IP changes? It’s answered now, so here is the setup as it runs today. Addresses, ports, domains and key names are left out on purpose.</p>
+
+<p>The machines: two J1900 boxes at home (one of them runs the <a href="/2026/11/19/exchange-tracker/">exchange tracker</a> every evening), a small ARM box running Armbian with an N1 on the same network, and the VPS that hosts my public sites. My laptop is usually somewhere else entirely.</p>
+
+<h2 id="where-it-started">Where it started</h2>
+
+<p>At first the router forwarded a non-standard port to one J1900, and <code class="language-plaintext highlighter-rouge">~/.ssh/config</code> pointed at the home public IP. Every time the ISP gave out a new address, the hostname in my config was wrong.</p>
+
+<p>The usual fix is dynamic DNS, and the box still runs scripts that put its current public IP into a Cloudflare A record every few minutes. One of them checks two IP services and refuses to update if they disagree, or if the address looks like carrier NAT (<code class="language-plaintext highlighter-rouge">100.64.0.0/10</code>), because then there’s nothing to reach from outside anyway.</p>
+
+<p>But DNS only answers where the box is. It doesn’t decide who may log in, and a forwarded SSH port is open to the whole internet whatever its name.</p>
+
+<h2 id="what-it-is-now">What it is now</h2>
+
+<p>In October I put Tailscale on the main J1900 and pointed SSH at its Tailscale address instead. Tailscale gets through NAT on both sides, so the home IP can change as often as it likes.</p>
+
+<pre><code class="language-sshconfig">Host j1900-main
+    HostName &lt;tailscale address&gt;
+    HostKeyAlias &lt;old address&gt;
+    IdentitiesOnly yes
+    StrictHostKeyChecking yes
+    ServerAliveInterval 30
+    ServerAliveCountMax 3
+</code></pre>
+
+<p>The second J1900 isn’t on the same tailnet as my laptop, so I reach it through the first one over the home LAN:</p>
+
+<pre><code class="language-sshconfig">Host j1900
+    HostName &lt;LAN address&gt;
+    ProxyJump j1900-main
+
+Host j1900-lan
+    HostName &lt;LAN address&gt;
+    ProxyJump none
+    ProxyCommand none
+</code></pre>
+
+<p>The ARM box works the same way: <code class="language-plaintext highlighter-rouge">oes</code> is reachable on Tailscale, and <code class="language-plaintext highlighter-rouge">n1</code> is <code class="language-plaintext highlighter-rouge">ProxyJump oes</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">tailscale status</code> on my laptop shows the main box as a direct connection over IPv6, not through a relay, so SSH feels like the LAN.</p>
+
+<h2 id="two-names-instead-of-one-clever-one">Two names instead of one clever one</h2>
+
+<p>For one day I tried a single <code class="language-plaintext highlighter-rouge">j1900-main</code> that worked everywhere. A <code class="language-plaintext highlighter-rouge">ProxyCommand</code> tried the LAN address with a 2 second timeout and fell back to the Tailscale address:</p>
+
+<pre><code class="language-sshconfig">ProxyCommand sh -c 'nc -G 2 &lt;LAN address&gt; 22 || exec nc -G 8 %h %p'
+</code></pre>
+
+<p>It worked, but it hid which path a connection had taken, and away from home every connection first waited for the LAN attempt to time out. The next day the config went back to two plain names: <code class="language-plaintext highlighter-rouge">ssh j1900</code> works from anywhere, and <code class="language-plaintext highlighter-rouge">ssh j1900-lan</code> goes straight over the home network. With two names the path is obvious, and nothing waits for an attempt that can’t succeed.</p>
+
+<h2 id="the-line-that-kept-host-key-checking-on">The line that kept host key checking on</h2>
+
+<p><code class="language-plaintext highlighter-rouge">StrictHostKeyChecking yes</code> refuses a host whose key isn’t in <code class="language-plaintext highlighter-rouge">known_hosts</code>. Reaching the same box at a new address, a Tailscale one instead of the LAN one, or a LAN one instead of the old public address and port, means SSH sees a “new” host, even though the key is the same.</p>
+
+<p>I didn’t want to just accept the new key, since that warning is there to catch a changed host. <code class="language-plaintext highlighter-rouge">HostKeyAlias</code> tells SSH to look up the key under the old name instead, so the key I already checked keeps being checked, and a different key still gets refused.</p>
+
+<h2 id="what-the-boxes-allow">What the boxes allow</h2>
+
+<p>On the main J1900, <code class="language-plaintext highlighter-rouge">ufw</code> allows the home LAN, anything on <code class="language-plaintext highlighter-rouge">tailscale0</code>, and UDP 41641 so Tailscale can make direct connections. Nothing else comes in.</p>
+
+<p>On both J1900s and the VPS, <code class="language-plaintext highlighter-rouge">sshd -T</code> says <code class="language-plaintext highlighter-rouge">passwordauthentication no</code> and <code class="language-plaintext highlighter-rouge">kbdinteractiveauthentication no</code>. Root can only log in with a key. I don’t use Tailscale SSH. Tailscale only gives a route, and OpenSSH with my own keys still decides who gets in.</p>
+
+<p>The second J1900 also has Wake-on-LAN turned on in its network card (magic packet).</p>
+
+<h2 id="something-i-only-found-while-writing-this">Something I only found while writing this</h2>
+
+<p>Of the DDNS scripts on that box, one has been logging “failed to read the DNS record (token or record ID invalid?)” since 19 October. Nothing broke, because SSH no longer goes through that record. A job nobody depends on any more can fail quietly for a month. Those records are next on the list to go through.</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">On this page</p>
+      <ol><li><a href="#where-it-started">Where it started</a></li><li><a href="#what-it-is-now">What it is now</a></li><li><a href="#two-names-instead-of-one-clever-one">Two names instead of one clever one</a></li><li><a href="#the-line-that-kept-host-key-checking-on">The line that kept host key checking on</a></li><li><a href="#what-the-boxes-allow">What the boxes allow</a></li><li><a href="#something-i-only-found-while-writing-this">Something I only found while writing this</a></li></ol>
+      <a class="toc-back" href="/#writing">All writing</a>
+    </aside>
+  </div>
+  <section class="post-related" aria-label="Related posts">
+    <h2>More on this subject</h2>
+    <ul><li><a href="/2026/11/01/stateful-alerts/">Server alerts that only report changes</a></li><li><a href="/2026/11/01/spare-machines/">What runs on my two J1900 boxes and the N1</a></li></ul>
+  </section>
+  <nav class="more" aria-label="More posts">
+    <a class="card more-link" href="/2026/11/19/exchange-tracker/">
+      <span class="more-label">Previous · Exchange Tracker</span>
+      <span class="more-title">Tracking changes to Monash exchange programs</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/11/21/study-kit-download-choices/">
+      <span class="more-label">Next · Study Kit</span>
+      <span class="more-title">Study Kit 1.16.0: download size limit and skipped files list</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Computer Science at Monash University. Backend and AI application development.</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">Status</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

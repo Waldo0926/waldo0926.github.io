@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Development notes | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Development notes" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Technical articles grouped by project, with technology tags and Chinese translations." />
+<meta property="og:description" content="Technical articles grouped by project, with technology tags and Chinese translations." />
+<link rel="canonical" href="https://blog.secureview.tech/notes/" />
+<meta property="og:url" content="https://blog.secureview.tech/notes/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/site.png" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/site.png" />
+<meta property="twitter:title" content="Development notes" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","author":{"@type":"Person","name":"Shuoxun Wen"},"description":"Technical articles grouped by project, with technology tags and Chinese translations.","headline":"Development notes","image":"https://blog.secureview.tech/assets/og/site.png","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/notes/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/notes/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/zh/notes/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css?v=1795802204">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/#writing">Writing</a>
+        <a href="/#projects">Projects</a>
+        <a href="/projects/">Archive</a>
+        <a href="/search/">Search</a>
+        <a href="/about/">About</a>
+      </nav>
+      <a class="lang-switch" href="/zh/notes/" lang="zh-Hans" hreflang="zh-Hans">中文</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <h1 class="display post-title">Development notes</h1>
+  </header>
+  <article class="card prose page-card">
+    <div class="notes-index">
+  <p class="lede">Implementation notes, limits and fixes by project. You can also <a href="/search/">search all articles</a>.</p>
+  <nav class="filters" aria-label="Articles by project">
+    <a class="chip" href="#notes-1">Q&amp;A bot (7)</a><a class="chip" href="#notes-2">Monash Hub (15)</a><a class="chip" href="#notes-3">Study Kit (10)</a><a class="chip" href="#notes-4">Homelab (3)</a><a class="chip" href="#notes-5">Exchange Tracker (1)</a><a class="chip" href="#notes-6">SecureView (4)</a><a class="chip" href="#notes-7">Blog (1)</a><a class="chip" href="#notes-8">Algorithms (1)</a><a class="chip" href="#notes-9">quotegate (1)</a><a class="chip" href="#notes-10">Attendance Helper (1)</a><a class="chip" href="#notes-11">Ed Web (1)</a>
+  </nav>
+  
+  <section id="notes-1" class="section">
+    <h2>Q&amp;A bot</h2>
+    <div class="posts">
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/28/bot-web-fallback-auto-kb/">Searching Monash websites when the KB misses, with a 10 pm review</a></h3>
+        <p class="post-excerpt">When local rules and RAG miss, policy questions rewrite queries and search Monash websites with verbatim checks, everyday questions get a labelled AI answer, and a 10 pm digest lists auto-additions and merge suggestions.</p>
+        <p class="post-foot"><time datetime="2026-11-28T01:40:00+08:00">2026-11-28</time></p>
+        <ul class="portfolio-tags" aria-label="Technology tags"><li>Python</li><li>SQLite</li><li>RAG</li><li>WeChat</li></ul>
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/27/bot-user-rules/">Stopping forwards from one user, or staying silent</a></h3>
+        <p class="post-excerpt">Per-message filtering doesn't stop one user from repeating the same thing or being rude. The bot now supports per-user no-forward and silent mute rules without changing anything for normal users.</p>
+        <p class="post-foot"><time datetime="2026-11-27T10:40:00+08:00">2026-11-27</time></p>
+        <ul class="portfolio-tags" aria-label="Technology tags"><li>Python</li><li>SQLite</li><li>WeChat</li></ul>
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/27/bot-context-words/">Why 'how to print at Malaysia campus' matched the student visa answer</a></h3>
+        <p class="post-excerpt">'How to print at Malaysia campus' matched the student visa answer because 'Malaysia' produced five tokens against one for 'print'. Now campus and asker words are stripped before matching.</p>
+        <p class="post-foot"><time datetime="2026-11-27T10:30:00+08:00">2026-11-27</time></p>
+        <ul class="portfolio-tags" aria-label="Technology tags"><li>Python</li><li>SQLite</li><li>WeChat</li></ul>
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/19/bot-on-the-hub/">The WeChat bot on Monash Hub</a></h3>
+        <p class="post-excerpt">The 马莫百科 bot now answers in the Ask panel on Monash Hub, with WeChat-only text removed for website visitors.</p>
+        <p class="post-foot"><time datetime="2026-11-19T11:40:00+08:00">2026-11-19</time></p>
+        <ul class="portfolio-tags" aria-label="Technology tags"><li>Python</li><li>FastAPI</li><li>Nuxt</li><li>WeChat</li></ul>
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/17/bot-learns-from-chat/">Teaching the bot with normal messages</a></h3>
+        <p class="post-excerpt">The bot now treats my plain messages as knowledge and tells a new fact from a correction or an answer, and asks when it isn't sure.</p>
+        <p class="post-foot"><time datetime="2026-11-17T11:00:00+08:00">2026-11-17</time></p>
+        
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/17/bot-forwarding/">Which messages the bot forwards to me</a></h3>
+        <p class="post-excerpt">The bot used to forward every message it couldn't answer. Now it filters small talk and noise and has a daily cap per person.</p>
+        <p class="post-foot"><time datetime="2026-11-17T10:00:00+08:00">2026-11-17</time></p>
+        
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/10/25/quote-only-rag/">A Q&amp;A bot that only sends quoted sentences</a></h3>
+        <p class="post-excerpt">The WeChat bot answers questions about visas, exams and enrolment. The model can only pick sentences from official pages, and the code checks each one.</p>
+        <p class="post-foot"><time datetime="2026-10-25T19:00:00+08:00">2026-10-25</time></p>
+        
+      </div></article>
+      
+    </div>
+  </section>
+  
+  <section id="notes-2" class="section">
+    <h2>Monash Hub</h2>
+    <div class="posts">
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/27/hub-home-layout-and-e2e/">Rebalancing the Monash Hub home page, and what Playwright caught</a></h3>
+        <p class="post-excerpt">Fixing a lopsided footer, buried parent entry, stretched 4x2 home tiles and two Playwright E2E failures caught before merge.</p>
+        <p class="post-foot"><time datetime="2026-11-27T10:30:00+08:00">2026-11-27</time></p>
+        <ul class="portfolio-tags" aria-label="Technology tags"><li>Nuxt</li><li>CSS</li><li>UX</li><li>Playwright</li><li>E2E</li></ul>
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/27/hub-cross-border-sync/">Syncing 18 public PostgreSQL tables across a lossy cross-border link</a></h3>
+        <p class="post-excerpt">Moving 18 whitelisted PostgreSQL tables from an overseas VPS to a mainland cloud server across 50% packet loss using xz, parallel 1 MB scp chunks and atomic replica-mode restore.</p>
+        <p class="post-foot"><time datetime="2026-11-27T10:15:00+08:00">2026-11-27</time></p>
+        <ul class="portfolio-tags" aria-label="Technology tags"><li>PostgreSQL</li><li>Bash</li><li>Linux</li><li>Networking</li><li>Docker</li></ul>
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/27/hub-readonly-mirror/">One codebase for Monash Hub, a China read-only mirror and a WeChat mini program</a></h3>
+        <p class="post-excerpt">Running a full overseas Monash Hub and a China mainland read-only mirror from one main branch, plus why the WeChat mini program lives in its own repo.</p>
+        <p class="post-foot"><time datetime="2026-11-27T10:00:00+08:00">2026-11-27</time></p>
+        <ul class="portfolio-tags" aria-label="Technology tags"><li>FastAPI</li><li>Nuxt</li><li>Docker</li><li>Architecture</li><li>WeChat</li></ul>
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/19/hub-google-signin/">Adding Google sign-in to Monash Hub</a></h3>
+        <p class="post-excerpt">Accounts are matched by email, so the sign-in checks a signed state, a verified address and keeps the session token out of server logs.</p>
+        <p class="post-foot"><time datetime="2026-11-19T11:10:00+08:00">2026-11-19</time></p>
+        <ul class="portfolio-tags" aria-label="Technology tags"><li>Python</li><li>FastAPI</li><li>OAuth</li><li>Security</li></ul>
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/19/hub-fees-intake/">Fees, intakes and applications on Monash Hub</a></h3>
+        <p class="post-excerpt">Monash Hub shows 2027 Malaysia fees. A listed fee doesn't mean a degree takes that intake or that applications are open, so each row says not verified.</p>
+        <p class="post-foot"><time datetime="2026-11-19T11:00:00+08:00">2026-11-19</time></p>
+        <ul class="portfolio-tags" aria-label="Technology tags"><li>Python</li><li>FastAPI</li><li>Nuxt</li><li>Data provenance</li></ul>
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/19/hub-compare-years/">Comparing a unit across Handbook years</a></h3>
+        <p class="post-excerpt">Compare requisites, campuses, teaching periods, assessments and exams between two Handbook years. A missing year is shown as unknown.</p>
+        <p class="post-foot"><time datetime="2026-11-19T10:30:00+08:00">2026-11-19</time></p>
+        <ul class="portfolio-tags" aria-label="Technology tags"><li>Nuxt</li><li>FastAPI</li><li>PostgreSQL</li><li>Handbook</li></ul>
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/17/hub-electives/">Finding electives on Monash Hub</a></h3>
+        <p class="post-excerpt">Filter free electives by exam, prerequisites and campus. There is no final exam filter because the data can't support it.</p>
+        <p class="post-foot"><time datetime="2026-11-17T12:00:00+08:00">2026-11-17</time></p>
+        
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/01/monash-planner-reason/">Why I built a degree planner for Monash</a></h3>
+        <p class="post-excerpt">Checking prerequisites, campuses and teaching periods against the Handbook, with a source for each result.</p>
+        <p class="post-foot"><time datetime="2026-11-01T07:20:00+08:00">2026-11-01</time></p>
+        
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/10/26/official-coverage/">Monash Hub official pages: from 662 to about 3,100</a></h3>
+        <p class="post-excerpt">The page list now comes from two sitemaps, some pages are filtered out, and a failed fetch keeps the old copy of a page.</p>
+        <p class="post-foot"><time datetime="2026-10-26T11:30:00+08:00">2026-10-26</time></p>
+        
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/10/26/two-campuses/">Answering for both Monash campuses</a></h3>
+        <p class="post-excerpt">Visas, insurance, intermission and unit closures follow different rules in Australia and Malaysia. Monash Hub answers both and a test checks the country.</p>
+        <p class="post-foot"><time datetime="2026-10-26T10:30:00+08:00">2026-10-26</time></p>
+        
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/10/26/plan-code-and-searches/">Plan codes and popular searches on Monash Hub</a></h3>
+        <p class="post-excerpt">Course plans move between devices through a link the server never receives, and popular searches are stored as a word, a day and a count.</p>
+        <p class="post-foot"><time datetime="2026-10-26T10:00:00+08:00">2026-10-26</time></p>
+        
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/10/26/offline-app/">Offline support for Monash Hub</a></h3>
+        <p class="post-excerpt">Monash Hub can be added to a phone's home screen and opens pages you've read without signal. The service worker always tries the network first.</p>
+        <p class="post-foot"><time datetime="2026-10-26T09:30:00+08:00">2026-10-26</time></p>
+        
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/10/24/rating-abuse/">Unit ratings without sign-in, and limiting repeat votes</a></h3>
+        <p class="post-excerpt">Students can rate a unit without an account. This post covers how repeat ratings are limited and what the limits still don't stop.</p>
+        <p class="post-foot"><time datetime="2026-10-24T17:30:00+08:00">2026-10-24</time></p>
+        
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/10/24/translation-pipeline/">Translating the Monash Handbook for free</a></h3>
+        <p class="post-excerpt">Over five thousand units and hundreds of official pages translated into Chinese at no cost, with a glossary in front of the model and English as the fallback.</p>
+        <p class="post-foot"><time datetime="2026-10-24T17:00:00+08:00">2026-10-24</time></p>
+        
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/10/24/deploy-rollback/">Automatic deploys and rollback for Monash Hub</a></h3>
+        <p class="post-excerpt">The deploy script on the VPS checks that the right commit is running and puts the previous images back if it is not.</p>
+        <p class="post-foot"><time datetime="2026-10-24T10:00:00+08:00">2026-10-24</time></p>
+        
+      </div></article>
+      
+    </div>
+  </section>
+  
+  <section id="notes-3" class="section">
+    <h2>Study Kit</h2>
+    <div class="posts">
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/21/study-kit-download-choices/">Study Kit 1.16.0: download size limit and skipped files list</a></h3>
+        <p class="post-excerpt">Study Kit 1.16.0 adds a file size limit and file type filters. Skipped files can be listed and downloaded with monash skipped.</p>
+        <p class="post-foot"><time datetime="2026-11-21T11:45:00+08:00">2026-11-21</time></p>
+        <ul class="portfolio-tags" aria-label="Technology tags"><li>Python</li><li>Moodle</li><li>CLI</li><li>MCP</li></ul>
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/19/study-kit-uninstall/">Study Kit 1.15.0: revoking Google access on uninstall</a></h3>
+        <p class="post-excerpt">monash uninstall now revokes the Google Drive and Gmail grants before deleting data, and deletes nothing if revoking fails.</p>
+        <p class="post-foot"><time datetime="2026-11-19T11:20:00+08:00">2026-11-19</time></p>
+        <ul class="portfolio-tags" aria-label="Technology tags"><li>Python</li><li>OAuth</li><li>Google</li><li>Privacy</li></ul>
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/19/study-kit-attendance-login/">Study Kit 1.14: attendance login recovery</a></h3>
+        <p class="post-excerpt">When the attendance login expires, Study Kit tries to sign back in with the browser profile on your computer and stops when a password or MFA is needed.</p>
+        <p class="post-foot"><time datetime="2026-11-19T10:00:00+08:00">2026-11-19</time></p>
+        <ul class="portfolio-tags" aria-label="Technology tags"><li>Python</li><li>Playwright</li><li>SSO</li><li>Privacy</li></ul>
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/19/study-kit-submissions/">Study Kit 1.13: reading your submissions and feedback</a></h3>
+        <p class="post-excerpt">Study Kit can read what you or your group submitted together with the marking feedback, so your AI app can go through the comments with you.</p>
+        <p class="post-foot"><time datetime="2026-11-19T09:30:00+08:00">2026-11-19</time></p>
+        <ul class="portfolio-tags" aria-label="Technology tags"><li>Python</li><li>Moodle</li><li>MCP</li><li>Privacy</li></ul>
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/19/study-kit-changes/">Study Kit 1.12: monash changes</a></h3>
+        <p class="post-excerpt">A local log of new files, edited assignment instructions, moved deadlines and staff replies in your units.</p>
+        <p class="post-foot"><time datetime="2026-11-19T09:00:00+08:00">2026-11-19</time></p>
+        <ul class="portfolio-tags" aria-label="Technology tags"><li>Python</li><li>SQLite</li><li>Moodle</li><li>Ed</li></ul>
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/03/study-kit-course-materials/">Exporting a whole unit's course materials</a></h3>
+        <p class="post-excerpt">Study Kit 1.8 to 1.11.1 export Moodle pages, Books, assignment briefs, Ed Lessons and linked Google files as one local package with a list of what is missing.</p>
+        <p class="post-foot"><time datetime="2026-11-03T00:00:00+08:00">2026-11-03</time></p>
+        <ul class="portfolio-tags" aria-label="Technology tags"><li>Python</li><li>Moodle</li><li>Ed</li><li>Google Drive</li><li>PDF</li><li>Privacy</li></ul>
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/01/study-kit-ed-export/">Zipping a unit's Ed materials in Study Kit</a></h3>
+        <p class="post-excerpt">Study Kit can now zip a unit's Ed Lessons by week. Getting there meant renaming existing files, downloading attachments and fixing a deploy.</p>
+        <p class="post-foot"><time datetime="2026-11-01T18:30:00+08:00">2026-11-01</time></p>
+        
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/10/31/study-kit-mail-attendance/">Study Kit 1.5.0: school mail and attendance</a></h3>
+        <p class="post-excerpt">Study Kit can optionally read school mail and attendance. Actions that change something show a preview and only run after you confirm.</p>
+        <p class="post-foot"><time datetime="2026-10-31T18:00:00+08:00">2026-10-31</time></p>
+        
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/10/30/study-kit-remote/">Study Kit 1.4.0: remote mode for ChatGPT</a></h3>
+        <p class="post-excerpt">ChatGPT and Claude on the web can now connect to Study Kit. It is still for one person, with pairing codes, fixed callback addresses and read-only tools.</p>
+        <p class="post-foot"><time datetime="2026-10-30T18:00:00+08:00">2026-10-30</time></p>
+        
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/10/26/assignment-sources/">Which sources Study Kit uses for assignment questions</a></h3>
+        <p class="post-excerpt">When you ask about an assignment, Study Kit reads the brief and rubric first, then staff answers on Ed, and gives a date and source for each rule.</p>
+        <p class="post-foot"><time datetime="2026-10-26T08:00:00+08:00">2026-10-26</time></p>
+        
+      </div></article>
+      
+    </div>
+  </section>
+  
+  <section id="notes-4" class="section">
+    <h2>Homelab</h2>
+    <div class="posts">
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/19/ssh-home-servers/">SSH to home servers when the IP changes</a></h3>
+        <p class="post-excerpt">Moving from a forwarded port and DDNS to Tailscale and ProxyJump, with two names per host and HostKeyAlias.</p>
+        <p class="post-foot"><time datetime="2026-11-19T12:15:00+08:00">2026-11-19</time></p>
+        <ul class="portfolio-tags" aria-label="Technology tags"><li>SSH</li><li>Tailscale</li><li>Linux</li><li>Networking</li></ul>
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/01/stateful-alerts/">Server alerts that only report changes</a></h3>
+        <p class="post-excerpt">The Linux checks track state, so they alert on a new problem and on recovery instead of every run, and automatic fixes have limits.</p>
+        <p class="post-foot"><time datetime="2026-11-01T07:40:00+08:00">2026-11-01</time></p>
+        
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/01/spare-machines/">What runs on my two J1900 boxes and the N1</a></h3>
+        <p class="post-excerpt">Two J1900 boxes, a Debian N1 and a VPS, and how I decide what stays online and what can be wiped.</p>
+        <p class="post-foot"><time datetime="2026-11-01T04:10:00+08:00">2026-11-01</time></p>
+        
+      </div></article>
+      
+    </div>
+  </section>
+  
+  <section id="notes-5" class="section">
+    <h2>Exchange Tracker</h2>
+    <div class="posts">
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/19/exchange-tracker/">Tracking changes to Monash exchange programs</a></h3>
+        <p class="post-excerpt">A small box at home reads the Monash exchange programs each evening and records new partners, places, cut-offs and status changes.</p>
+        <p class="post-foot"><time datetime="2026-11-19T12:00:00+08:00">2026-11-19</time></p>
+        <ul class="portfolio-tags" aria-label="Technology tags"><li>Python</li><li>Web scraping</li><li>systemd</li><li>Data quality</li></ul>
+      </div></article>
+      
+    </div>
+  </section>
+  
+  <section id="notes-6" class="section">
+    <h2>SecureView</h2>
+    <div class="posts">
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/19/secureview-passphrase/">Passphrase checks in SecureView</a></h3>
+        <p class="post-excerpt">The server never sees the passphrase, so the checks moved to the browser. We measured Argon2id costs and changed the 10 character rule.</p>
+        <p class="post-foot"><time datetime="2026-11-19T11:30:00+08:00">2026-11-19</time></p>
+        <ul class="portfolio-tags" aria-label="Technology tags"><li>Security</li><li>Argon2id</li><li>Web Crypto</li><li>Threat modelling</li></ul>
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/01/mysql-concurrency/">SecureView concurrency testing</a></h3>
+        <p class="post-excerpt">Connection pool exhaustion and deadlocks only showed up once the file sharing app had many users at the same time.</p>
+        <p class="post-foot"><time datetime="2026-11-01T07:30:00+08:00">2026-11-01</time></p>
+        
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/10/24/secureview-pool/">SecureView load test: upload failures at 100 users</a></h3>
+        <p class="post-excerpt">At 100 concurrent users up to 78% of uploads failed while CPU stayed at 3%. The cause, a first fix that made it worse, and the fix that worked.</p>
+        <p class="post-foot"><time datetime="2026-10-24T18:20:00+08:00">2026-10-24</time></p>
+        
+      </div></article>
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/10/24/secureview-keys/">File sharing where the server can't decrypt the files</a></h3>
+        <p class="post-excerpt">In SecureView every file is encrypted in the browser and the server holds no key that opens it. This post covers sharing and forgotten passphrases.</p>
+        <p class="post-foot"><time datetime="2026-10-24T18:00:00+08:00">2026-10-24</time></p>
+        
+      </div></article>
+      
+    </div>
+  </section>
+  
+  <section id="notes-7" class="section">
+    <h2>Blog</h2>
+    <div class="posts">
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/01/blog-build-rollback/">How this blog is built and served</a></h3>
+        <p class="post-excerpt">Posts are built with Jekyll, served from my VPS, and GitHub Pages stays up as a mirror.</p>
+        <p class="post-foot"><time datetime="2026-11-01T07:10:00+08:00">2026-11-01</time></p>
+        
+      </div></article>
+      
+    </div>
+  </section>
+  
+  <section id="notes-8" class="section">
+    <h2>Algorithms</h2>
+    <div class="posts">
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/11/01/string-algorithms/">String algorithms code I kept after the course</a></h3>
+        <p class="post-excerpt">Z matching, BWT search, Ukkonen suffix trees and Rabin Karp rebuilt as a standalone repo, with their limitations written down.</p>
+        <p class="post-foot"><time datetime="2026-11-01T04:20:00+08:00">2026-11-01</time></p>
+        
+      </div></article>
+      
+    </div>
+  </section>
+  
+  <section id="notes-9" class="section">
+    <h2>quotegate</h2>
+    <div class="posts">
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/10/26/quotegate/">Turning the bot's quote check into a Python package</a></h3>
+        <p class="post-excerpt">The quote check from the WeChat bot is now a separate Python package with no dependencies, published to PyPI from a tag.</p>
+        <p class="post-foot"><time datetime="2026-10-26T11:00:00+08:00">2026-10-26</time></p>
+        
+      </div></article>
+      
+    </div>
+  </section>
+  
+  <section id="notes-10" class="section">
+    <h2>Attendance Helper</h2>
+    <div class="posts">
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/10/26/chrome-store/">Preparing a Chrome extension for the Web Store</a></h3>
+        <p class="post-excerpt">Before listing the attendance extension I removed a permission, removed unused URLs from a library and made the build reject remote code.</p>
+        <p class="post-foot"><time datetime="2026-10-26T09:00:00+08:00">2026-10-26</time></p>
+        
+      </div></article>
+      
+    </div>
+  </section>
+  
+  <section id="notes-11" class="section">
+    <h2>Ed Web</h2>
+    <div class="posts">
+      
+      <article class="card post-card"><div class="post-main">
+        <h3><a href="/2026/10/26/ed-web-redesign/">Ed Web redesign: refreshing only changed posts</a></h3>
+        <p class="post-excerpt">Ed Web reads a course's Ed forum in the browser with no backend. The redesign adds incremental refresh, a clearer "new" marker, safe rendering and Ed API tokens.</p>
+        <p class="post-foot"><time datetime="2026-10-26T08:30:00+08:00">2026-10-26</time></p>
+        
+      </div></article>
+      
+    </div>
+  </section>
+  
+</div>
+
+
+  </article>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Computer Science at Monash University. Backend and AI application development.</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">Status</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

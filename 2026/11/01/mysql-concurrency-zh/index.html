@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>SecureView 的并发测试 | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="SecureView 的并发测试" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="zh_Hans" />
+<meta name="description" content="连接池耗尽和死锁，是文件分享系统有多人同时使用后才出现的问题" />
+<meta property="og:description" content="连接池耗尽和死锁，是文件分享系统有多人同时使用后才出现的问题" />
+<link rel="canonical" href="https://blog.secureview.tech/2026/11/01/mysql-concurrency-zh/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/11/01/mysql-concurrency-zh/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/mysql-concurrency-zh.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-11-01T07:30:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/mysql-concurrency-zh.png" />
+<meta property="twitter:title" content="SecureView 的并发测试" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-11-01T07:30:00+08:00","datePublished":"2026-11-01T07:30:00+08:00","description":"连接池耗尽和死锁，是文件分享系统有多人同时使用后才出现的问题","headline":"SecureView 的并发测试","image":"https://blog.secureview.tech/assets/og/mysql-concurrency-zh.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/11/01/mysql-concurrency-zh/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/11/01/mysql-concurrency-zh/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/11/01/mysql-concurrency-zh/">
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/11/01/mysql-concurrency/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css?v=1795802204">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/zh/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/zh/#writing">文章</a>
+        <a href="/zh/#projects">项目</a>
+        <a href="/zh/projects/">归档</a>
+        <a href="/zh/search/">搜索</a>
+        <a href="/zh/about/">关于</a>
+      </nav>
+      <a class="lang-switch" href="/2026/11/01/mysql-concurrency/" lang="en" hreflang="en">English</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/zh/#writing">文章</a>
+      <span aria-hidden="true">/</span>
+      <span>SecureView</span>
+    </p>
+    <h1 class="display post-title">SecureView 的并发测试</h1><p class="lede">连接池耗尽和死锁，<wbr>是文件分享系统有多人同时使用后才出现的问题</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-11-01T07:30:00+08:00">1 Nov 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>约 1 分钟</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/11/01/mysql-concurrency/">English</a>
+        <a href="/2026/11/01/mysql-concurrency-zh/" lang="zh-Hans" class="on" aria-current="page">中文</a>
+      </span>
+    </div>
+  </header>
+  <p class="post-source small muted">
+    <a href="https://github.com/Waldo0926/SecureView" rel="noopener external" target="_blank">对应源码</a> · 资料核对：2026-11-01
+  </p>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p>SecureView 是我们四个人的毕业设计，一个在浏览器里加密文件的文件分享系统，我负责测试、CI、部署和一部分安全功能</p>
+
+<p>一个人演示时看到的是加密、上传、分享和解密，后来我花了更多时间在数据库连接、并发请求和失败之后的处理上</p>
+
+<h2 id="和加密无关的上传失败">和加密无关的上传失败</h2>
+
+<p>100 个用户的压测发现了连接池的问题，修好之前有很多上传失败，测试结果写在项目 README 里，这篇不再给新的数据</p>
+
+<p>我们还遇到过 MySQL 死锁，原因在事务边界和锁行的顺序，只上传一个文件时根本碰不到</p>
+
+<h2 id="每个修复都配一个测试">每个修复都配一个测试</h2>
+
+<p>修好一个并发问题后，我会写一个能重现它的测试，手动重试几次刚好成功说明不了什么，MySQL 测试、浏览器测试和故障注入就是用来防止同样的问题再出现</p>
+
+<p>要弄清一次死锁，需要知道哪些语句锁了哪些行、重试怎么做、写入到底有没有完成，光看报错信息是不够的</p>
+
+<p>以前的测试数据和环境说明在 <a href="https://github.com/Waldo0926/SecureView">SecureView 仓库</a>里，这篇只是回顾测试过程，不代表现在部署的性能</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">本文目录</p>
+      <ol><li><a href="#和加密无关的上传失败">和加密无关的上传失败</a></li><li><a href="#每个修复都配一个测试">每个修复都配一个测试</a></li></ol>
+      <a class="toc-back" href="/zh/#writing">全部文章</a>
+    </aside>
+  </div>
+  <section class="post-related" aria-label="相关文章">
+    <h2>同一方向的其他文章</h2>
+    <ul><li><a href="/2026/11/19/secureview-passphrase-zh/">SecureView 的密码检查</a></li><li><a href="/2026/10/24/secureview-pool-zh/">SecureView 压测：100 人同时上传时的失败</a></li><li><a href="/2026/10/24/secureview-keys-zh/">服务器解不开文件的文件分享</a></li></ul>
+  </section>
+  <nav class="more" aria-label="更多文章">
+    <a class="card more-link" href="/2026/11/01/monash-planner-reason-zh/">
+      <span class="more-label">上一篇 · Monash Hub</span>
+      <span class="more-title">我为什么做 Monash 选课规划工具</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/11/01/stateful-alerts-zh/">
+      <span class="more-label">下一篇 · Homelab</span>
+      <span class="more-title">只在状态变化时发的服务器告警</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Monash University Malaysia 计算机科学，记录开发与学习</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">运行状态</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

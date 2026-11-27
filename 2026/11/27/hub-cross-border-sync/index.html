@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Syncing 18 public PostgreSQL tables across a lossy cross-border link | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Syncing 18 public PostgreSQL tables across a lossy cross-border link" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Moving 18 whitelisted PostgreSQL tables from an overseas VPS to a mainland cloud server across 50% packet loss using xz, parallel 1 MB scp chunks and atomic replica-mode restore." />
+<meta property="og:description" content="Moving 18 whitelisted PostgreSQL tables from an overseas VPS to a mainland cloud server across 50% packet loss using xz, parallel 1 MB scp chunks and atomic replica-mode restore." />
+<link rel="canonical" href="https://blog.secureview.tech/2026/11/27/hub-cross-border-sync/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/11/27/hub-cross-border-sync/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/hub-cross-border-sync.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-11-27T10:15:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/hub-cross-border-sync.png" />
+<meta property="twitter:title" content="Syncing 18 public PostgreSQL tables across a lossy cross-border link" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-11-27T10:15:00+08:00","datePublished":"2026-11-27T10:15:00+08:00","description":"Moving 18 whitelisted PostgreSQL tables from an overseas VPS to a mainland cloud server across 50% packet loss using xz, parallel 1 MB scp chunks and atomic replica-mode restore.","headline":"Syncing 18 public PostgreSQL tables across a lossy cross-border link","image":"https://blog.secureview.tech/assets/og/hub-cross-border-sync.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/11/27/hub-cross-border-sync/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/11/27/hub-cross-border-sync/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/11/27/hub-cross-border-sync/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/11/27/hub-cross-border-sync-zh/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css?v=1795802204">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/#writing">Writing</a>
+        <a href="/#projects">Projects</a>
+        <a href="/projects/">Archive</a>
+        <a href="/search/">Search</a>
+        <a href="/about/">About</a>
+      </nav>
+      <a class="lang-switch" href="/2026/11/27/hub-cross-border-sync-zh/" lang="zh-Hans" hreflang="zh-Hans">中文</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/#writing">Writing</a>
+      <span aria-hidden="true">/</span>
+      <span>Monash Hub</span>
+    </p>
+    <h1 class="display post-title">Syncing 18 public PostgreSQL tables across a lossy cross-border link</h1><p class="lede">Moving 18 whitelisted PostgreSQL tables from an overseas VPS to a mainland cloud server across 50% packet loss using xz, parallel 1 MB scp chunks and atomic replica-mode restore.</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-11-27T10:15:00+08:00">27 Nov 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>4 min read</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/11/27/hub-cross-border-sync/" class="on" aria-current="page">English</a>
+        <a href="/2026/11/27/hub-cross-border-sync-zh/" lang="zh-Hans">中文</a>
+      </span>
+    </div>
+  </header>
+  <p class="post-source small muted">
+    <a href="https://github.com/Waldo0926/monash-hub" rel="noopener external" target="_blank">Source repository</a> · Source reviewed: 2026-11-27
+  </p>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p>When I stood up the <a href="/2026/11/27/hub-readonly-mirror/">China mainland read-only mirror</a> of Monash Hub, the database on the mainland host needed the public Handbook and official-guide tables from my overseas PostgreSQL instance — and nothing else. The overseas server is treated as strictly read-only for this job, and no user, auth, notification, review or community table may ever leave it.</p>
+
+<p>The data is not huge: 18 public tables, roughly 100 MB when gzipped. On a clean network that takes a few seconds. On an evening cross-border link with roughly 50% packet loss and ~228 ms RTT, a single TCP stream stalled at ~5.5 KB/s and moved only 512 KB in five minutes.</p>
+
+<p>Hostnames, IPs, ports and credentials are omitted below.</p>
+
+<h2 id="making-the-transfer-survive-packet-loss">Making the transfer survive packet loss</h2>
+
+<p>TCP congestion control punishes a single connection hard when half the packets drop at high latency. Rewriting the sync script (<code class="language-plaintext highlighter-rouge">deployment/sync-cn-public-data.sh</code>) around four simple changes brought the transfer time down by roughly 16×:</p>
+
+<ol>
+  <li><strong>Read-only whitelist dump + stronger compression.</strong> The script runs <code class="language-plaintext highlighter-rouge">pg_dump --data-only --no-owner --no-privileges</code> against an explicit 18-table whitelist on the overseas container, streams it through <code class="language-plaintext highlighter-rouge">gzip -1</code> over SSH to my local machine, and re-compresses locally with <code class="language-plaintext highlighter-rouge">xz -T0 -6</code>. That shrinks the ~100 MB gzip stream to ~54 MB.</li>
+  <li><strong>Local privacy audit before upload.</strong> Before anything goes to the mainland host, the script checks the decompressed SQL stream against a regex of all 16 forbidden tables (<code class="language-plaintext highlighter-rouge">users</code>, <code class="language-plaintext highlighter-rouge">email_verification_codes</code>, <code class="language-plaintext highlighter-rouge">notifications</code>, <code class="language-plaintext highlighter-rouge">auth_throttle</code>, <code class="language-plaintext highlighter-rouge">community_*</code>, <code class="language-plaintext highlighter-rouge">unit_reviews</code>, <code class="language-plaintext highlighter-rouge">search_terms</code>, <code class="language-plaintext highlighter-rouge">alembic_version</code>, etc.) and aborts on any match.</li>
+  <li><strong>1 MB chunks uploaded in parallel with retries.</strong> <code class="language-plaintext highlighter-rouge">split -b 1m</code> cuts the 54 MB archive into 54 independent pieces, and <code class="language-plaintext highlighter-rouge">xargs -P 8</code> runs 8 concurrent <code class="language-plaintext highlighter-rouge">scp</code> workers, each retrying up to 4 times with <code class="language-plaintext highlighter-rouge">ServerAliveInterval=10</code>. Even when one worker hits <code class="language-plaintext highlighter-rouge">scp: Connection closed</code>, it retries that single 1 MB piece without restarting the other 53.</li>
+  <li><strong>End-to-end SHA256 verification.</strong> The target host concatenates the chunks, checks <code class="language-plaintext highlighter-rouge">sha256sum</code> against the hash computed locally, and refuses to restore on a mismatch.</li>
+</ol>
+
+<p>On the latest sync (after PR #299 added <code class="language-plaintext highlighter-rouge">reference_links</code> to 962 degrees), all 54 chunks landed and verified in 503 seconds — still not LAN speed, but completely reliable even during peak cross-border congestion.</p>
+
+<h2 id="three-snags-i-hit-along-the-way">Three snags I hit along the way</h2>
+
+<h3 id="1-circular-foreign-keys-on---data-only-restore">1. Circular foreign keys on <code class="language-plaintext highlighter-rouge">--data-only</code> restore</h3>
+
+<p><code class="language-plaintext highlighter-rouge">pg_dump --data-only</code> immediately warned that <code class="language-plaintext highlighter-rouge">unit_requisite_groups</code> and <code class="language-plaintext highlighter-rouge">curriculum_containers</code> have self-referencing / circular foreign-key constraints, meaning plain <code class="language-plaintext highlighter-rouge">COPY</code> statements can fail depending on row order.</p>
+
+<p>Because the restore runs inside a single transaction on an isolated read-only mirror, wrapping it like this keeps it both fast and atomic:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">BEGIN</span><span class="p">;</span>
+<span class="k">SET</span> <span class="k">LOCAL</span> <span class="n">session_replication_role</span> <span class="o">=</span> <span class="s1">'replica'</span><span class="p">;</span>
+<span class="k">TRUNCATE</span> <span class="k">TABLE</span> <span class="o">&lt;</span><span class="mi">18</span> <span class="n">whitelisted</span> <span class="k">public</span> <span class="n">tables</span><span class="o">&gt;</span> <span class="k">RESTART</span> <span class="k">IDENTITY</span> <span class="k">CASCADE</span><span class="p">;</span>
+<span class="c1">-- xz -dc dump stream</span>
+<span class="k">COMMIT</span><span class="p">;</span>
+<span class="k">ANALYZE</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>If anything fails mid-restore, the transaction rolls back and the previous dataset stays intact. <code class="language-plaintext highlighter-rouge">SET LOCAL</code> automatically resets <code class="language-plaintext highlighter-rouge">session_replication_role</code> when the transaction ends, and <code class="language-plaintext highlighter-rouge">ANALYZE</code> updates planner statistics immediately afterward.</p>
+
+<h3 id="2-the-xargs--n-1-bash--c-argument-order-bug">2. The <code class="language-plaintext highlighter-rouge">xargs -n 1 bash -c</code> argument-order bug</h3>
+
+<p>When I moved from an interactive shell function to a standalone bash script, the first run failed immediately with <code class="language-plaintext highlighter-rouge">cp: &lt;host&gt;: No such file or directory</code>.</p>
+
+<p>I had written:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>find <span class="s2">"</span><span class="nv">$LOCAL_CHUNKS</span><span class="s2">"</span> <span class="nt">-maxdepth</span> 1 <span class="nt">-name</span> <span class="s1">'part-*'</span> | <span class="nb">sort</span> | xargs <span class="nt">-n</span> 1 <span class="nt">-P</span> <span class="s2">"</span><span class="nv">$PARALLEL_CHUNKS</span><span class="s2">"</span> bash <span class="nt">-c</span> <span class="s1">'
+  f="$1"
+  dst_host="$2"
+  remote_dir="$3"
+  ...
+'</span> _ <span class="s2">"</span><span class="nv">$DST_HOST</span><span class="s2">"</span> <span class="s2">"</span><span class="nv">$REMOTE_CHUNKS</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">xargs -n 1</code> appends the piped filename at the <strong>end</strong> of the command line, not right after <code class="language-plaintext highlighter-rouge">_</code>. So <code class="language-plaintext highlighter-rouge">$1</code> was <code class="language-plaintext highlighter-rouge">$DST_HOST</code>, <code class="language-plaintext highlighter-rouge">$2</code> was <code class="language-plaintext highlighter-rouge">$REMOTE_CHUNKS</code>, and the actual chunk path was <code class="language-plaintext highlighter-rouge">$3</code>. Swapping the assignments fixed it cleanly.</p>
+
+<h3 id="3-schema-drift-before-data-sync">3. Schema drift before data sync</h3>
+
+<p>Because the overseas database already had Alembic migration <code class="language-plaintext highlighter-rouge">d7a1e3b5c902</code> (adding <code class="language-plaintext highlighter-rouge">reference_links</code> JSONB columns to <code class="language-plaintext highlighter-rouge">courses</code>, <code class="language-plaintext highlighter-rouge">areas_of_study</code> and <code class="language-plaintext highlighter-rouge">curriculum_containers</code>), running a <code class="language-plaintext highlighter-rouge">--data-only</code> sync before migrating the mainland database would have failed on mismatched <code class="language-plaintext highlighter-rouge">COPY</code> column lists. The safe order is always: deploy code → <code class="language-plaintext highlighter-rouge">alembic upgrade head</code> → rebuild <code class="language-plaintext highlighter-rouge">api</code> and <code class="language-plaintext highlighter-rouge">web</code> → run <code class="language-plaintext highlighter-rouge">sync-cn-public-data.sh</code>.</p>
+
+<h2 id="optional-mirror-args-for-slow-pypi-and-npm-builds">Optional mirror args for slow PyPI and npm builds</h2>
+
+<p>Building the backend Docker image on the mainland server also timed out against <code class="language-plaintext highlighter-rouge">pypi.org</code>. Rather than hardcoding a regional mirror into the shared Dockerfiles, I added optional empty-by-default build args:</p>
+
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ARG</span><span class="s"> PIP_INDEX_URL=""</span>
+<span class="k">RUN </span>pip <span class="nb">install</span> <span class="nt">--no-cache-dir</span> <span class="k">${</span><span class="nv">PIP_INDEX_URL</span>:+-i<span class="p"> </span><span class="s2">"</span><span class="nv">$PIP_INDEX_URL</span><span class="s2">"</span><span class="k">}</span> <span class="nt">-r</span> /srv/backend/requirements.txt
+</code></pre></div></div>
+
+<p>The frontend Dockerfile does the same with <code class="language-plaintext highlighter-rouge">ARG NPM_REGISTRY=""</code>. Overseas builds leave both empty and use upstream defaults; <code class="language-plaintext highlighter-rouge">docker-compose.cn.yml</code> passes domestic mirrors so rebuilds finish in under half a minute instead of timing out.</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">On this page</p>
+      <ol><li><a href="#making-the-transfer-survive-packet-loss">Making the transfer survive packet loss</a></li><li><a href="#three-snags-i-hit-along-the-way">Three snags I hit along the way</a></li><li><a href="#optional-mirror-args-for-slow-pypi-and-npm-builds">Optional mirror args for slow PyPI and npm builds</a></li></ol>
+      <a class="toc-back" href="/#writing">All writing</a>
+    </aside>
+  </div>
+  <section class="post-related" aria-label="Related posts">
+    <h2>More on this subject</h2>
+    <ul><li><a href="/2026/11/27/hub-home-layout-and-e2e/">Rebalancing the Monash Hub home page, and what Playwright caught</a></li><li><a href="/2026/11/27/hub-readonly-mirror/">One codebase for Monash Hub, a China read-only mirror and a WeChat mini program</a></li><li><a href="/2026/11/19/hub-google-signin/">Adding Google sign-in to Monash Hub</a></li></ul>
+  </section>
+  <nav class="more" aria-label="More posts">
+    <a class="card more-link" href="/2026/11/27/hub-readonly-mirror/">
+      <span class="more-label">Previous · Monash Hub</span>
+      <span class="more-title">One codebase for Monash Hub, a China read-only mirror and a WeChat mini program</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/11/27/bot-context-words/">
+      <span class="more-label">Next · Q&A bot</span>
+      <span class="more-title">Why 'how to print at Malaysia campus' matched the student visa answer</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Computer Science at Monash University. Backend and AI application development.</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">Status</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

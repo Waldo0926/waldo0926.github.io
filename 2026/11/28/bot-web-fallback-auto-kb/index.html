@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Searching Monash websites when the KB misses, with a 10 pm review | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Searching Monash websites when the KB misses, with a 10 pm review" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="When local rules and RAG miss, policy questions rewrite queries and search Monash websites with verbatim checks, everyday questions get a labelled AI answer, and a 10 pm digest lists auto-additions and merge suggestions." />
+<meta property="og:description" content="When local rules and RAG miss, policy questions rewrite queries and search Monash websites with verbatim checks, everyday questions get a labelled AI answer, and a 10 pm digest lists auto-additions and merge suggestions." />
+<link rel="canonical" href="https://blog.secureview.tech/2026/11/28/bot-web-fallback-auto-kb/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/11/28/bot-web-fallback-auto-kb/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/bot-web-fallback-auto-kb.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-11-28T01:40:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/bot-web-fallback-auto-kb.png" />
+<meta property="twitter:title" content="Searching Monash websites when the KB misses, with a 10 pm review" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-11-28T01:40:00+08:00","datePublished":"2026-11-28T01:40:00+08:00","description":"When local rules and RAG miss, policy questions rewrite queries and search Monash websites with verbatim checks, everyday questions get a labelled AI answer, and a 10 pm digest lists auto-additions and merge suggestions.","headline":"Searching Monash websites when the KB misses, with a 10 pm review","image":"https://blog.secureview.tech/assets/og/bot-web-fallback-auto-kb.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/11/28/bot-web-fallback-auto-kb/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/11/28/bot-web-fallback-auto-kb/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/11/28/bot-web-fallback-auto-kb/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/11/28/bot-web-fallback-auto-kb-zh/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css?v=1795802204">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/#writing">Writing</a>
+        <a href="/#projects">Projects</a>
+        <a href="/projects/">Archive</a>
+        <a href="/search/">Search</a>
+        <a href="/about/">About</a>
+      </nav>
+      <a class="lang-switch" href="/2026/11/28/bot-web-fallback-auto-kb-zh/" lang="zh-Hans" hreflang="zh-Hans">中文</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/#writing">Writing</a>
+      <span aria-hidden="true">/</span>
+      <span>Q&A bot</span>
+    </p>
+    <h1 class="display post-title">Searching Monash websites when the KB misses, with a 10 pm review</h1><p class="lede">When local rules and RAG miss, policy questions rewrite queries and search Monash websites with verbatim checks, everyday questions get a labelled AI answer, and a 10 pm digest lists auto-additions and merge suggestions.</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-11-28T01:40:00+08:00">28 Nov 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>4 min read</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/11/28/bot-web-fallback-auto-kb/" class="on" aria-current="page">English</a>
+        <a href="/2026/11/28/bot-web-fallback-auto-kb-zh/" lang="zh-Hans">中文</a>
+      </span>
+    </div>
+  </header>
+  <p class="post-source small muted"> · Source reviewed: 2026-11-28
+  </p>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p><a href="/2026/10/25/quote-only-rag/">Quote-only RAG</a> cut down how often the bot missed reworded questions, but two kinds of messages still kept ending up in my chat.</p>
+
+<p>Sometimes a student writes very colloquially, like “下学期不想读了先停半年怎么弄” (stop studying for half a year next semester). The KB already covers <code class="language-plaintext highlighter-rouge">intermission</code>, but the words barely overlap so local retrieval never pulls it up. Other times a page on <code class="language-plaintext highlighter-rouge">monash.edu.my</code> or <code class="language-plaintext highlighter-rouge">monash.edu</code> was missed by my weekly crawl or updated between runs. Mixed in with those were everyday questions like plug adapters or rain gear in Kuala Lumpur that do not need a human answer.</p>
+
+<p>I added <code class="language-plaintext highlighter-rouge">wxbot/websearch.py</code> to handle what happens after a local miss. Nothing ahead of it changed: taught Q&amp;As, the Monash Hub API, 马莫百科 articles and the local RAG index always run first. If local lookup answers the question, it returns right away without touching Tavily or writing anything to the KB.</p>
+
+<h2 id="official-search-for-policy-questions-labelled-ai-for-everyday-ones">Official search for policy questions, labelled AI for everyday ones</h2>
+
+<p>Letting a free model improvise policy answers already burned me once, so misses are split in <code class="language-plaintext highlighter-rouge">is_high_risk()</code> instead of handing everything to AI. Visas, fees, enrolment, exams, grades, graduation, intermission, special consideration, unit codes and university policies count as high risk. Weather, plug adapters, SIM cards, Grab and nearby food count as low risk.</p>
+
+<p>For a high-risk miss, the model rewrites the colloquial Chinese into two or three short bilingual queries, such as <code class="language-plaintext highlighter-rouge">Monash Malaysia intermission</code> and <code class="language-plaintext highlighter-rouge">休学 申请</code>. The bot searches the local RAG index again with those first. Half the time the page was already crawled under formal wording.</p>
+
+<p>If local search still comes up empty, Tavily searches <code class="language-plaintext highlighter-rouge">monash.edu.my</code> and <code class="language-plaintext highlighter-rouge">monash.edu</code>, sorting <code class="language-plaintext highlighter-rouge">monash.edu.my</code> ahead of <code class="language-plaintext highlighter-rouge">monash.edu</code>. The returned text never goes to free-form summarisation. It runs through the same verbatim quote check in <code class="language-plaintext highlighter-rouge">rag.py</code>, keeping the Australia campus warning headers intact. If no verified quote survives, the question still forwards to me.</p>
+
+<p>Writing the tests caught an annoying bug in <code class="language-plaintext highlighter-rouge">Brain.answer()</code>: when local RAG found zero chunks it returned <code class="language-plaintext highlighter-rouge">Result(None, "no chunks")</code> with <code class="language-plaintext highlighter-rouge">unsure=False</code>, which hit an <code class="language-plaintext highlighter-rouge">else</code> branch and returned <code class="language-plaintext highlighter-rouge">miss</code> early before ever reaching query rewriting or Tavily. Changing that branch to return early only when <code class="language-plaintext highlighter-rouge">reply is not None</code> fixed it.</p>
+
+<p>Low-risk life questions that miss the local layers go to <code class="language-plaintext highlighter-rouge">life_fallback()</code>. The reply always ends with a note saying it was written by AI and is not official policy, and it does not auto-forward to me unless the student replies <code class="language-plaintext highlighter-rouge">人工</code>.</p>
+
+<h2 id="auto-adding-new-answers-proposing-changes-to-old-ones">Auto-adding new answers, proposing changes to old ones</h2>
+
+<p>Verified new answers from Layer 2 and Layer 3 are saved into <code class="language-plaintext highlighter-rouge">qa</code> and synced into the RAG <code class="language-plaintext highlighter-rouge">chunk</code> table immediately via <code class="language-plaintext highlighter-rouge">chunks.sync_qa_row()</code>, so the next student asking the same thing hits the KB directly without another search or model call.</p>
+
+<p>A <code class="language-plaintext highlighter-rouge">source</code> column tracks where each row came from: <code class="language-plaintext highlighter-rouge">owner</code>, <code class="language-plaintext highlighter-rouge">auto_web</code> or <code class="language-plaintext highlighter-rouge">auto_ai</code>. An <code class="language-plaintext highlighter-rouge">auto_ai</code> row stores the disclaimer as part of the answer text so later hits never look like something I wrote by hand.</p>
+
+<p>Existing Q&amp;As are never overwritten silently. Anything touching them goes into <code class="language-plaintext highlighter-rouge">kb_proposal</code> for my review. If query rewriting ends up matching an older Q&amp;A, it queues an <code class="language-plaintext highlighter-rouge">add_phrase</code> suggestion for the student’s wording. If a new, broader Q&amp;A is added on the same topic as a short older one (for example, a full hostel appliance answer covering an older rice-cooker Q&amp;A), it queues a <code class="language-plaintext highlighter-rouge">merge_qa</code> suggestion to fold the old phrasings into the fuller entry and drop the duplicate.</p>
+
+<h2 id="a-10-pm-summary-and-plain-chinese-edits">A 10 pm summary and plain-Chinese edits</h2>
+
+<p>A background loop in <code class="language-plaintext highlighter-rouge">wxbot/bot.py</code> sends one summary at 10 pm listing Q&amp;As auto-added that day and any open proposals. Quiet days send nothing. One small deployment trap: the loop checks server local time, so on a UTC VPS <code class="language-plaintext highlighter-rouge">WXBOT_AUTO_DIGEST_HOUR</code> has to be <code class="language-plaintext highlighter-rouge">14</code> to land at 10 pm in Malaysia instead of 6 am.</p>
+
+<p>Proposals take <code class="language-plaintext highlighter-rouge">采纳 P1</code>, <code class="language-plaintext highlighter-rouge">采纳 全部</code> or <code class="language-plaintext highlighter-rouge">驳回 P1</code>, and an approved change can still be rolled back with <code class="language-plaintext highlighter-rouge">撤销</code>. If an auto-added answer in the 10 pm summary looks slightly off, I also added an admin-only parser (<code class="language-plaintext highlighter-rouge">wxbot/admin_nlp.py</code>, strictly inside <code class="language-plaintext highlighter-rouge">is_admin</code> so normal users can never reach it). I can ask “有哪些指令” when I forget a command, or write “把 #128 删掉” or “把 #128 里的 RM50 改成 RM80，去掉旧网址”. Every write previews the before and after and waits for <code class="language-plaintext highlighter-rouge">1</code> before touching SQLite, with <code class="language-plaintext highlighter-rouge">撤销</code> afterwards.</p>
+
+<h2 id="things-to-watch">Things to watch</h2>
+
+<p>Official account replies still have a 5-second timeout, so adding query rewriting and Tavily makes it more likely to fall into late delivery where the student has to send another message to read the reply; private chats and groups do not have that limit. Tavily’s free plan gives 1,000 searches a month, which should last with local lookup running first, though I will still need to watch usage. The high-risk versus low-risk split is just a keyword regex for now, so edge cases will need adjusting as I read the nightly summaries.</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">On this page</p>
+      <ol><li><a href="#official-search-for-policy-questions-labelled-ai-for-everyday-ones">Official search for policy questions, labelled AI for everyday ones</a></li><li><a href="#auto-adding-new-answers-proposing-changes-to-old-ones">Auto-adding new answers, proposing changes to old ones</a></li><li><a href="#a-10-pm-summary-and-plain-chinese-edits">A 10 pm summary and plain-Chinese edits</a></li><li><a href="#things-to-watch">Things to watch</a></li></ol>
+      <a class="toc-back" href="/#writing">All writing</a>
+    </aside>
+  </div>
+  <section class="post-related" aria-label="Related posts">
+    <h2>More on this subject</h2>
+    <ul><li><a href="/2026/11/27/bot-user-rules/">Stopping forwards from one user, or staying silent</a></li><li><a href="/2026/11/27/bot-context-words/">Why 'how to print at Malaysia campus' matched the student visa answer</a></li><li><a href="/2026/11/19/bot-on-the-hub/">The WeChat bot on Monash Hub</a></li></ul>
+  </section>
+  <nav class="more" aria-label="More posts">
+    <a class="card more-link" href="/2026/11/27/bot-user-rules/">
+      <span class="more-label">Previous · Q&A bot</span>
+      <span class="more-title">Stopping forwards from one user, or staying silent</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Computer Science at Monash University. Backend and AI application development.</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">Status</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

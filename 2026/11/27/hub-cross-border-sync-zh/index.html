@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>在 50% 丢包的跨境链路上同步 18 张 PostgreSQL 公开表 | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="在 50% 丢包的跨境链路上同步 18 张 PostgreSQL 公开表" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="zh_Hans" />
+<meta name="description" content="在晚高峰 50% 丢包的跨境链路上，用 xz 压缩、1 MB 并发分片 scp 和事务内 replica 模式恢复，把 18 张 PostgreSQL 公开表安全同步到国内节点" />
+<meta property="og:description" content="在晚高峰 50% 丢包的跨境链路上，用 xz 压缩、1 MB 并发分片 scp 和事务内 replica 模式恢复，把 18 张 PostgreSQL 公开表安全同步到国内节点" />
+<link rel="canonical" href="https://blog.secureview.tech/2026/11/27/hub-cross-border-sync-zh/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/11/27/hub-cross-border-sync-zh/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/hub-cross-border-sync-zh.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-11-27T10:15:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/hub-cross-border-sync-zh.png" />
+<meta property="twitter:title" content="在 50% 丢包的跨境链路上同步 18 张 PostgreSQL 公开表" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-11-27T10:15:00+08:00","datePublished":"2026-11-27T10:15:00+08:00","description":"在晚高峰 50% 丢包的跨境链路上，用 xz 压缩、1 MB 并发分片 scp 和事务内 replica 模式恢复，把 18 张 PostgreSQL 公开表安全同步到国内节点","headline":"在 50% 丢包的跨境链路上同步 18 张 PostgreSQL 公开表","image":"https://blog.secureview.tech/assets/og/hub-cross-border-sync-zh.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/11/27/hub-cross-border-sync-zh/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/11/27/hub-cross-border-sync-zh/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/11/27/hub-cross-border-sync-zh/">
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/11/27/hub-cross-border-sync/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css?v=1795802204">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/zh/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/zh/#writing">文章</a>
+        <a href="/zh/#projects">项目</a>
+        <a href="/zh/projects/">归档</a>
+        <a href="/zh/search/">搜索</a>
+        <a href="/zh/about/">关于</a>
+      </nav>
+      <a class="lang-switch" href="/2026/11/27/hub-cross-border-sync/" lang="en" hreflang="en">English</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/zh/#writing">文章</a>
+      <span aria-hidden="true">/</span>
+      <span>Monash Hub</span>
+    </p>
+    <h1 class="display post-title">在 50% 丢包的跨境链路上同步 18 张 PostgreSQL 公开表</h1><p class="lede">在晚高峰 50% 丢包的跨境链路上，<wbr>用 xz 压缩、<wbr>1 MB 并发分片 scp 和事务内 replica 模式恢复，<wbr>把 18 张 PostgreSQL 公开表安全同步到国内节点</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-11-27T10:15:00+08:00">27 Nov 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>约 6 分钟</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/11/27/hub-cross-border-sync/">English</a>
+        <a href="/2026/11/27/hub-cross-border-sync-zh/" lang="zh-Hans" class="on" aria-current="page">中文</a>
+      </span>
+    </div>
+  </header>
+  <p class="post-source small muted">
+    <a href="https://github.com/Waldo0926/monash-hub" rel="noopener external" target="_blank">对应源码</a> · 资料核对：2026-11-27
+  </p>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p>给 Monash Hub 搭好<a href="/2026/11/27/hub-readonly-mirror-zh/">国内只读镜像</a>以后，国内这台 PostgreSQL 需要从海外主库同步 Handbook 和官方指南数据，但只能同步公开表。海外主库全程只读，用户、认证、通知、评价和社区表一行都不能出库</p>
+
+<p>数据量其实不大，18 张公开表用 gzip 压完大概 100 MB。网络正常时几秒就传完了，但晚高峰实测跨境链路丢包率接近 50%、RTT 约 228 ms，单流 <code class="language-plaintext highlighter-rouge">pg_dump | ssh</code> 直接卡在 5.5 KB/s，五分钟只挪了 512 KB</p>
+
+<p>下面的记录隐去了真实主机名、IP、端口和密钥</p>
+
+<h2 id="让传输在高丢包下跑得动">让传输在高丢包下跑得动</h2>
+
+<p>高延迟叠加高丢包时，单条 TCP 连接会被拥塞控制压得很惨。我把同步脚本（<code class="language-plaintext highlighter-rouge">deployment/sync-cn-public-data.sh</code>）改成四步后，实测整体提速了约 16 倍：</p>
+
+<ol>
+  <li><strong>只读白名单导出 + 更高压缩率</strong>：脚本在海外容器里只对显式列出的 18 张公开表跑 <code class="language-plaintext highlighter-rouge">pg_dump --data-only --no-owner --no-privileges</code>，经 SSH <code class="language-plaintext highlighter-rouge">gzip -1</code> 拉回本地后，再用 <code class="language-plaintext highlighter-rouge">xz -T0 -6</code> 多核重压，体积从约 100 MB 降到约 54 MB</li>
+  <li><strong>上传前做本地隐私审计</strong>：文件发出前先在本地解压扫描，用正则核对 16 张禁用表（<code class="language-plaintext highlighter-rouge">users</code>、<code class="language-plaintext highlighter-rouge">email_verification_codes</code>、<code class="language-plaintext highlighter-rouge">notifications</code>、<code class="language-plaintext highlighter-rouge">auth_throttle</code>、<code class="language-plaintext highlighter-rouge">community_*</code>、<code class="language-plaintext highlighter-rouge">unit_reviews</code>、<code class="language-plaintext highlighter-rouge">search_terms</code>、<code class="language-plaintext highlighter-rouge">alembic_version</code> 等），只要命中任意一张立刻中止</li>
+  <li><strong>1 MB 分片 + 8 并发 <code class="language-plaintext highlighter-rouge">scp</code> 重试</strong>：用 <code class="language-plaintext highlighter-rouge">split -b 1m</code> 把 54 MB 切成 54 个独立分片，<code class="language-plaintext highlighter-rouge">xargs -P 8</code> 开 8 个 <code class="language-plaintext highlighter-rouge">scp</code> 并发传，每片失败最多重试 4 次并配 <code class="language-plaintext highlighter-rouge">ServerAliveInterval=10</code>。哪怕某一片碰上 <code class="language-plaintext highlighter-rouge">scp: Connection closed</code>，也只重传这 1 MB，不会连累另外 53 片</li>
+  <li><strong>端到端 SHA256 校验</strong>：目标机把分片拼回完整文件后，比对远端 <code class="language-plaintext highlighter-rouge">sha256sum</code> 和本地算出的哈希，不一致拒绝导入</li>
+</ol>
+
+<p>最近一次同步（PR #299 给 962 个学位补齐了 <code class="language-plaintext highlighter-rouge">reference_links</code> 之后），54 个分片在 503 秒内全部传完并校验通过，虽然比不上局域网，但在晚高峰也足够稳</p>
+
+<h2 id="顺手踩到的三个坑">顺手踩到的三个坑</h2>
+
+<h3 id="1---data-only-恢复遇到循环外键">1. <code class="language-plaintext highlighter-rouge">--data-only</code> 恢复遇到循环外键</h3>
+
+<p><code class="language-plaintext highlighter-rouge">pg_dump --data-only</code> 导出时就提示 <code class="language-plaintext highlighter-rouge">unit_requisite_groups</code> 和 <code class="language-plaintext highlighter-rouge">curriculum_containers</code> 存在自引用/循环外键约束，直接执行 <code class="language-plaintext highlighter-rouge">COPY</code> 可能因为行顺序报外键错</p>
+
+<p>因为目标库是隔离的只读镜像，把整个恢复包进单个事务里就能同时保证速度和原子性：</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">BEGIN</span><span class="p">;</span>
+<span class="k">SET</span> <span class="k">LOCAL</span> <span class="n">session_replication_role</span> <span class="o">=</span> <span class="s1">'replica'</span><span class="p">;</span>
+<span class="k">TRUNCATE</span> <span class="k">TABLE</span> <span class="o">&lt;</span><span class="mi">18</span> <span class="err">张白名单公开表</span><span class="o">&gt;</span> <span class="k">RESTART</span> <span class="k">IDENTITY</span> <span class="k">CASCADE</span><span class="p">;</span>
+<span class="c1">-- 接 xz -dc 解压流</span>
+<span class="k">COMMIT</span><span class="p">;</span>
+<span class="k">ANALYZE</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>中途任何一步失败都会自动回滚，不会把线上旧数据冲坏；<code class="language-plaintext highlighter-rouge">SET LOCAL</code> 在事务结束时自动恢复默认行为，最后的 <code class="language-plaintext highlighter-rouge">ANALYZE</code> 立刻刷新查询规划统计信息</p>
+
+<h3 id="2-xargs--n-1-bash--c-的参数位置偏移">2. <code class="language-plaintext highlighter-rouge">xargs -n 1 bash -c</code> 的参数位置偏移</h3>
+
+<p>从交互 shell 整理成独立脚本后，第一次跑立刻报 <code class="language-plaintext highlighter-rouge">cp: &lt;host&gt;: No such file or directory</code></p>
+
+<p>原因是原来写成了这样：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>find <span class="s2">"</span><span class="nv">$LOCAL_CHUNKS</span><span class="s2">"</span> <span class="nt">-maxdepth</span> 1 <span class="nt">-name</span> <span class="s1">'part-*'</span> | <span class="nb">sort</span> | xargs <span class="nt">-n</span> 1 <span class="nt">-P</span> <span class="s2">"</span><span class="nv">$PARALLEL_CHUNKS</span><span class="s2">"</span> bash <span class="nt">-c</span> <span class="s1">'
+  f="$1"
+  dst_host="$2"
+  remote_dir="$3"
+  ...
+'</span> _ <span class="s2">"</span><span class="nv">$DST_HOST</span><span class="s2">"</span> <span class="s2">"</span><span class="nv">$REMOTE_CHUNKS</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">xargs -n 1</code> 是把管道传进来的文件名拼在整条命令的<strong>最后</strong>，而不是紧跟在 <code class="language-plaintext highlighter-rouge">_</code> 后面。所以 <code class="language-plaintext highlighter-rouge">$1</code> 其实是 <code class="language-plaintext highlighter-rouge">$DST_HOST</code>，<code class="language-plaintext highlighter-rouge">$2</code> 是 <code class="language-plaintext highlighter-rouge">$REMOTE_CHUNKS</code>，真正的文件路径在 <code class="language-plaintext highlighter-rouge">$3</code>。把三个变量的顺序对调后问题立刻消失</p>
+
+<h3 id="3-同步数据前必须先对齐表结构">3. 同步数据前必须先对齐表结构</h3>
+
+<p>海外库升级到 Alembic 迁移 <code class="language-plaintext highlighter-rouge">d7a1e3b5c902</code>（给 <code class="language-plaintext highlighter-rouge">courses</code>、<code class="language-plaintext highlighter-rouge">areas_of_study</code> 和 <code class="language-plaintext highlighter-rouge">curriculum_containers</code> 加了 <code class="language-plaintext highlighter-rouge">reference_links</code> 字段）之后，如果国内库没先跑迁移就直接同步 <code class="language-plaintext highlighter-rouge">--data-only</code>，<code class="language-plaintext highlighter-rouge">COPY</code> 会直接因为列数不一致报错。安全顺序固定为：传新代码 → 跑 <code class="language-plaintext highlighter-rouge">alembic upgrade head</code> → 重建 <code class="language-plaintext highlighter-rouge">api</code> 和 <code class="language-plaintext highlighter-rouge">web</code> → 再跑 <code class="language-plaintext highlighter-rouge">sync-cn-public-data.sh</code></p>
+
+<h2 id="顺带解决国内机-docker-构建超时">顺带解决国内机 Docker 构建超时</h2>
+
+<p>国内云服务器构建后端镜像时，直接连 <code class="language-plaintext highlighter-rouge">pypi.org</code> 经常超时。不想把国内镜像源写死进共用 Dockerfile，就在 <code class="language-plaintext highlighter-rouge">backend/Dockerfile</code> 和 <code class="language-plaintext highlighter-rouge">frontend/Dockerfile</code> 里各加了一个默认为空的可选构建参数：</p>
+
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ARG</span><span class="s"> PIP_INDEX_URL=""</span>
+<span class="k">RUN </span>pip <span class="nb">install</span> <span class="nt">--no-cache-dir</span> <span class="k">${</span><span class="nv">PIP_INDEX_URL</span>:+-i<span class="p"> </span><span class="s2">"</span><span class="nv">$PIP_INDEX_URL</span><span class="s2">"</span><span class="k">}</span> <span class="nt">-r</span> /srv/backend/requirements.txt
+</code></pre></div></div>
+
+<p>前端用同样的方式加了 <code class="language-plaintext highlighter-rouge">ARG NPM_REGISTRY=""</code>。海外构建不传参时行为完全不变，国内的 <code class="language-plaintext highlighter-rouge">docker-compose.cn.yml</code> 传入镜像源地址，构建从反复超时缩短到不到半分钟</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">本文目录</p>
+      <ol><li><a href="#让传输在高丢包下跑得动">让传输在高丢包下跑得动</a></li><li><a href="#顺手踩到的三个坑">顺手踩到的三个坑</a></li><li><a href="#顺带解决国内机-docker-构建超时">顺带解决国内机 Docker 构建超时</a></li></ol>
+      <a class="toc-back" href="/zh/#writing">全部文章</a>
+    </aside>
+  </div>
+  <section class="post-related" aria-label="相关文章">
+    <h2>同一方向的其他文章</h2>
+    <ul><li><a href="/2026/11/27/hub-home-layout-and-e2e-zh/">重新平衡 Monash Hub 首页布局，以及 Playwright 拦下的两个问题</a></li><li><a href="/2026/11/27/hub-readonly-mirror-zh/">一套代码跑海外站和国内只读版，加上一个微信小程序</a></li><li><a href="/2026/11/19/hub-google-signin-zh/">Monash Hub 加入 Google 登录</a></li></ul>
+  </section>
+  <nav class="more" aria-label="更多文章">
+    <a class="card more-link" href="/2026/11/27/hub-readonly-mirror-zh/">
+      <span class="more-label">上一篇 · Monash Hub</span>
+      <span class="more-title">一套代码跑海外站和国内只读版，加上一个微信小程序</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/11/27/bot-context-words-zh/">
+      <span class="more-label">下一篇 · Q&A bot</span>
+      <span class="more-title">为什么「马来西亚校区怎么打印」匹配到了学生签证</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Monash University Malaysia 计算机科学，记录开发与学习</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">运行状态</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

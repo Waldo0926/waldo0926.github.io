@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>重新平衡 Monash Hub 首页布局，以及 Playwright 拦下的两个问题 | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="重新平衡 Monash Hub 首页布局，以及 Playwright 拦下的两个问题" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="zh_Hans" />
+<meta name="description" content="修掉单列凸出的页脚、不显眼的家长入口、被拉成细长条的 4×2 首页卡片，以及 Playwright 在合并前拦下的两个回归问题" />
+<meta property="og:description" content="修掉单列凸出的页脚、不显眼的家长入口、被拉成细长条的 4×2 首页卡片，以及 Playwright 在合并前拦下的两个回归问题" />
+<link rel="canonical" href="https://blog.secureview.tech/2026/11/27/hub-home-layout-and-e2e-zh/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/11/27/hub-home-layout-and-e2e-zh/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/hub-home-layout-and-e2e-zh.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-11-27T10:30:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/hub-home-layout-and-e2e-zh.png" />
+<meta property="twitter:title" content="重新平衡 Monash Hub 首页布局，以及 Playwright 拦下的两个问题" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-11-27T10:30:00+08:00","datePublished":"2026-11-27T10:30:00+08:00","description":"修掉单列凸出的页脚、不显眼的家长入口、被拉成细长条的 4×2 首页卡片，以及 Playwright 在合并前拦下的两个回归问题","headline":"重新平衡 Monash Hub 首页布局，以及 Playwright 拦下的两个问题","image":"https://blog.secureview.tech/assets/og/hub-home-layout-and-e2e-zh.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/11/27/hub-home-layout-and-e2e-zh/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/11/27/hub-home-layout-and-e2e-zh/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/11/27/hub-home-layout-and-e2e-zh/">
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/11/27/hub-home-layout-and-e2e/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css?v=1795802204">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/zh/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/zh/#writing">文章</a>
+        <a href="/zh/#projects">项目</a>
+        <a href="/zh/projects/">归档</a>
+        <a href="/zh/search/">搜索</a>
+        <a href="/zh/about/">关于</a>
+      </nav>
+      <a class="lang-switch" href="/2026/11/27/hub-home-layout-and-e2e/" lang="en" hreflang="en">English</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/zh/#writing">文章</a>
+      <span aria-hidden="true">/</span>
+      <span>Monash Hub</span>
+    </p>
+    <h1 class="display post-title">重新平衡 Monash Hub 首页布局，<wbr>以及 Playwright 拦下的两个问题</h1><p class="lede">修掉单列凸出的页脚、<wbr>不显眼的家长入口、<wbr>被拉成细长条的 4×2 首页卡片，<wbr>以及 Playwright 在合并前拦下的两个回归问题</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-11-27T10:30:00+08:00">27 Nov 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>约 5 分钟</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/11/27/hub-home-layout-and-e2e/">English</a>
+        <a href="/2026/11/27/hub-home-layout-and-e2e-zh/" lang="zh-Hans" class="on" aria-current="page">中文</a>
+      </span>
+    </div>
+  </header>
+  <p class="post-source small muted">
+    <a href="https://github.com/Waldo0926/monash-hub" rel="noopener external" target="_blank">对应源码</a> · 资料核对：2026-11-27
+  </p>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p>验收<a href="/2026/11/27/hub-readonly-mirror-zh/">国内只读版</a>桌面端页面的时候，盯着整页截图看出了好几处以前海外站也一直存在的布局和文案问题。这些问题不影响功能，所以拖了好几周都没动，但截成整图一看就特别扎眼</p>
+
+<h2 id="四个顺手修掉的布局与文案问题">四个顺手修掉的布局与文案问题</h2>
+
+<ol>
+  <li><strong>页脚单列向下凸出</strong>：页脚里的 <code class="language-plaintext highlighter-rouge">功能导航</code> 8 个链接排成了一竖列，而旁边的官方来源和系统入口三列各自只有 3 到 4 行，导致页脚右边大片留白。把 <code class="language-plaintext highlighter-rouge">功能导航</code> 改成两列网格（把 <code class="language-plaintext highlighter-rouge">找选修课</code> 和 <code class="language-plaintext highlighter-rouge">学费查询</code> 也补进去，排成 2 列 × 5 行），同时去掉首页最后一个区块底部叠加的约 160 px 空白，整个页脚立刻齐平</li>
+  <li><strong>首页右下角大片空白</strong>：之前重要日期只列 4 条，下面的 <code class="language-plaintext highlighter-rouge">常用系统</code> 是一堆小胶囊标签，卡片下半截空了一半。把首页重要日期改成默认展示 6 条，下面的标题改成 <code class="language-plaintext highlighter-rouge">常用系统入口</code>，每个入口从胶囊改成 2 列带一行用途说明的小卡片（比如 <code class="language-plaintext highlighter-rouge">Moodle · 课件与作业</code>、<code class="language-plaintext highlighter-rouge">WES · 选课与成绩</code>、<code class="language-plaintext highlighter-rouge">Allocate+ · 排课表选班</code>），把留白换成了对新生真正有用的信息</li>
+  <li><strong>顶栏命名与优先级</strong>：新生常分不清 <code class="language-plaintext highlighter-rouge">课程</code> 和 <code class="language-plaintext highlighter-rouge">专业与学位</code> 的区别，<code class="language-plaintext highlighter-rouge">给家长看</code> 又是灰色小字夹在搜索框旁边，很容易被忽略。把中文文案统一改成 <code class="language-plaintext highlighter-rouge">课程查询</code>、<code class="language-plaintext highlighter-rouge">学费查询</code>、<code class="language-plaintext highlighter-rouge">家长入口</code>；顶栏把 <code class="language-plaintext highlighter-rouge">官方指南</code> 放第一项，高频的 <code class="language-plaintext highlighter-rouge">WAM/GPA</code> 和 <code class="language-plaintext highlighter-rouge">学费查询</code> 提到一级导航，<code class="language-plaintext highlighter-rouge">选课工具</code> 下拉只放选课三件套（<code class="language-plaintext highlighter-rouge">选课规划</code>、<code class="language-plaintext highlighter-rouge">先修图</code>、<code class="language-plaintext highlighter-rouge">找选修课</code>），<code class="language-plaintext highlighter-rouge">家长入口</code> 做成浅蓝胶囊放进主导航，一眼就能看到</li>
+  <li><strong>长指南吸顶目录和课程页收尾</strong>：把 <code class="language-plaintext highlighter-rouge">/guides/[slug]</code> 原本占在正文上面的章节大纲移到右侧栏吸顶，长政策翻到底也能跳章节；<code class="language-plaintext highlighter-rouge">/units/[code]</code> 底部加了一张简短的继续规划卡片，看完课程可以直接跳先修图、选课规划或年份对比</li>
+</ol>
+
+<h2 id="pr-301-合并前playwright-拦下了两件事">PR #301 合并前，Playwright 拦下了两件事</h2>
+
+<p>本地 <code class="language-plaintext highlighter-rouge">vitest</code> 单测和 <code class="language-plaintext highlighter-rouge">nuxi typecheck</code> 全过之后我提了 PR #301，结果 GitHub Actions 的 Playwright 浏览器测试挂了 2 条用例（桌面和手机各跑一次，76 个里挂了 4 个）：</p>
+
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">e2e/tests/pwa.spec.ts:32</code></strong>：断言中文版 <code class="language-plaintext highlighter-rouge">/manifest.webmanifest</code> 里的快捷方式包含 <code class="language-plaintext highlighter-rouge">课程</code>。因为 PWA manifest 直接读了 <code class="language-plaintext highlighter-rouge">nav.units</code>，把文案改成 <code class="language-plaintext highlighter-rouge">课程查询</code> 后，manifest 快捷方式也跟着变了——提醒了我改一个 i18n 键会影响到页面可见导航以外的地方</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">e2e/tests/units.spec.ts:57</code></strong>：用 <code class="language-plaintext highlighter-rouge">page.getByRole('link', { name: /比较年份|Compare years/ })</code> 定位链接时没加 <code class="language-plaintext highlighter-rouge">.first()</code>。我们在课程页底部加了规划卡片后，页面上出现了第二个 <code class="language-plaintext highlighter-rouge">比较年份变化</code> 链接，直接触发了 Playwright strict mode 报错</li>
+</ul>
+
+<p>两处都是改一行的测试更新，CI 提前拦下来也避免了线上回归</p>
+
+<h2 id="上线后一眼看出的-css-grid-拉伸坑">上线后一眼看出的 CSS Grid 拉伸坑</h2>
+
+<p>PR #301 合并部署到海外站后，一刷新首页就发现一个很丑的问题：左栏 8 张入口卡片被拉成了细长条，底下空出一大截灰色</p>
+
+<p>把左右两栏放一起看，原因一下子就清楚了：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">.hero</code> 设了 <code class="language-plaintext highlighter-rouge">align-items: stretch</code>，<code class="language-plaintext highlighter-rouge">.tools</code> 又设了 <code class="language-plaintext highlighter-rouge">flex: 1 1 auto; grid-auto-rows: 1fr;</code></li>
+  <li>右栏把重要日期加到 6 条、常用系统改成 2 列卡片后，整体增高了大约 220 px</li>
+  <li>国内版左栏是 <strong>3×3 九宫格（3 行）</strong>，每张卡片分摊下来大约 175 px 高，接近正方形，看着很舒服</li>
+  <li>海外版左栏还是旧的 <strong>4×2（只有 2 行）</strong>，而且漏了 <code class="language-plaintext highlighter-rouge">找选修课</code>（<code class="language-plaintext highlighter-rouge">/electives</code>），结果 CSS Grid 把这两行强行撑到了每行约 270 px，再加上 <code class="language-plaintext highlighter-rouge">align-content: start</code> 把图标和文字顶在最上面，底下就空出了大片灰色</li>
+</ul>
+
+<p>PR #303 的修法比硬写 <code class="language-plaintext highlighter-rouge">max-height</code> 更干净：把海外和国内统一成 <strong>3×3 九宫格</strong>，给海外补上 <code class="language-plaintext highlighter-rouge">找选修课</code>（第 9 格海外留 <code class="language-plaintext highlighter-rouge">社区</code>，国内放 <code class="language-plaintext highlighter-rouge">马莫百科</code>），卡片内部改成 <code class="language-plaintext highlighter-rouge">align-content: center</code> 垂直居中，同时把右栏 <code class="language-plaintext highlighter-rouge">.hero-side</code> 设为 <code class="language-plaintext highlighter-rouge">grid-template-rows: 1fr auto</code>，不管切到马来西亚还是澳大利亚校区，常用系统卡片都不会被拉变形</p>
+
+<p>顺着同一批截图，我还把公众号模块的标题从读起来有点别扭的 <code class="language-plaintext highlighter-rouge">马莫同学写的公众号</code> 改成了 <code class="language-plaintext highlighter-rouge">马莫学生运营的公众号</code>——这张卡片同时介绍了文章、后台自动回复机器人和关注二维码，“运营的公众号”比“写的公众号”贴切得多</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">本文目录</p>
+      <ol><li><a href="#四个顺手修掉的布局与文案问题">四个顺手修掉的布局与文案问题</a></li><li><a href="#pr-301-合并前playwright-拦下了两件事">PR #301 合并前，Playwright 拦下了两件事</a></li><li><a href="#上线后一眼看出的-css-grid-拉伸坑">上线后一眼看出的 CSS Grid 拉伸坑</a></li></ol>
+      <a class="toc-back" href="/zh/#writing">全部文章</a>
+    </aside>
+  </div>
+  <section class="post-related" aria-label="相关文章">
+    <h2>同一方向的其他文章</h2>
+    <ul><li><a href="/2026/11/27/hub-cross-border-sync-zh/">在 50% 丢包的跨境链路上同步 18 张 PostgreSQL 公开表</a></li><li><a href="/2026/11/27/hub-readonly-mirror-zh/">一套代码跑海外站和国内只读版，加上一个微信小程序</a></li><li><a href="/2026/11/19/hub-google-signin-zh/">Monash Hub 加入 Google 登录</a></li></ul>
+  </section>
+  <nav class="more" aria-label="更多文章">
+    <a class="card more-link" href="/2026/11/27/bot-context-words-zh/">
+      <span class="more-label">上一篇 · Q&A bot</span>
+      <span class="more-title">为什么「马来西亚校区怎么打印」匹配到了学生签证</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/11/27/bot-user-rules-zh/">
+      <span class="more-label">下一篇 · Q&A bot</span>
+      <span class="more-title">对单个用户停止转人工，或者不再回复</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Monash University Malaysia 计算机科学，记录开发与学习</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">运行状态</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

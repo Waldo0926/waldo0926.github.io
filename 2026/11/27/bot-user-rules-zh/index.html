@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#006DAE">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>对单个用户停止转人工，或者不再回复 | Shuoxun Wen</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="对单个用户停止转人工，或者不再回复" />
+<meta name="author" content="Shuoxun Wen" />
+<meta property="og:locale" content="zh_Hans" />
+<meta name="description" content="消息级过滤挡不住同一个人反复发或者说话不客气。现在可以按用户设「不转人工」或「彻底拉黑」，跨私聊和群聊生效，也不影响其他正常用户" />
+<meta property="og:description" content="消息级过滤挡不住同一个人反复发或者说话不客气。现在可以按用户设「不转人工」或「彻底拉黑」，跨私聊和群聊生效，也不影响其他正常用户" />
+<link rel="canonical" href="https://blog.secureview.tech/2026/11/27/bot-user-rules-zh/" />
+<meta property="og:url" content="https://blog.secureview.tech/2026/11/27/bot-user-rules-zh/" />
+<meta property="og:site_name" content="Shuoxun Wen" />
+<meta property="og:image" content="https://blog.secureview.tech/assets/og/bot-user-rules-zh.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-11-27T10:40:00+08:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.secureview.tech/assets/og/bot-user-rules-zh.png" />
+<meta property="twitter:title" content="对单个用户停止转人工，或者不再回复" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shuoxun Wen"},"dateModified":"2026-11-27T10:40:00+08:00","datePublished":"2026-11-27T10:40:00+08:00","description":"消息级过滤挡不住同一个人反复发或者说话不客气。现在可以按用户设「不转人工」或「彻底拉黑」，跨私聊和群聊生效，也不影响其他正常用户","headline":"对单个用户停止转人工，或者不再回复","image":"https://blog.secureview.tech/assets/og/bot-user-rules-zh.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.secureview.tech/2026/11/27/bot-user-rules-zh/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://blog.secureview.tech/assets/avatar.jpg"},"name":"Shuoxun Wen"},"url":"https://blog.secureview.tech/2026/11/27/bot-user-rules-zh/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link type="application/atom+xml" rel="alternate" href="https://blog.secureview.tech/feed.xml" title="Shuoxun Wen" />
+  <link rel="alternate" hreflang="zh-Hans" href="https://blog.secureview.tech/2026/11/27/bot-user-rules-zh/">
+  <link rel="alternate" hreflang="en" href="https://blog.secureview.tech/2026/11/27/bot-user-rules/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+  <link rel="stylesheet" href="/assets/style.css?v=1795802204">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-row">
+      <a class="brand" href="/zh/">
+        <img class="mark" src="/assets/avatar.jpg" alt="" width="34" height="34">
+        <span>Shuoxun Wen</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/zh/#writing">文章</a>
+        <a href="/zh/#projects">项目</a>
+        <a href="/zh/projects/">归档</a>
+        <a href="/zh/search/">搜索</a>
+        <a href="/zh/about/">关于</a>
+      </nav>
+      <a class="lang-switch" href="/2026/11/27/bot-user-rules/" lang="en" hreflang="en">English</a>
+      <a class="btn btn--ghost btn--small header-cta" href="https://github.com/Waldo0926">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container post-wrap">
+  <header class="post-hero">
+    <p class="crumbs">
+      <a href="/zh/#writing">文章</a>
+      <span aria-hidden="true">/</span>
+      <span>Q&A bot</span>
+    </p>
+    <h1 class="display post-title">对单个用户停止转人工，<wbr>或者不再回复</h1><p class="lede">消息级过滤挡不住同一个人反复发或者说话不客气。<wbr>现在可以按用户设<wbr>「不转人工」<wbr>或<wbr>「彻底拉黑」<wbr>，<wbr>跨私聊和群聊生效，<wbr>也不影响其他正常用户</p>
+    <div class="post-meta">
+      <time class="mono" datetime="2026-11-27T10:40:00+08:00">27 Nov 2026</time>
+      <span class="sep" aria-hidden="true"></span>
+      <span>约 4 分钟</span>
+      <span class="toggle" role="group" aria-label="Language">
+        <a href="/2026/11/27/bot-user-rules/">English</a>
+        <a href="/2026/11/27/bot-user-rules-zh/" lang="zh-Hans" class="on" aria-current="page">中文</a>
+      </span>
+    </div>
+  </header>
+  <p class="post-source small muted"> · 资料核对：2026-11-27
+  </p>
+
+  <div class="post-body">
+    <article class="card prose">
+      <p>上次给机器人加了<a href="/2026/11/17/bot-forwarding-zh/">消息分流和每人每天 5 条上限</a>，挡掉了大部分闲聊和乱码</p>
+
+<p>用了一段时间发现，只按单条消息判断还是不够</p>
+
+<p>机器人主路径没有大模型，也不会做语气或情感分析，只要句子里带了课程、签证或者问号，答不上来就照样会转给我</p>
+
+<p>如果某个人回答过几次还反复追问，或者说话很不客气，每天 5 条的上限还是会把这些消息送进我的聊天框</p>
+
+<p>我维护这个号不是客服义务，不想因为个别对话坏了心情，所以加了按用户设置的两个档位，普通用户的流程一点没变</p>
+
+<h2 id="分成两档不转人工和彻底拉黑">分成两档：不转人工和彻底拉黑</h2>
+
+<p>收到一条待答通知时，上面已经带着短编号（比如 <code class="language-plaintext highlighter-rouge">#42</code>），现在可以直接用这个编号对提问人设限制：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">不转 42</code>：机器人能答的问题照常答，但答不上来、对方发「人工」或者私聊要进群，都不再转给我，群里也不再 <code class="language-plaintext highlighter-rouge">@</code> 我</li>
+  <li><code class="language-plaintext highlighter-rouge">拉黑 42</code>：机器人直接忽略这个人发的所有消息，不回复也不转发</li>
+  <li><code class="language-plaintext highlighter-rouge">黑名单</code> 和 <code class="language-plaintext highlighter-rouge">解除 序号</code>：查看名单，或者手滑之后恢复正常</li>
+</ul>
+
+<p>「不转人工」容易漏掉的是文案</p>
+
+<p>如果后台不转了，前台还回一句“已经转给 Waldo，他看到后会回复你”，或者在文章下面继续附“回复「人工」转给 Waldo”，对方只会接着发</p>
+
+<p>所以在 <code class="language-plaintext highlighter-rouge">no_forward</code> 状态下，答不上来和发「人工」只给 Monash Hub 和马莫百科往期文章的链接，部分回答末尾的 <code class="language-plaintext highlighter-rouge">ask_owner_tail()</code> 会裁掉，自我介绍和 <code class="language-plaintext highlighter-rouge">triage.py</code> 的提示语里提到我的句子也会去掉</p>
+
+<p>同时会把这个人当前还没处理的 <code class="language-plaintext highlighter-rouge">open</code> 待答全部标成 <code class="language-plaintext highlighter-rouge">ignored</code>，不然隔天超时提醒还是会把旧消息顶上来</p>
+
+<h2 id="不只是改-brainpy">不只是改 <code class="language-plaintext highlighter-rouge">brain.py</code></h2>
+
+<p>一开始以为在 <code class="language-plaintext highlighter-rouge">Brain.handle</code> 开头加两行判断就够了，真看一遍三个通道的入口，漏掉的地方不少</p>
+
+<p><strong>公众号要挡在最前面</strong>。<code class="language-plaintext highlighter-rouge">wxbot/mp.py</code> 里，打招呼（“你好”）、语音图片提示、首次关注语，以及待发队列 <code class="language-plaintext highlighter-rouge">outbox</code> 都在进入 <code class="language-plaintext highlighter-rouge">Brain.handle</code> 之前或之外处理。彻底拉黑必须在 <code class="language-plaintext highlighter-rouge">MPServer.handle</code> 一进来就返回空字符串，让服务器回微信要求的 <code class="language-plaintext highlighter-rouge">success</code>，这样用户端既看不到回复也不会报错</p>
+
+<p><strong>个人号按 <code class="language-plaintext highlighter-rouge">wxid</code> 跨私聊和群聊联动</strong>。在 <code class="language-plaintext highlighter-rouge">wxbot/pcwx.py</code> 里，同一个人私聊的 id 是 <code class="language-plaintext highlighter-rouge">pc:&lt;wxid&gt;</code>，在群里 <code class="language-plaintext highlighter-rouge">@</code> 机器人时是 <code class="language-plaintext highlighter-rouge">pc:&lt;群id&gt;|&lt;wxid&gt;</code>。现在统一折成 <code class="language-plaintext highlighter-rouge">person_key</code>（<code class="language-plaintext highlighter-rouge">pc:&lt;wxid&gt;</code>）存表，不管是在私聊还是某个群里设了限制，他换个群 <code class="language-plaintext highlighter-rouge">@</code> 机器人一样生效。另外，被拉黑的人会在群频控（<code class="language-plaintext highlighter-rouge">_room_busy</code>）之前被丢掉，避免一个人把整个群每分钟的回复额度刷光</p>
+
+<p><strong>关闭旧待答时的 <code class="language-plaintext highlighter-rouge">LIKE</code> 下划线问题</strong>。按 <code class="language-plaintext highlighter-rouge">pc:&lt;wxid&gt;</code> 批量关掉一个人在各个群里未处理的待答时，SQL 用了 <code class="language-plaintext highlighter-rouge">user_id LIKE 'pc:%|' + wxid</code>。微信的 <code class="language-plaintext highlighter-rouge">wxid_</code> 里天生带下划线，在 SQLite 里 <code class="language-plaintext highlighter-rouge">_</code> 是匹配任意单个字符的通配符，所以查出来之后还在 Python 里用 <code class="language-plaintext highlighter-rouge">person_key()</code> 再核对了一次，防止误关别人</p>
+
+<p><strong>不能挂在 <code class="language-plaintext highlighter-rouge">contact</code> 表上</strong>。机器人支持用户发「删除我的数据」清空自己在 <code class="language-plaintext highlighter-rouge">log</code>、<code class="language-plaintext highlighter-rouge">outbox</code>、<code class="language-plaintext highlighter-rouge">pending</code>、<code class="language-plaintext highlighter-rouge">contact</code> 里的全部记录。屏蔽规则放在单独的 <code class="language-plaintext highlighter-rouge">user_rule</code> 表里，<code class="language-plaintext highlighter-rouge">forget_user()</code> 不碰它，不然对方删一次数据就自己解封了</p>
+
+<p>另外加了一层保护，管理员和 <code class="language-plaintext highlighter-rouge">OWNER_WXID</code> 不能被加进名单，防止手滑把自己屏蔽掉</p>
+
+<h2 id="还管不到的地方">还管不到的地方</h2>
+
+<p>微信里公众号的 <code class="language-plaintext highlighter-rouge">openid</code>（<code class="language-plaintext highlighter-rouge">mp:...</code>）和个人微信号的 <code class="language-plaintext highlighter-rouge">wxid</code>（<code class="language-plaintext highlighter-rouge">pc:...</code>）是两套完全独立的 id，没法自动对应成同一个人</p>
+
+<p>如果同一个人既在公众号发消息又加了个人号，只能两边各设一次</p>
+
+    </article>
+    <aside class="toc card">
+      <p class="toc-title">本文目录</p>
+      <ol><li><a href="#分成两档不转人工和彻底拉黑">分成两档：不转人工和彻底拉黑</a></li><li><a href="#不只是改-brainpy">不只是改 <code class="language-plaintext highlighter-rouge</a></li><li><a href="#还管不到的地方">还管不到的地方</a></li></ol>
+      <a class="toc-back" href="/zh/#writing">全部文章</a>
+    </aside>
+  </div>
+  <section class="post-related" aria-label="相关文章">
+    <h2>同一方向的其他文章</h2>
+    <ul><li><a href="/2026/11/28/bot-web-fallback-auto-kb-zh/">知识库没命中时去官网补查，每晚十点汇总给我看</a></li><li><a href="/2026/11/27/bot-context-words-zh/">为什么「马来西亚校区怎么打印」匹配到了学生签证</a></li><li><a href="/2026/11/19/bot-on-the-hub-zh/">微信机器人接入 Monash Hub</a></li></ul>
+  </section>
+  <nav class="more" aria-label="更多文章">
+    <a class="card more-link" href="/2026/11/27/hub-home-layout-and-e2e-zh/">
+      <span class="more-label">上一篇 · Monash Hub</span>
+      <span class="more-title">重新平衡 Monash Hub 首页布局，以及 Playwright 拦下的两个问题</span>
+    </a>
+    <a class="card more-link more-link--next" href="/2026/11/28/bot-web-fallback-auto-kb-zh/">
+      <span class="more-label">下一篇 · Q&A bot</span>
+      <span class="more-title">知识库没命中时去官网补查，每晚十点汇总给我看</span>
+    </a>
+  </nav>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <p class="footer-name">Shuoxun Wen</p>
+        <p class="footer-note">Monash University Malaysia 计算机科学，记录开发与学习</p>
+      </div>
+      <nav class="footer-links" aria-label="Elsewhere">
+        <a href="https://github.com/Waldo0926">GitHub</a>
+        <a href="https://www.linkedin.com/in/shuoxun-wen/">LinkedIn</a>
+        <a href="mailto:wensx0926@gmail.com">Email</a>
+        <a href="https://waldo0926.github.io/uptime/">运行状态</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
